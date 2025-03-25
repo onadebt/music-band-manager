@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: user-management-service
+            uri: http://localhost:8091
+            predicates: Path=/users/**
+
+          - id: music-catalog-service
+            uri: http://localhost:8092
+            predicates: Path=/music-catalog/**
+
+          - id: band-management-service
+            uri: http://localhost:8093
+            predicates: Path=/bands/**
+
+          - id: tour-management-service
+            uri: http://localhost:8094
+            predicates: Path=/tours/**
+
+server:
+  port: 8080
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
