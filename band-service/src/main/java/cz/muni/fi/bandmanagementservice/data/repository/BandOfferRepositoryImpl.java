@@ -13,8 +13,8 @@ import java.util.Optional;
  * @author Tomáš MAREK
  */
 public class BandOfferRepositoryImpl implements BandOfferRepository {
-    private int nextId = 1;
-    private final Map<Integer, BandOffer> bandOffers = new HashMap<>();
+    private Long nextId = 1L;
+    private final Map<Long, BandOffer> bandOffers = new HashMap<>();
 
 
     @Override
@@ -23,7 +23,7 @@ public class BandOfferRepositoryImpl implements BandOfferRepository {
     }
 
     @Override
-    public Optional<BandOffer> getBandOfferById(int id) {
+    public Optional<BandOffer> getBandOfferById(Long id) {
         if (bandOffers.containsKey(id)) {
             return Optional.of(bandOffers.get(id));
         }

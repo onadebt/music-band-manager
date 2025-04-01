@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface BandOfferRepository {
     public Collection<BandOffer> getAllBandOffers();
 
-    public Optional<BandOffer> getBandOfferById(int id);
+    public Optional<BandOffer> getBandOfferById(Long id);
 
     public void createBandOffer(BandOffer bandOffer);
 

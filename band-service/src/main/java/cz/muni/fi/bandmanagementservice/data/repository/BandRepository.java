@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface BandRepository {
     public Collection<Band> getAllBands();
 
-    public Optional<Band> getBandById(int id);
+    public Optional<Band> getBandById(Long id);
 
     public void createBand(Band band);
 

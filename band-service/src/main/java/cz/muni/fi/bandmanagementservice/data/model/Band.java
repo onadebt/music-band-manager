@@ -11,7 +11,7 @@ import java.util.Objects;
  * @author Tomáš MAREK
  */
 public class Band {
-    private Integer id;
+    private Long id;
 
     @NotNull
     private String name;
@@ -20,12 +20,12 @@ public class Band {
     private String musicalStyle;
 
     @NotNull
-    private int managerId;
+    private Long managerId;
 
     private String logoUrl;
     private Collection<Integer> members = List.of();
 
-    public Band(Integer id, String name, String musicalStyle, int managerId) {
+    public Band(Long id, String name, String musicalStyle, Long managerId) {
         this.id = id;
         this.name = name;
         this.musicalStyle = musicalStyle;
@@ -44,11 +44,11 @@ public class Band {
         this.members.add(memberId);
     }
 
-    public int getManagerId() {
+    public Long getManagerId() {
         return managerId;
     }
 
-    public void setManagerId(int managerId) {
+    public void setManagerId(Long managerId) {
         this.managerId = managerId;
     }
 
@@ -76,11 +76,11 @@ public class Band {
         this.name = name;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -11,8 +11,8 @@ import java.util.Optional;
  * @author Tomáš MAREK
  */
 public class BandRepositoryImpl implements BandRepository {
-    private int nextId = 1;
-    private final Map<Integer, Band> bands = new HashMap<>();
+    private Long nextId = 1L;
+    private final Map<Long, Band> bands = new HashMap<>();
 
     @Override
     public Collection<Band> getAllBands() {
@@ -20,7 +20,7 @@ public class BandRepositoryImpl implements BandRepository {
     }
 
     @Override
-    public Optional<Band> getBandById(int id) {
+    public Optional<Band> getBandById(Long id) {
         if (bands.containsKey(id)) {
             return Optional.of(bands.get(id));
         }
