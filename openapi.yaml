@@ -20,12 +20,46 @@ components:
       required:
         - name
       properties:
-        name: {type: string, description: name of the band, example: Covercraft}
+        id: {type: integer, description: band id}
+        name: {type: string, description: name of the band, example: Rammstein}
+        musicalStyle: {type: string, description: musical style played by the band, example: industrial metal }
+        logo: {type: string, description: url of band logo, nullable: true }
+        managerId: {type: integer, description: id of the band manager}
+        members: {type: array, items: {type: integer}, description: array of member id's}
+
 paths:
   /api/bands:
+    post:
+      tags:
+        - BandService
+      summary: creates a new band
+      operationId: createBand
+      parameters:
+        - {name: name, in: query, required: true, schema: {type: string}, description: "name of the new music band"}
+        - {name: musicalStyle, in: query, required: true, schema: {type: string}, description: "musical style played by the new band"}
+        - {name: managerId, in: query, required: true, schema: {type: integer}, description: "Id of the manager of the new band"}
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Band"
+        "400":
+          description: cannot create given band
     get:
       tags:
         - BandService
+      summary: returns searched band
+      operationId: getBand
+      parameters:
+        - {name: id, in: query, required: true, schema: {type: integer}, description: "Id of queried band"}
       responses:
-        "201":
-          description: ok
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Band"
+        "404":
+          description: given band not found
