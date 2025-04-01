@@ -9,7 +9,6 @@ import java.util.Objects;
  * @author Tomáš MAREK
  */
 public class Band {
-    @NotNull
     private int id;
 
     @NotNull
