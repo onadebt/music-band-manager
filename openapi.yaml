@@ -14,7 +14,7 @@ tags:
   - name: UserService
 components:
   schemas:
-    Band:
+    BandDto:
       title: A musical band
       description: object representing a musical band, with its manager and members
       properties:
@@ -25,7 +25,7 @@ components:
         managerId: {type: integer, description: id of the band manager}
         members: {type: array, items: {type: integer}, description: array of member id's}
 
-    BandOffer:
+    BandOfferDto:
       title: Offer to join a band
       description: object containing info regarding an offer to join a band
       properties:
@@ -52,7 +52,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Band"
+                $ref: "#/components/schemas/BandDto"
         "400":
           description: cannot create given band
     get:
@@ -68,7 +68,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Band"
+                $ref: "#/components/schemas/BandDto"
         "404":
           description: given band not found
   /api/bands/offers:
@@ -87,7 +87,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BandOffer"
+                $ref: "#/components/schemas/BandOfferDto"
         "400":
           description: cannot create given offer
     get:
@@ -103,7 +103,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BandOffer"
+                $ref: "#/components/schemas/BandOfferDto"
         "404":
           description: Given band offer cannot be found
 
