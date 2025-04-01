@@ -1,5 +1,6 @@
 package cz.muni.fi.bandmanagementservice.data.repository;
 
+import cz.muni.fi.bandmanagementservice.data.exceptions.DataStorageException;
 import cz.muni.fi.bandmanagementservice.data.model.Band;
 import cz.muni.fi.bandmanagementservice.data.model.BandOffer;
 
@@ -38,6 +39,9 @@ public class BandOfferRepositoryImpl implements BandOfferRepository {
 
     @Override
     public void updateBandOffer(BandOffer bandOffer) {
+        if (!bandOffers.containsKey(bandOffer.getBandId())) {
+            throw new DataStorageException("Updated band offer with id %d not found!".formatted(bandOffer.getId()));
+        }
         bandOffers.put(bandOffer.getBandId(), bandOffer);
     }
 }

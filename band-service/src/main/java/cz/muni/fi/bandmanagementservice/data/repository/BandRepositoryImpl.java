@@ -1,5 +1,6 @@
 package cz.muni.fi.bandmanagementservice.data.repository;
 
+import cz.muni.fi.bandmanagementservice.data.exceptions.DataStorageException;
 import cz.muni.fi.bandmanagementservice.data.model.Band;
 
 import java.util.Collection;
@@ -35,6 +36,9 @@ public class BandRepositoryImpl implements BandRepository {
 
     @Override
     public void updateBand(Band band) {
+        if (!bands.containsKey(band.getId())) {
+            throw new DataStorageException("Updated band with id %d not found!".formatted(band.getId()));
+        }
         bands.put(band.getId(), band);
     }
 }
