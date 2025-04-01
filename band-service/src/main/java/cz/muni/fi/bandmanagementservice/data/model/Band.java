@@ -1,5 +1,7 @@
 package cz.muni.fi.bandmanagementservice.data.model;
 
+import io.swagger.v3.oas.models.security.SecurityScheme;
+
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.Objects;
  * @author Tomáš MAREK
  */
 public class Band {
-    private int id;
+    private Integer id;
 
     @NotNull
     private String name;
@@ -23,7 +25,7 @@ public class Band {
     private String logoUrl;
     private Collection<Integer> members = List.of();
 
-    public Band(int id, String name, String musicalStyle, int managerId) {
+    public Band(Integer id, String name, String musicalStyle, int managerId) {
         this.id = id;
         this.name = name;
         this.musicalStyle = musicalStyle;

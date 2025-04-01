@@ -6,11 +6,10 @@ import javax.validation.constraints.NotNull;
  * @author Tomáš MAREK
  */
 public class BandOffer {
-    @NotNull
-    private int id;
+    private Integer id;
 
     @NotNull
-    private int BandId;
+    private int bandId;
 
     @NotNull
     private int invitedMusicianId;
@@ -19,7 +18,14 @@ public class BandOffer {
     private int offeringManagerId;
 
     @NotNull
-    private BandOfferStatus status;
+    private BandOfferStatus status = BandOfferStatus.PENDING;
+
+    public BandOffer(Integer id, int bandId, int invitedMusicianId, int offeringManagerId) {
+        this.id = id;
+        this.bandId = bandId;
+        this.invitedMusicianId = invitedMusicianId;
+        this.offeringManagerId = offeringManagerId;
+    }
 
     public void acceptOffer(){
         status = BandOfferStatus.ACCEPTED;
@@ -46,11 +52,11 @@ public class BandOffer {
     }
 
     public int getBandId() {
-        return BandId;
+        return bandId;
     }
 
     public void setBandId(int bandId) {
-        BandId = bandId;
+        bandId = bandId;
     }
 
     public int getId() {

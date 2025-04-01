@@ -1,0 +1,21 @@
+package cz.muni.fi.bandmanagementservice.data.repository;
+
+import cz.muni.fi.bandmanagementservice.data.model.Band;
+import cz.muni.fi.bandmanagementservice.data.model.BandOffer;
+
+import java.util.Collection;
+import java.util.Optional;
+
+/**
+ * @author Tomáš MAREK
+ */
+public interface BandOfferRepository {
+    public Collection<BandOffer> getAllBandOffers();
+
+    public Optional<BandOffer> getBandOfferById(int id);
+
+    public void createBandOffer(BandOffer bandOffer);
+
+    public void updateBandOffer(BandOffer bandOffer);
+
+}
