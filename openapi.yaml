@@ -17,8 +17,6 @@ components:
     Band:
       title: A musical band
       description: object representing a musical band, with its manager and members
-      required:
-        - name
       properties:
         id: {type: integer, description: band id}
         name: {type: string, description: name of the band, example: Rammstein}
@@ -26,6 +24,16 @@ components:
         logo: {type: string, description: url of band logo, nullable: true }
         managerId: {type: integer, description: id of the band manager}
         members: {type: array, items: {type: integer}, description: array of member id's}
+
+    BandOffer:
+      title: Offer to join a band
+      description: object containing info regarding an offer to join a band
+      properties:
+        id: {type: integer, description: id of band offer}
+        bandId: {type: integer, description: id of offering band}
+        invitedMusicianId: {type: integer, description: id of invited musician}
+        offeringManagerId: {type: integer, description: id of offer manager}
+        status: {type: string, description: status of the offer, enum: ["Pending", "Accepted", "Rejected"]}
 
 paths:
   /api/bands:
@@ -63,3 +71,39 @@ paths:
                 $ref: "#/components/schemas/Band"
         "404":
           description: given band not found
+  /api/bands/offers:
+    post:
+      tags:
+        - BandService
+      summary: publishes new offer to join band
+      operationId: postBandOffer
+      parameters:
+        - {name: bandId, in: query, required: true, schema: {type: integer}, description: "Id of offered band"}
+        - {name: invitedMusicianId, in: query, required: true, schema: {type: integer}, description: "Id of invited musician"}
+        - {name: offeringManagerId, in: query, required: true, schema: {type: integer}, description: "Id of offering manager"}
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BandOffer"
+        "400":
+          description: cannot create given offer
+    get:
+      tags:
+        - BandService
+      summary: gets required offer
+      operationId: getBandOffer
+      parameters:
+        - {name: offerId, in: query, required: true, schema: {type: integer}, description: "Id of searched band offer"}
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BandOffer"
+        "404":
+          description: Given band offer cannot be found
+
