@@ -17,4 +17,6 @@ public interface BandRepository {
     public void createBand(Band band);
 
     public void updateBand(Band band);
+
+    public void deleteBand(Band band);
 }

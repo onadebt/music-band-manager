@@ -18,4 +18,5 @@ public interface BandOfferRepository {
 
     public void updateBandOffer(BandOffer bandOffer);
 
+    public void deleteBandOffer(BandOffer bandOffer);
 }

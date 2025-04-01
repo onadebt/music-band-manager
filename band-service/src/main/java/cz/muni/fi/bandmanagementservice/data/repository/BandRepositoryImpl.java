@@ -36,9 +36,19 @@ public class BandRepositoryImpl implements BandRepository {
 
     @Override
     public void updateBand(Band band) {
+        verifyBandExists(band);
+        bands.put(band.getId(), band);
+    }
+
+    @Override
+    public void deleteBand(Band band) {
+        verifyBandExists(band);
+        bands.remove(band.getId());
+    }
+
+    private void verifyBandExists(Band band){
         if (!bands.containsKey(band.getId())) {
             throw new DataStorageException("Updated band with id %d not found!".formatted(band.getId()));
         }
-        bands.put(band.getId(), band);
     }
 }

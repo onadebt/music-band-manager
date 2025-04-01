@@ -39,9 +39,19 @@ public class BandOfferRepositoryImpl implements BandOfferRepository {
 
     @Override
     public void updateBandOffer(BandOffer bandOffer) {
+        verifyBandOfferExist(bandOffer);
+        bandOffers.put(bandOffer.getBandId(), bandOffer);
+    }
+
+    @Override
+    public void deleteBandOffer(BandOffer bandOffer) {
+        verifyBandOfferExist(bandOffer);
+        bandOffers.remove(bandOffer.getBandId());
+    }
+
+    private void verifyBandOfferExist(BandOffer bandOffer) {
         if (!bandOffers.containsKey(bandOffer.getBandId())) {
             throw new DataStorageException("Updated band offer with id %d not found!".formatted(bandOffer.getId()));
         }
-        bandOffers.put(bandOffer.getBandId(), bandOffer);
     }
 }
