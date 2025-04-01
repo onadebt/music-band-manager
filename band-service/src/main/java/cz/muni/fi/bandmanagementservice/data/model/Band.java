@@ -23,7 +23,7 @@ public class Band {
     private Long managerId;
 
     private String logoUrl;
-    private Collection<Integer> members = List.of();
+    private Collection<Long> members = List.of();
 
     public Band(Long id, String name, String musicalStyle, Long managerId) {
         this.id = id;
@@ -32,15 +32,15 @@ public class Band {
         this.managerId = managerId;
     }
 
-    public Collection<Integer> getMembers() {
+    public Collection<Long> getMembers() {
         return members;
     }
 
-    public void setMembers(List<Integer> members) {
+    public void setMembers(List<Long> members) {
         this.members = members;
     }
 
-    public void addMember(int memberId) {
+    public void addMember(Long memberId) {
         this.members.add(memberId);
     }
 
@@ -88,7 +88,7 @@ public class Band {
     public boolean equals(Object object) {
         if (object == null || getClass() != object.getClass()) return false;
         Band band = (Band) object;
-        return managerId == band.managerId && Objects.equals(name, band.name) && Objects.equals(musicalStyle, band.musicalStyle) && Objects.equals(logoUrl, band.logoUrl) && Objects.equals(members, band.members);
+        return Objects.equals(managerId, band.managerId) && Objects.equals(name, band.name) && Objects.equals(musicalStyle, band.musicalStyle) && Objects.equals(logoUrl, band.logoUrl) && Objects.equals(members, band.members);
     }
 
     @Override
