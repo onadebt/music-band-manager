@@ -48,18 +48,6 @@ public class BandOfferService {
         bandOfferRepository.deleteBandOffer(bandOffer);
     }
 
-    public List<BandOffer> getAllBandOffers() {
-        return bandOfferRepository.getAllBandOffers().stream().toList();
-    }
-
-    public List<BandOffer> getBandOffersByBandId(Long bandId) {
-        return bandOfferRepository.getAllBandOffers().stream().filter(bandOffer -> bandOffer.getBandId().equals(bandId)).toList();
-    }
-
-    public List<BandOffer> getBandOfferByInvitedMusicianId(Long invitedMusicianId) {
-        return bandOfferRepository.getAllBandOffers().stream().filter(bandOffer -> bandOffer.getInvitedMusicianId().equals(invitedMusicianId)).toList();
-    }
-
     public void acceptOffer(Long bandOfferId){
         BandOffer bandOffer = getBandOffer(bandOfferId);
         bandOffer.acceptOffer();
@@ -82,5 +70,17 @@ public class BandOfferService {
     public void revokeOffer(Long bandOfferId){
         BandOffer bandOffer = getBandOffer(bandOfferId);
         bandOfferRepository.deleteBandOffer(bandOffer);
+    }
+
+    public List<BandOffer> getAllBandOffers() {
+        return bandOfferRepository.getAllBandOffers().stream().toList();
+    }
+
+    public List<BandOffer> getBandOffersByBandId(Long bandId) {
+        return bandOfferRepository.getAllBandOffers().stream().filter(bandOffer -> bandOffer.getBandId().equals(bandId)).toList();
+    }
+
+    public List<BandOffer> getBandOfferByInvitedMusicianId(Long invitedMusicianId) {
+        return bandOfferRepository.getAllBandOffers().stream().filter(bandOffer -> bandOffer.getInvitedMusicianId().equals(invitedMusicianId)).toList();
     }
 }
