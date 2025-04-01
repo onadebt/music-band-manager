@@ -1,0 +1,31 @@
+openapi: 3.0.1
+info:
+  title: PA165 - Music Band Manager
+  description: PA165 Spring 2025 student project - Music Band Manager
+  version: 1.0.0
+servers:
+  - url: "http://localhost:8080"
+tags:
+  - name: ApiGateway
+  - name: BandService
+  - name: MusicCatalog
+  - name: ServiceRegistry
+  - name: TourService
+  - name: UserService
+components:
+  schemas:
+    Band:
+      title: A musical band
+      description: object representing a musical band, with its manager and members
+      required:
+        - name
+      properties:
+        name: {type: string, description: name of the band, example: Covercraft}
+paths:
+  /api/bands:
+    get:
+      tags:
+        - BandService
+      responses:
+        "201":
+          description: ok
