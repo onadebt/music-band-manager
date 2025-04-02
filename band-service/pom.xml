@@ -31,12 +31,12 @@
 						<configuration>
 							<inputSpec>openapi.yaml</inputSpec>
 							<generatorName>spring</generatorName>
-							<apiPackage>cz.muni.fi.generated.band.api</apiPackage>
-							<modelPackage>cz.muni.fi.generated.band.model</modelPackage>
+							<apiPackage>cz.muni.fi.bandmanagementservice.band.api</apiPackage>
+							<modelPackage>cz.muni.fi.bandmanagementservice.band.model</modelPackage>
 							<!-- https://openapi-generator.tech/docs/generators/spring -->
 							<configOptions>
-								<basePackage>cz.muni.fi.generated.band</basePackage>
-								<configPackage>cz.muni.fi.generated.band.config</configPackage>
+								<basePackage>cz.muni.fi.bandmanagementservice.band</basePackage>
+								<configPackage>cz.muni.fi.bandmanagementservice.band.config</configPackage>
 								<useSpringBoot3>true</useSpringBoot3>
 								<useTags>true</useTags>
 								<delegatePattern>true</delegatePattern>

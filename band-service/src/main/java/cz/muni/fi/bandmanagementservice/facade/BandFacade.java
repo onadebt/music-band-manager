@@ -4,8 +4,8 @@ import cz.muni.fi.bandmanagementservice.data.model.Band;
 import cz.muni.fi.bandmanagementservice.data.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.mappers.BandMapper;
 import cz.muni.fi.bandmanagementservice.service.BandService;
-import cz.muni.fi.generated.band.model.BandDto;
-import cz.muni.fi.generated.band.model.BandInfoUpdateRequest;
+import cz.muni.fi.bandmanagementservice.band.model.BandDto;
+import cz.muni.fi.bandmanagementservice.band.model.BandInfoUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
