@@ -40,14 +40,6 @@ components:
         offeringManagerId: {type: integer, format: int64,  description: id of offer manager}
         status: {type: string, description: status of the offer, enum: ["Pending", "Accepted", "Rejected"]}
 
-    ErrorMessage:
-      type: object
-      description: Response body for HTML statuses
-      properties:
-        status: {type: integer, format: int64, description: HTTP status code, example: 404}
-        error: {type: string, description: HTTP error description, example: not found}
-        message: {type: string, description: message with further error description, example: invalid entity id}
-
 paths:
   /api/bands/create:
     post:
@@ -68,10 +60,6 @@ paths:
                 $ref: "#/components/schemas/BandDto"
         "400":
           description: Cannot create given band
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorMessage"
 
   /api/bands:
     get:
@@ -90,10 +78,6 @@ paths:
                 $ref: "#/components/schemas/BandDto"
         "404":
           description: Given band not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorMessage"
 
     post:
       tags:
@@ -116,16 +100,8 @@ paths:
                 $ref: "#/components/schemas/BandDto"
         "404":
           description: Updated band not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorMessage"
         "400":
           description: Band could not be updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorMessage"
 
   /api/bands/offers/create:
     post:
@@ -146,10 +122,6 @@ paths:
                 $ref: "#/components/schemas/BandOfferDto"
         "400":
           description: cannot create given offer
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorMessage"
 
   /api/bands/offers:
     get:
@@ -168,10 +140,6 @@ paths:
                 $ref: "#/components/schemas/BandOfferDto"
         "404":
           description: Given band offer cannot be found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorMessage"
 
   /api/bands/offers/accept:
     post:
@@ -190,16 +158,8 @@ paths:
                 $ref: "#/components/schemas/BandOfferDto"
         "404":
           description: Band offer does not exists
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorMessage"
         "400":
           description: Band offer could not be accepted
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorMessage"
 
   /api/bands/offers/reject:
     post:
@@ -218,13 +178,5 @@ paths:
                 $ref: "#/components/schemas/BandOfferDto"
         "404":
           description: Band offer does not exists
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorMessage"
         "400":
           description: Band offer could not be rejected
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorMessage"
