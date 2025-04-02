@@ -18,12 +18,12 @@ components:
       title: A musical band
       description: Object representing a musical band, with its manager and members
       properties:
-        id: {type: integer, description: band id}
+        id: {type: integer, format: int64, description: band id}
         name: {type: string, description: name of the band, example: Rammstein}
         musicalStyle: {type: string, description: musical style played by the band, example: industrial metal }
         logo: {type: string, description: url of band logo, nullable: true }
-        managerId: {type: integer, description: id of the band manager}
-        members: {type: array, items: {type: integer}, description: array of member id's}
+        managerId: {type: integer, format: int64, description: id of the band manager}
+        members: {type: array, items: {type: integer, format: int64}, description: array of member id's}
 
     BandInfoUpdateRequest:
       title: Request for change of band information
@@ -32,23 +32,23 @@ components:
         name: {type: string, description: name of the band, example: Rammstein }
         musicalStyle: { type: string, description: musical style played by the band, example: industrial metal }
         logo: { type: string, description: url of band logo, nullable: true }
-        managerId: { type: integer, description: id of the band manager }
+        managerId: { type: integer, format: int64, description: id of the band manager }
 
     BandOfferDto:
       title: Offer to join a band
       description: Object containing info regarding an offer to join a band
       properties:
-        id: {type: integer, description: id of band offer}
-        bandId: {type: integer, description: id of offering band}
-        invitedMusicianId: {type: integer, description: id of invited musician}
-        offeringManagerId: {type: integer, description: id of offer manager}
+        id: {type: integer, format: int64, description: id of band offer}
+        bandId: {type: integer, format: int64, description: id of offering band}
+        invitedMusicianId: {type: integer, format: int64, description: id of invited musician}
+        offeringManagerId: {type: integer, format: int64,  description: id of offer manager}
         status: {type: string, description: status of the offer, enum: ["Pending", "Accepted", "Rejected"]}
 
     ErrorMessage:
       type: object
       description: Response body for HTML statuses
       properties:
-        status: {type: integer, description: HTTP status code, example: 404}
+        status: {type: integer, format: int64, description: HTTP status code, example: 404}
         error: {type: string, description: HTTP error description, example: not found}
         message: {type: string, description: message with further error description, example: invalid entity id}
 
@@ -62,7 +62,7 @@ paths:
       parameters:
         - {name: name, in: query, required: true, schema: {type: string}, description: "name of the new music band"}
         - {name: musicalStyle, in: query, required: true, schema: {type: string}, description: "musical style played by the new band"}
-        - {name: managerId, in: query, required: true, schema: {type: integer}, description: "Id of the manager of the new band"}
+        - {name: managerId, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of the manager of the new band"}
       responses:
         "201":
           description: OK
@@ -84,7 +84,7 @@ paths:
       summary: Returns searched band
       operationId: getBand
       parameters:
-        - {name: id, in: query, required: true, schema: {type: integer}, description: "Id of queried band"}
+        - {name: id, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of queried band"}
       responses:
         "200":
           description: OK
@@ -105,7 +105,7 @@ paths:
       summary: Updates basic band info - managerId, name, logo, musicalStyle
       operationId: updateBand
       parameters:
-        - { name: id, in: query, required: true, schema: { type: integer }, description: "Id of updated band" }
+        - { name: id, in: query, required: true, schema: { type: integer, format: int64 }, description: "Id of updated band" }
       responses:
         "201":
           description: OK
@@ -133,9 +133,9 @@ paths:
       summary: Publishes new offer to join band
       operationId: postBandOffer
       parameters:
-        - {name: bandId, in: query, required: true, schema: {type: integer}, description: "Id of offered band"}
-        - {name: invitedMusicianId, in: query, required: true, schema: {type: integer}, description: "Id of invited musician"}
-        - {name: offeringManagerId, in: query, required: true, schema: {type: integer}, description: "Id of offering manager"}
+        - {name: bandId, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of offered band"}
+        - {name: invitedMusicianId, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of invited musician"}
+        - {name: offeringManagerId, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of offering manager"}
       responses:
         "201":
           description: OK
@@ -157,7 +157,7 @@ paths:
       summary: Gets required offer
       operationId: getBandOffer
       parameters:
-        - {name: offerId, in: query, required: true, schema: {type: integer}, description: "Id of searched band offer"}
+        - {name: offerId, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of searched band offer"}
       responses:
         "200":
           description: OK
@@ -179,7 +179,7 @@ paths:
       summary: Accepts offer
       operationId: acceptBandOffer
       parameters:
-        - { name: offerId, in: query, required: true, schema: { type: integer }, description: "Id of accepted band offer" }
+        - { name: offerId, in: query, required: true, schema: { type: integer, format: int64 }, description: "Id of accepted band offer" }
       responses:
         "201":
           description: OK
@@ -207,7 +207,7 @@ paths:
       summary: Rejects required offer
       operationId: rejectBandOffer
       parameters:
-        - { name: offerId, in: query, required: true, schema: { type: integer }, description: "Id of rejected band offer"}
+        - { name: offerId, in: query, required: true, schema: {type: integer, format: int64 }, description: "Id of rejected band offer"}
       responses:
         "201":
           description: OK
