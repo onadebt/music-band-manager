@@ -122,4 +122,59 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorMessage"
+  /api/bands/offers/accept:
+    post:
+      tags:
+        - BandService
+      summary: accepts offer
+      operationId: acceptBandOffer
+      parameters:
+        - { name: offerId, in: query, required: true, schema: { type: integer }, description: "Id of accepted band offer" }
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BandOfferDto"
+        "404":
+          description: band offer does not exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "400":
+          description: band offer could not be accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+  /api/bands/offers/reject:
+    post:
+      tags:
+        - BandService
+      summary: rejects required offer
+      operationId: rejectBandOffer
+      parameters:
+        - { name: offerId, in: query, required: true, schema: { type: integer }, description: "Id of rejected band offer"}
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BandOfferDto"
+        "404":
+          description: band offer does not exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "400":
+          description: band offer could not be rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+
 
