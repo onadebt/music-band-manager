@@ -3,6 +3,7 @@ package cz.muni.fi.bandmanagementservice.data.model;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +24,7 @@ public class Band {
     private Long managerId;
 
     private String logoUrl;
-    private Collection<Long> members = List.of();
+    private final Collection<Long> members = new ArrayList<>();
 
     public Band(Long id, String name, String musicalStyle, Long managerId) {
         this.id = id;
@@ -37,7 +38,8 @@ public class Band {
     }
 
     public void setMembers(List<Long> members) {
-        this.members = members;
+        this.members.clear();
+        this.members.addAll(members);
     }
 
     public void addMember(Long memberId) {
