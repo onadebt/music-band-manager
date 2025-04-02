@@ -1,7 +1,7 @@
-package cz.muni.fi.bandmanagementservice.mappers;
+package cz.muni.fi.bandmanagementservice.band.mappers;
 
-import cz.muni.fi.bandmanagementservice.data.model.Band;
-import cz.muni.fi.bandmanagementservice.data.model.BandInfoUpdate;
+import cz.muni.fi.bandmanagementservice.band.data.model.Band;
+import cz.muni.fi.bandmanagementservice.band.data.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.band.model.BandDto;
 import cz.muni.fi.bandmanagementservice.band.model.BandInfoUpdateRequest;
 

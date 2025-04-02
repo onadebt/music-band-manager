@@ -1,21 +1,17 @@
-package cz.muni.fi.bandmanagementservice.restController;
+package cz.muni.fi.bandmanagementservice.band.restController;
 
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
-import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
-import cz.muni.fi.bandmanagementservice.facade.BandFacade;
-import cz.muni.fi.bandmanagementservice.facade.BandOfferFacade;
+import cz.muni.fi.bandmanagementservice.band.exceptions.InvalidOperationException;
+import cz.muni.fi.bandmanagementservice.band.exceptions.ResourceNotFoundException;
+import cz.muni.fi.bandmanagementservice.band.facade.BandFacade;
+import cz.muni.fi.bandmanagementservice.band.facade.BandOfferFacade;
 import cz.muni.fi.bandmanagementservice.band.api.BandServiceApiDelegate;
 import  cz.muni.fi.bandmanagementservice.band.model.BandDto;
 import cz.muni.fi.bandmanagementservice.band.model.BandInfoUpdateRequest;
 import cz.muni.fi.bandmanagementservice.band.model.BandOfferDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-
-import java.security.InvalidParameterException;
-import java.util.Optional;
 
 /**
  * @author Tomáš MAREK

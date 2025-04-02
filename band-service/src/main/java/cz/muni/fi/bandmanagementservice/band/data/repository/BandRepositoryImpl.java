@@ -1,7 +1,8 @@
-package cz.muni.fi.bandmanagementservice.data.repository;
+package cz.muni.fi.bandmanagementservice.band.data.repository;
 
-import cz.muni.fi.bandmanagementservice.exceptions.DataStorageException;
-import cz.muni.fi.bandmanagementservice.data.model.Band;
+import cz.muni.fi.bandmanagementservice.band.exceptions.DataStorageException;
+import cz.muni.fi.bandmanagementservice.band.data.model.Band;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Optional;
 /**
  * @author Tomáš MAREK
  */
+@Component
 public class BandRepositoryImpl implements BandRepository {
     private Long nextId = 1L;
     private final Map<Long, Band> bands = new HashMap<>();

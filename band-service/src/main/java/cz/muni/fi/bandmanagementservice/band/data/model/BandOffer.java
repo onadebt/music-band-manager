@@ -1,6 +1,6 @@
-package cz.muni.fi.bandmanagementservice.data.model;
+package cz.muni.fi.bandmanagementservice.band.data.model;
 
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
+import cz.muni.fi.bandmanagementservice.band.exceptions.InvalidOperationException;
 
 import javax.validation.constraints.NotNull;
 

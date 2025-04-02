@@ -1,7 +1,6 @@
-package cz.muni.fi.bandmanagementservice.data.repository;
+package cz.muni.fi.bandmanagementservice.band.data.repository;
 
-import cz.muni.fi.bandmanagementservice.data.model.Band;
-import cz.muni.fi.bandmanagementservice.data.model.BandOffer;
+import cz.muni.fi.bandmanagementservice.band.data.model.BandOffer;
 
 import java.util.Collection;
 import java.util.Optional;

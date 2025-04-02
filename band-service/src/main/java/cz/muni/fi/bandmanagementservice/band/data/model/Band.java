@@ -1,6 +1,4 @@
-package cz.muni.fi.bandmanagementservice.data.model;
-
-import io.swagger.v3.oas.models.security.SecurityScheme;
+package cz.muni.fi.bandmanagementservice.band.data.model;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;

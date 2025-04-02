@@ -1,6 +1,6 @@
-package cz.muni.fi.bandmanagementservice.mappers;
+package cz.muni.fi.bandmanagementservice.band.mappers;
 
-import cz.muni.fi.bandmanagementservice.data.model.BandOffer;
+import cz.muni.fi.bandmanagementservice.band.data.model.BandOffer;
 import cz.muni.fi.bandmanagementservice.band.model.BandOfferDto;
 
 /**
