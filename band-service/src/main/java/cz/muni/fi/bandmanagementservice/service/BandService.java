@@ -1,7 +1,7 @@
 package cz.muni.fi.bandmanagementservice.service;
 
-import cz.muni.fi.bandmanagementservice.data.exceptions.InvalidBandException;
-import cz.muni.fi.bandmanagementservice.data.exceptions.InvalidOperationException;
+import cz.muni.fi.bandmanagementservice.exceptions.InvalidBandException;
+import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.data.model.Band;
 import cz.muni.fi.bandmanagementservice.data.repository.BandRepository;
 import org.springframework.beans.factory.annotation.Autowired;

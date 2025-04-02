@@ -1,6 +1,6 @@
 package cz.muni.fi.bandmanagementservice.service;
 
-import cz.muni.fi.bandmanagementservice.data.exceptions.InvalidOfferException;
+import cz.muni.fi.bandmanagementservice.exceptions.InvalidOfferException;
 import cz.muni.fi.bandmanagementservice.data.model.Band;
 import cz.muni.fi.bandmanagementservice.data.model.BandOffer;
 import cz.muni.fi.bandmanagementservice.data.repository.BandOfferRepository;

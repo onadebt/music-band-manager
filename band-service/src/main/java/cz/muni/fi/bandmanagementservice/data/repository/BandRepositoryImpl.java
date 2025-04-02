@@ -1,6 +1,6 @@
 package cz.muni.fi.bandmanagementservice.data.repository;
 
-import cz.muni.fi.bandmanagementservice.data.exceptions.DataStorageException;
+import cz.muni.fi.bandmanagementservice.exceptions.DataStorageException;
 import cz.muni.fi.bandmanagementservice.data.model.Band;
 
 import java.util.Collection;
