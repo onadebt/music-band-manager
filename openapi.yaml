@@ -55,6 +55,10 @@ paths:
                 $ref: "#/components/schemas/BandDto"
         "400":
           description: cannot create given band
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
     get:
       tags:
         - BandService
@@ -71,6 +75,10 @@ paths:
                 $ref: "#/components/schemas/BandDto"
         "404":
           description: given band not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
   /api/bands/offers:
     post:
       tags:
@@ -90,6 +98,10 @@ paths:
                 $ref: "#/components/schemas/BandOfferDto"
         "400":
           description: cannot create given offer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
     get:
       tags:
         - BandService
@@ -106,4 +118,8 @@ paths:
                 $ref: "#/components/schemas/BandOfferDto"
         "404":
           description: Given band offer cannot be found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
 
