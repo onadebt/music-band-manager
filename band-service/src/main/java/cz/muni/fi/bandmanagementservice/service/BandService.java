@@ -1,6 +1,7 @@
 package cz.muni.fi.bandmanagementservice.service;
 
 import cz.muni.fi.bandmanagementservice.data.exceptions.InvalidBandException;
+import cz.muni.fi.bandmanagementservice.data.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.data.model.Band;
 import cz.muni.fi.bandmanagementservice.data.repository.BandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,10 @@ public class BandService {
     public void updateBand(Band band){
         if (bandRepository.getBandById(band.getId()).isEmpty()){
             throw new InvalidBandException("Band with id %d does not exists".formatted(band.getId()));
+        }
+        Band originalBand = bandRepository.getBandById(band.getId()).get();
+        if (originalBand.getMembers() != band.getMembers()){
+            throw new InvalidOperationException("Band members can only be managed through BandOffers");
         }
         bandRepository.updateBand(band);
     }
