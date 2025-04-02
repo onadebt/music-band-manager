@@ -1,9 +1,9 @@
 package cz.muni.fi.bandmanagementservice.service;
 
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidBandException;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.data.model.Band;
 import cz.muni.fi.bandmanagementservice.data.repository.BandRepository;
+import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class BandService {
     public Band getBand(Long id){
         Optional<Band> maybeBand = bandRepository.getBandById(id);
         if (maybeBand.isEmpty()){
-            throw new InvalidBandException("Band with id %d does not exist".formatted(id));
+            throw new ResourceNotFoundException("Band with id %d does not exist".formatted(id));
         }
         return maybeBand.get();
     }
@@ -42,7 +42,7 @@ public class BandService {
 
     public void updateBand(Band band){
         if (bandRepository.getBandById(band.getId()).isEmpty()){
-            throw new InvalidBandException("Band with id %d does not exists".formatted(band.getId()));
+            throw new ResourceNotFoundException("Band with id %d does not exists".formatted(band.getId()));
         }
         Band originalBand = bandRepository.getBandById(band.getId()).get();
         if (originalBand.getMembers() != band.getMembers()){

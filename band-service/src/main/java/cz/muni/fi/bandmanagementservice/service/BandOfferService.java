@@ -1,10 +1,10 @@
 package cz.muni.fi.bandmanagementservice.service;
 
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidOfferException;
 import cz.muni.fi.bandmanagementservice.data.model.Band;
 import cz.muni.fi.bandmanagementservice.data.model.BandOffer;
 import cz.muni.fi.bandmanagementservice.data.repository.BandOfferRepository;
 import cz.muni.fi.bandmanagementservice.data.repository.BandRepository;
+import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,14 +28,14 @@ public class BandOfferService {
     public BandOffer getBandOffer(Long bandOfferId) {
         Optional<BandOffer> maybeBandOffer = bandOfferRepository.getBandOfferById(bandOfferId);
         if (maybeBandOffer.isEmpty()) {
-            throw new InvalidOfferException("BandOffer with id %s does not exist!".formatted(bandOfferId));
+            throw new ResourceNotFoundException("BandOffer with id %s does not exist!".formatted(bandOfferId));
         }
         return maybeBandOffer.get();
     }
 
     public BandOffer createBandOffer(Long bandId, Long invitedMusicianId, Long offeringManagerId) {
         if (bandRepository.getBandById(bandId).isEmpty()) {
-            throw new InvalidOfferException("Band with id %s does not exist!".formatted(bandId));
+            throw new ResourceNotFoundException("BandOffer with id %s does not exist!".formatted(bandId));
         }
         // TODO verify manager and musician
         BandOffer newOffer = new BandOffer(null, bandId, invitedMusicianId, offeringManagerId);
@@ -55,7 +55,7 @@ public class BandOfferService {
 
         Optional<Band> newBand = bandRepository.getBandById(bandOffer.getBandId());
         if (newBand.isEmpty()){
-            throw new InvalidOfferException("Band with id %d not found".formatted(bandOffer.getBandId()));
+            throw new ResourceNotFoundException("BandOffer with id %d not found".formatted(bandOffer.getBandId()));
         }
         newBand.get().addMember(bandOffer.getInvitedMusicianId());
         bandRepository.updateBand(newBand.get());
