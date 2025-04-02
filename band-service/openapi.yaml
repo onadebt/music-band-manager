@@ -6,12 +6,7 @@ info:
 servers:
   - url: "http://localhost:8080"
 tags:
-  - name: ApiGateway
   - name: BandService
-  - name: MusicCatalog
-  - name: ServiceRegistry
-  - name: TourService
-  - name: UserService
 components:
   schemas:
     BandDto:
@@ -102,7 +97,7 @@ paths:
 
     post:
       tags:
-        - bandService
+        - BandService
       summary: Updates basic band info - managerId, name, logo, musicalStyle
       operationId: updateBand
       parameters:
