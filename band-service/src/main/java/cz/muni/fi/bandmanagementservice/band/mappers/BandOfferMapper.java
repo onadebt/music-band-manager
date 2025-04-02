@@ -1,13 +1,17 @@
 package cz.muni.fi.bandmanagementservice.band.mappers;
 
 import cz.muni.fi.bandmanagementservice.band.data.model.BandOffer;
+import cz.muni.fi.bandmanagementservice.band.data.model.BandOfferStatus;
 import cz.muni.fi.bandmanagementservice.band.model.BandOfferDto;
 
 /**
  * @author Tomáš MAREK
  */public class BandOfferMapper {
-     public static BandOffer mapFromDto(BandOfferDto dto){
-         return new BandOffer(dto.getId(), dto.getBandId(), dto.getInvitedMusicianId(), dto.getOfferingManagerId());
+     public static BandOffer mapFromDto(BandOfferDto dto) {
+         BandOffer offer = new BandOffer(dto.getId(), dto.getBandId(), dto.getInvitedMusicianId(), dto.getOfferingManagerId());
+         assert dto.getStatus() != null;
+         offer.setStatus(mapStatusFromDto(dto.getStatus()));
+         return offer;
      }
 
 
@@ -17,6 +21,23 @@ import cz.muni.fi.bandmanagementservice.band.model.BandOfferDto;
          dto.setBandId(bandOffer.getBandId());
          dto.setInvitedMusicianId(bandOffer.getInvitedMusicianId());
          dto.setOfferingManagerId(bandOffer.getOfferingManagerId());
+         dto.setStatus(mapStatusToDto(bandOffer.getStatus()));
          return dto;
+    }
+
+    private static BandOfferDto.StatusEnum mapStatusToDto(BandOfferStatus status){
+        return switch (status) {
+            case BandOfferStatus.PENDING -> BandOfferDto.StatusEnum.PENDING;
+            case BandOfferStatus.ACCEPTED -> BandOfferDto.StatusEnum.ACCEPTED;
+            case BandOfferStatus.REJECTED -> BandOfferDto.StatusEnum.REJECTED;
+        };
+    }
+
+    private static BandOfferStatus mapStatusFromDto(BandOfferDto.StatusEnum status){
+         return switch (status) {
+             case BandOfferDto.StatusEnum.PENDING -> BandOfferStatus.PENDING;
+             case BandOfferDto.StatusEnum.ACCEPTED -> BandOfferStatus.ACCEPTED;
+             case BandOfferDto.StatusEnum.REJECTED -> BandOfferStatus.REJECTED;
+         };
     }
 }

@@ -36,7 +36,7 @@ public class BandOfferService {
 
     public BandOffer createBandOffer(Long bandId, Long invitedMusicianId, Long offeringManagerId) {
         if (bandRepository.getBandById(bandId).isEmpty()) {
-            throw new InvalidOperationException("BandOffer with id %s does not exist!".formatted(bandId));
+            throw new InvalidOperationException("Band with id %s does not exist!".formatted(bandId));
         }
         // TODO verify manager and musician
         BandOffer newOffer = new BandOffer(null, bandId, invitedMusicianId, offeringManagerId);

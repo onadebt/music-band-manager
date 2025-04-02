@@ -33,8 +33,8 @@ public class BandOfferRepositoryImpl implements BandOfferRepository {
 
     @Override
     public void createBandOffer(BandOffer bandOffer) {
-        bandOffer.setBandId(nextId++);
-        bandOffers.put(bandOffer.getBandId(), bandOffer);
+        bandOffer.setId(nextId++);
+        bandOffers.put(bandOffer.getId(), bandOffer);
     }
 
     @Override

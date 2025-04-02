@@ -74,4 +74,12 @@ public class BandOffer {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public BandOfferStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BandOfferStatus status) {
+        this.status = status;
+    }
 }
