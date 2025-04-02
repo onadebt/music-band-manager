@@ -107,6 +107,11 @@ paths:
       operationId: updateBand
       parameters:
         - { name: id, in: query, required: true, schema: { type: integer, format: int64 }, description: "Id of updated band" }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BandInfoUpdateRequest"
       responses:
         "201":
           description: OK

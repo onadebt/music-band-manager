@@ -1,5 +1,6 @@
 package cz.muni.fi.bandmanagementservice.service;
 
+import cz.muni.fi.bandmanagementservice.data.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.data.model.Band;
 import cz.muni.fi.bandmanagementservice.data.repository.BandRepository;
@@ -40,15 +41,19 @@ public class BandService {
         return bandRepository.getAllBands().stream().toList();
     }
 
-    public void updateBand(Band band){
-        if (bandRepository.getBandById(band.getId()).isEmpty()){
-            throw new ResourceNotFoundException("Band with id %d does not exists".formatted(band.getId()));
+    public Band updateBand(BandInfoUpdate bandInfoUpdate){
+        Band updatedBand = new Band(bandInfoUpdate.id(), bandInfoUpdate
+                .name(), bandInfoUpdate.musicalStyle(), bandInfoUpdate.managerId(),
+                bandInfoUpdate.logoUrl());
+        if (bandRepository.getBandById(updatedBand.getId()).isEmpty()){
+            throw new ResourceNotFoundException("Band with id %d does not exists".formatted(updatedBand.getId()));
         }
-        Band originalBand = bandRepository.getBandById(band.getId()).get();
-        if (originalBand.getMembers() != band.getMembers()){
+        Band originalBand = bandRepository.getBandById(updatedBand.getId()).get();
+        if (originalBand.getMembers() != updatedBand.getMembers()){
             throw new InvalidOperationException("Band members can only be managed through BandOffers");
         }
-        bandRepository.updateBand(band);
+        bandRepository.updateBand(updatedBand);
+        return bandRepository.getBandById(updatedBand.getId()).get();
     }
 
 

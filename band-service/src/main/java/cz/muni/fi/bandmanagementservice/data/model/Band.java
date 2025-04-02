@@ -33,6 +33,11 @@ public class Band {
         this.managerId = managerId;
     }
 
+    public Band(Long id, String name, String musicalStyle, Long managerId, String logoUrl) {
+        this(id, name, musicalStyle, managerId);
+        this.logoUrl = logoUrl;
+    }
+
     public Collection<Long> getMembers() {
         return members;
     }
