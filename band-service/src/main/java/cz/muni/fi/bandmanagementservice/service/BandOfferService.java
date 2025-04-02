@@ -4,6 +4,7 @@ import cz.muni.fi.bandmanagementservice.data.model.Band;
 import cz.muni.fi.bandmanagementservice.data.model.BandOffer;
 import cz.muni.fi.bandmanagementservice.data.repository.BandOfferRepository;
 import cz.muni.fi.bandmanagementservice.data.repository.BandRepository;
+import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class BandOfferService {
 
     public BandOffer createBandOffer(Long bandId, Long invitedMusicianId, Long offeringManagerId) {
         if (bandRepository.getBandById(bandId).isEmpty()) {
-            throw new ResourceNotFoundException("BandOffer with id %s does not exist!".formatted(bandId));
+            throw new InvalidOperationException("BandOffer with id %s does not exist!".formatted(bandId));
         }
         // TODO verify manager and musician
         BandOffer newOffer = new BandOffer(null, bandId, invitedMusicianId, offeringManagerId);
