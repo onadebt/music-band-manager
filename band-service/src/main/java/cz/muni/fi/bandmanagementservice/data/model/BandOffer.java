@@ -1,5 +1,7 @@
 package cz.muni.fi.bandmanagementservice.data.model;
 
+import cz.muni.fi.bandmanagementservice.data.exceptions.InvalidOperationException;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -28,10 +30,16 @@ public class BandOffer {
     }
 
     public void acceptOffer(){
+        if (status != BandOfferStatus.PENDING){
+            throw new InvalidOperationException("The offer has already been accepted or rejected");
+        }
         status = BandOfferStatus.ACCEPTED;
     }
 
     public void rejectOffer(){
+        if (status != BandOfferStatus.PENDING){
+            throw new InvalidOperationException("The offer has already been accepted or rejected");
+        }
         status = BandOfferStatus.REJECTED;
     }
 
