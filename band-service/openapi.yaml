@@ -29,6 +29,7 @@ components:
       title: Request for change of band information
       description: Object containing newly updated band info, except members which are updated through dedicated api
       properties:
+        id: {type: integer, format: int64, description: band id}
         name: {type: string, description: name of the band, example: Rammstein }
         musicalStyle: { type: string, description: musical style played by the band, example: industrial metal }
         logo: { type: string, description: url of band logo, nullable: true }
