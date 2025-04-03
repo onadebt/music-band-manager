@@ -57,7 +57,7 @@ public class BandOfferService {
 
         Optional<Band> newBand = bandRepository.getBandById(bandOffer.getBandId());
         if (newBand.isEmpty()){
-            throw new ResourceNotFoundException("BandOffer with id %d not found".formatted(bandOffer.getBandId()));
+            throw new IllegalStateException("Band with id %d not found".formatted(bandOffer.getBandId()));
         }
         newBand.get().addMember(bandOffer.getInvitedMusicianId());
         bandRepository.updateBand(newBand.get());

@@ -25,8 +25,7 @@ public class BandFacade {
     }
 
     public BandDto createBand(String name, String musicalStyle, Long managerId) {
-        Band newBand = bandService.createBand(name, musicalStyle, managerId);
-        return BandMapper.mapToDto(newBand);
+        return BandMapper.mapToDto(bandService.createBand(name, musicalStyle, managerId));
     }
 
     public BandDto getBand(Long id) {

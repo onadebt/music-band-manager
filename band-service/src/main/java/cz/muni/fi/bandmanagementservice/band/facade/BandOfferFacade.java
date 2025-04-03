@@ -21,9 +21,7 @@ public class BandOfferFacade {
         this.bandOfferService = bandOfferService;
     }
 
-    public BandOfferDto acceptBandOffer(Long offerId) {
-        return BandOfferMapper.mapToDto(bandOfferService.acceptOffer(offerId));
-    }
+
 
     public BandOfferDto getBandOffer(Long offerId) {
         return BandOfferMapper.mapToDto(bandOfferService.getBandOffer(offerId));
@@ -31,6 +29,10 @@ public class BandOfferFacade {
 
     public BandOfferDto postBandOffer(Long bandId, Long invitedMusicianId, Long offeringManagerId) {
         return BandOfferMapper.mapToDto(bandOfferService.createBandOffer(bandId, invitedMusicianId, offeringManagerId));
+    }
+
+    public BandOfferDto acceptBandOffer(Long offerId) {
+        return BandOfferMapper.mapToDto(bandOfferService.acceptOffer(offerId));
     }
 
     public BandOfferDto rejectBandOffer(Long offerId) {

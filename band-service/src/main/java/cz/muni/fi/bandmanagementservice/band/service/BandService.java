@@ -49,9 +49,6 @@ public class BandService {
         }
         Band originalBand = bandRepository.getBandById(updatedBand.getId()).get();
         updatedBand.setMembers(originalBand.getMembers());
-        if (originalBand.getMembers() != updatedBand.getMembers()){
-            throw new InvalidOperationException("Band members can only be managed through BandOffers");
-        }
         return bandRepository.updateBand(updatedBand);
     }
 

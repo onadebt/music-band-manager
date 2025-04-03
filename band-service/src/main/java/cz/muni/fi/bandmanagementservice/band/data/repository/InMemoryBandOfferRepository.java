@@ -45,18 +45,18 @@ public class InMemoryBandOfferRepository implements BandOfferRepository {
     @Override
     public BandOffer updateBandOffer(BandOffer bandOffer) {
         verifyBandOfferExist(bandOffer);
-        bandOffers.put(bandOffer.getBandId(), bandOffer);
+        bandOffers.put(bandOffer.getId(), bandOffer);
         return bandOffer;
     }
 
     @Override
     public void deleteBandOffer(BandOffer bandOffer) {
         verifyBandOfferExist(bandOffer);
-        bandOffers.remove(bandOffer.getBandId());
+        bandOffers.remove(bandOffer.getId());
     }
 
     private void verifyBandOfferExist(BandOffer bandOffer) {
-        if (!bandOffers.containsKey(bandOffer.getBandId())) {
+        if (!bandOffers.containsKey(bandOffer.getId())) {
             throw new DataStorageException("Updated band offer with id %d not found!".formatted(bandOffer.getId()));
         }
     }
