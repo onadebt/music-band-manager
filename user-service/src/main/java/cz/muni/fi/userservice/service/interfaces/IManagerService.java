@@ -1,6 +1,5 @@
 package cz.muni.fi.userservice.service.interfaces;
 
-import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.model.Manager;
 
 import java.util.List;
@@ -17,6 +16,6 @@ public interface IManagerService {
 
     List<Manager> findByManagedBandIds(Set<Long> bandIds);
 
-    Manager updateManagerByBandIds(Long managerId, Set<Long> bandIds);
+    Manager updateManagerBandIds(Long managerId, Set<Long> bandIds);
 
 }

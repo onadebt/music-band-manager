@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,5 +55,26 @@ public class ManagerFacade implements IManagerFacade {
             throw new IllegalArgumentException("Manager with ID " + id + " does not exist");
         }
         managerService.deleteById(id);
+    }
+
+
+    public List<ManagerDTO> findByBandIds(Set<Long> bandIds) {
+        if (bandIds == null) {
+            throw new IllegalArgumentException("Band IDs cannot be null or empty");
+        }
+        return managerService.findByManagedBandIds(bandIds).stream()
+                .map(managerMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public ManagerDTO updateBandIds(Long managerId, Set<Long> bandIds) {
+        if (managerId == null) {
+            throw new IllegalArgumentException("Manager ID cannot be null");
+        }
+        if (bandIds == null) {
+            throw new IllegalArgumentException("Band IDs cannot be null");
+        }
+        Manager manager = managerService.updateManagerBandIds(managerId, bandIds);
+        return managerMapper.toDTO(manager);
     }
 }

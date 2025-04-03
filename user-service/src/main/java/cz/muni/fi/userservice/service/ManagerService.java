@@ -40,7 +40,7 @@ public class ManagerService implements IManagerService {
     }
 
     @Override
-    public Manager updateManagerByBandIds(Long managerId, Set<Long> bandIds) {
+    public Manager updateManagerBandIds(Long managerId, Set<Long> bandIds) {
         Manager manager = managerRepository.findById(managerId).orElse(null);
         if (manager == null) {
             throw new IllegalArgumentException("Manager with ID " + managerId + " does not exist");
