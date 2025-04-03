@@ -1,5 +1,6 @@
 package cz.muni.fi.userservice;
 
+import cz.muni.fi.userservice.dto.ArtistDTO;
 import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.model.Manager;
 import cz.muni.fi.userservice.model.Role;
@@ -12,6 +13,8 @@ import java.util.Set;
 public class TestDataFactory {
     public static final Artist TEST_ARTIST_1 = setUpTestArtist1();
     public static final Artist TEST_ARTIST_2 = setUpTestArtist2();
+    public static final ArtistDTO TEST_ARTIST_1_DTO = setUpTestArtist1Dto();
+    public static final ArtistDTO TEST_ARTIST_2_DTO = setUpTestArtist2Dto();
     public static final Manager TEST_MANAGER_1 = setUpTestManager1();
     public static final Manager TEST_MANAGER_2 = setUpTestManager2();
 
@@ -56,6 +59,22 @@ public class TestDataFactory {
         return testArtist;
     }
 
+    private static ArtistDTO setUpTestArtist1Dto() {
+        ArtistDTO artistDTO = new ArtistDTO();
+        artistDTO.setId(1L);
+        artistDTO.setUsername("xlindemann");
+        artistDTO.setEmail("lindemann_till@email.com");
+        artistDTO.setFirstName("Till");
+        artistDTO.setLastName("Lindemann");
+        artistDTO.setRole(Role.ARTIST);
+        artistDTO.setPassword("Password in clean? Really guys?");
+        artistDTO.setStageName("Till Lindemann");
+        artistDTO.setBio("Born in 1963, Leipzig");
+        artistDTO.setSkills("Singer");
+        artistDTO.setBandIds(Set.of(1L, 2L, 3L));
+        return artistDTO;
+    }
+
     private static Artist setUpTestArtist2() {
         Artist testArtis = new Artist("Joakim Brodén", "Born in 1980, Falun", "Singer, Keyboard", Set.of(2L, 4L));
         testArtis.setId(2L);
@@ -66,5 +85,21 @@ public class TestDataFactory {
         testArtis.setRole(Role.ARTIST);
         testArtis.setPassword("Very strong password");
         return testArtis;
+    }
+
+    private static ArtistDTO setUpTestArtist2Dto() {
+        ArtistDTO artistDTO = new ArtistDTO();
+        artistDTO.setId(2L);
+        artistDTO.setUsername("brodenj");
+        artistDTO.setEmail("joakim_broden@example.com");
+        artistDTO.setFirstName("Joakim");
+        artistDTO.setLastName("Brodén");
+        artistDTO.setRole(Role.ARTIST);
+        artistDTO.setPassword("Very strong password");
+        artistDTO.setStageName("Joakim Brodén");
+        artistDTO.setBio("Born in 1980, Falun");
+        artistDTO.setSkills("Singer, Keyboard");
+        artistDTO.setBandIds(Set.of(2L, 4L));
+        return artistDTO;
     }
 }
