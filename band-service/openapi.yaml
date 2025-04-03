@@ -230,14 +230,14 @@ paths:
                 items:
                   $ref: "#/components/schemas/BandOfferDto"
 
-  /api/bands/offers/byManager:
+  /api/bands/offers/byBand:
     get:
       tags:
         - BandService
-      summary: Returns all band offers created by given manager
-      operationId: getBandOffersByManager
+      summary: Returns all band offers for by given band
+      operationId: getBandOffersByBand
       parameters:
-        - {name: id, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of offering manager"}
+        - {name: id, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of offering band"}
       responses:
         "200":
           description: OK

@@ -6,6 +6,9 @@ import cz.muni.fi.bandmanagementservice.band.model.BandOfferDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author Tomáš MAREK
  */
@@ -33,4 +36,22 @@ public class BandOfferFacade {
     public BandOfferDto rejectBandOffer(Long offerId) {
         return BandOfferMapper.mapToDto(bandOfferService.rejectOffer(offerId));
     }
+
+    public void revokeOffer(Long offerId){
+        bandOfferService.revokeOffer(offerId);
+    }
+
+    public List<BandOfferDto> getAllBandOffers(){
+        return bandOfferService.getAllBandOffers().stream().map(BandOfferMapper::mapToDto).collect(Collectors.toList());
+    }
+
+    public List<BandOfferDto> getBandOffersByBandId(Long bandId){
+        return bandOfferService.getBandOffersByBandId(bandId).stream().map(BandOfferMapper::mapToDto).collect(Collectors.toList());
+    }
+
+    public List<BandOfferDto> getBandOffersByInvitedMusicianId(Long invitedMusicianId){
+        return bandOfferService.getBandOfferByInvitedMusicianId(invitedMusicianId).stream().map(BandOfferMapper::mapToDto).collect(Collectors.toList());
+    }
+
+
 }

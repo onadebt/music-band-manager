@@ -96,4 +96,32 @@ public ResponseEntity<BandOfferDto> acceptBandOffer(Long offerId) {
     public ResponseEntity<List<BandDto>> getAllBands() {
         return new ResponseEntity<>(bandFacade.getAllBands(), HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<List<BandOfferDto>> getAllBandOffers() {
+        return new ResponseEntity<>(bandOfferFacade.getAllBandOffers(), HttpStatus.OK);
+    }
+
+
+    @Override
+    public ResponseEntity<List<BandOfferDto>> getBandOffersByMusician(Long id) {
+        return new ResponseEntity<>(bandOfferFacade.getBandOffersByInvitedMusicianId(id), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> revokeBandOffer(Long offerId) {
+        try {
+            bandOfferFacade.revokeOffer(offerId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (InvalidOperationException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<BandOfferDto>> getBandOffersByBand(Long id) {
+        return new ResponseEntity<>(bandOfferFacade.getBandOffersByBandId(id), HttpStatus.OK);
+    }
 }
