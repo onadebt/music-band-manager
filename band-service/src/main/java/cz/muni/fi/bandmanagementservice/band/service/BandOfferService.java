@@ -51,7 +51,7 @@ public class BandOfferService {
     public BandOffer acceptOffer(Long bandOfferId){
         BandOffer bandOffer = getBandOffer(bandOfferId);
         bandOffer.acceptOffer();
-        bandOfferRepository.updateBandOffer(bandOffer);
+        BandOffer accepted = bandOfferRepository.updateBandOffer(bandOffer);
 
         Optional<Band> newBand = bandRepository.getBandById(bandOffer.getBandId());
         if (newBand.isEmpty()){
@@ -59,12 +59,13 @@ public class BandOfferService {
         }
         newBand.get().addMember(bandOffer.getInvitedMusicianId());
         bandRepository.updateBand(newBand.get());
+        return accepted;
     }
 
     public BandOffer rejectOffer(Long bandOfferId){
         BandOffer bandOffer = getBandOffer(bandOfferId);
         bandOffer.rejectOffer();
-        bandOfferRepository.updateBandOffer(bandOffer);
+        return bandOfferRepository.updateBandOffer(bandOffer);
     }
 
     public void revokeOffer(Long bandOfferId){
