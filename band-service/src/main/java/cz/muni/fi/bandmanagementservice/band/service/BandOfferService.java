@@ -36,9 +36,15 @@ public class BandOfferService {
     }
 
     public BandOffer createBandOffer(Long bandId, Long invitedMusicianId, Long offeringManagerId) {
-        if (bandRepository.getBandById(bandId).isEmpty()) {
-            throw new InvalidOperationException("Band with id %s does not exist!".formatted(bandId));
+        Optional<Band> maybeOfferedBand = bandRepository.getBandById(bandId);
+        if (maybeOfferedBand.isEmpty()) {
+            throw new InvalidOperationException("Band with id %s does not exist".formatted(bandId));
         }
+        Band offeredBand = maybeOfferedBand.get();
+        if (!offeredBand.getManagerId().equals(offeringManagerId)){
+            throw new InvalidOperationException("Offered can be created only by manager of the band");
+        }
+
         // TODO verify manager and musician
         BandOffer newOffer = new BandOffer(null, bandId, invitedMusicianId, offeringManagerId);
         return bandOfferRepository.createBandOffer(newOffer);
