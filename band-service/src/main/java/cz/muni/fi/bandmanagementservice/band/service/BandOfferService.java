@@ -2,6 +2,7 @@ package cz.muni.fi.bandmanagementservice.band.service;
 
 import cz.muni.fi.bandmanagementservice.band.data.model.Band;
 import cz.muni.fi.bandmanagementservice.band.data.model.BandOffer;
+import cz.muni.fi.bandmanagementservice.band.data.model.BandOfferStatus;
 import cz.muni.fi.bandmanagementservice.band.data.repository.BandOfferRepository;
 import cz.muni.fi.bandmanagementservice.band.data.repository.BandRepository;
 import cz.muni.fi.bandmanagementservice.band.exceptions.InvalidOperationException;
@@ -70,6 +71,9 @@ public class BandOfferService {
 
     public void revokeOffer(Long bandOfferId){
         BandOffer bandOffer = getBandOffer(bandOfferId);
+        if (bandOffer.getStatus() != BandOfferStatus.PENDING){
+            throw new InvalidOperationException("BandOffer was already accepted or rejected and cannot be revoked");
+        }
         bandOfferRepository.deleteBandOffer(bandOffer);
     }
 
