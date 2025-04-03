@@ -42,9 +42,14 @@ public class BandOfferService {
         }
         Band offeredBand = maybeOfferedBand.get();
         if (!offeredBand.getManagerId().equals(offeringManagerId)){
-            throw new InvalidOperationException("Offered can be created only by manager of the band");
+            throw new InvalidOperationException("Offer can be created only by manager of the band");
         }
-
+        if (offeredBand.getMembers().contains(invitedMusicianId)) {
+            throw new InvalidOperationException("Musician is already member of the band");
+        }
+        if (bandOfferRepository.pendingBandOfferExists(offeringManagerId, bandId)) {
+            throw new InvalidOperationException("There is already a pending band offer for given musician and band");
+        }
         // TODO verify manager and musician
         BandOffer newOffer = new BandOffer(null, bandId, invitedMusicianId, offeringManagerId);
         return bandOfferRepository.createBandOffer(newOffer);

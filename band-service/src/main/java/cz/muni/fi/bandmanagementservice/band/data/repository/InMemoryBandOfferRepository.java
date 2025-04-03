@@ -1,6 +1,7 @@
 package cz.muni.fi.bandmanagementservice.band.data.repository;
 
 import cz.muni.fi.bandmanagementservice.band.data.model.Band;
+import cz.muni.fi.bandmanagementservice.band.data.model.BandOfferStatus;
 import cz.muni.fi.bandmanagementservice.band.exceptions.DataStorageException;
 import cz.muni.fi.bandmanagementservice.band.data.model.BandOffer;
 import org.springframework.stereotype.Component;
@@ -53,6 +54,14 @@ public class InMemoryBandOfferRepository implements BandOfferRepository {
     public void deleteBandOffer(BandOffer bandOffer) {
         verifyBandOfferExist(bandOffer);
         bandOffers.remove(bandOffer.getId());
+    }
+
+    @Override
+    public boolean pendingBandOfferExists(Long invitedMusicianId, Long bandId) {
+        return getAllBandOffers().stream().anyMatch(
+                o -> o.getBandId().equals(bandId)
+                        && o.getInvitedMusicianId().equals(invitedMusicianId)
+                        && o.getStatus().equals(BandOfferStatus.PENDING));
     }
 
     private void verifyBandOfferExist(BandOffer bandOffer) {

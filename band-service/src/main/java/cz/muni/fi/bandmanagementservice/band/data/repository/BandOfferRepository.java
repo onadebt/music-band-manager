@@ -18,4 +18,6 @@ public interface BandOfferRepository {
     public BandOffer updateBandOffer(BandOffer bandOffer);
 
     public void deleteBandOffer(BandOffer bandOffer);
+
+    public boolean pendingBandOfferExists(Long invitedMusicianId, Long bandId);
 }
