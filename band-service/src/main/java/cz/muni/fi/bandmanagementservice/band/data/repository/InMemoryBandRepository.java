@@ -32,6 +32,9 @@ public class InMemoryBandRepository implements BandRepository {
 
     @Override
     public void createBand(Band band) {
+        if (band.getId() != null) {
+            throw new DataStorageException("Cannot create band which already has id");
+        }
         band.setId(nextId++);
         bands.put(band.getId(), band);
     }

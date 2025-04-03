@@ -33,6 +33,9 @@ public class InMemoryBandOfferRepository implements BandOfferRepository {
 
     @Override
     public void createBandOffer(BandOffer bandOffer) {
+        if (bandOffer.getId() != null) {
+            throw new DataStorageException("Cannot create bandOffer which already has id");
+        }
         bandOffer.setId(nextId++);
         bandOffers.put(bandOffer.getId(), bandOffer);
     }
