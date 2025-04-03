@@ -14,9 +14,9 @@ public interface BandRepository {
 
     public Optional<Band> getBandById(Long id);
 
-    public void createBand(Band band);
+    public Band createBand(Band band);
 
-    public void updateBand(Band band);
+    public Band updateBand(Band band);
 
     public void deleteBand(Band band);
 }

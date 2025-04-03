@@ -25,8 +25,7 @@ public class BandService {
 
     public Band createBand(String name, String musicalStyle, Long managerId){
         Band newBand = new Band(null, name, musicalStyle, managerId);
-        bandRepository.createBand(newBand);
-        return newBand;
+        return bandRepository.createBand(newBand);
     }
 
     public Band getBand(Long id){
@@ -52,8 +51,7 @@ public class BandService {
         if (originalBand.getMembers() != updatedBand.getMembers()){
             throw new InvalidOperationException("Band members can only be managed through BandOffers");
         }
-        bandRepository.updateBand(updatedBand);
-        return bandRepository.getBandById(updatedBand.getId()).get();
+        return bandRepository.updateBand(updatedBand);
     }
 
 

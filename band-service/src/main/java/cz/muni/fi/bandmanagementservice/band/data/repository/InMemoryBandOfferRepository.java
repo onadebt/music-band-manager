@@ -1,5 +1,6 @@
 package cz.muni.fi.bandmanagementservice.band.data.repository;
 
+import cz.muni.fi.bandmanagementservice.band.data.model.Band;
 import cz.muni.fi.bandmanagementservice.band.exceptions.DataStorageException;
 import cz.muni.fi.bandmanagementservice.band.data.model.BandOffer;
 import org.springframework.stereotype.Component;
@@ -32,18 +33,20 @@ public class InMemoryBandOfferRepository implements BandOfferRepository {
     }
 
     @Override
-    public void createBandOffer(BandOffer bandOffer) {
+    public BandOffer createBandOffer(BandOffer bandOffer) {
         if (bandOffer.getId() != null) {
             throw new DataStorageException("Cannot create bandOffer which already has id");
         }
         bandOffer.setId(nextId++);
         bandOffers.put(bandOffer.getId(), bandOffer);
+        return bandOffer;
     }
 
     @Override
-    public void updateBandOffer(BandOffer bandOffer) {
+    public BandOffer updateBandOffer(BandOffer bandOffer) {
         verifyBandOfferExist(bandOffer);
         bandOffers.put(bandOffer.getBandId(), bandOffer);
+        return bandOffer;
     }
 
     @Override

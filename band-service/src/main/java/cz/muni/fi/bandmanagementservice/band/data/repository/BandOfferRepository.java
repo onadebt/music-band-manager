@@ -13,9 +13,9 @@ public interface BandOfferRepository {
 
     public Optional<BandOffer> getBandOfferById(Long id);
 
-    public void createBandOffer(BandOffer bandOffer);
+    public BandOffer createBandOffer(BandOffer bandOffer);
 
-    public void updateBandOffer(BandOffer bandOffer);
+    public BandOffer updateBandOffer(BandOffer bandOffer);
 
     public void deleteBandOffer(BandOffer bandOffer);
 }

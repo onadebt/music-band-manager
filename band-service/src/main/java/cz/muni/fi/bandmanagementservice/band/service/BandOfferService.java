@@ -40,8 +40,7 @@ public class BandOfferService {
         }
         // TODO verify manager and musician
         BandOffer newOffer = new BandOffer(null, bandId, invitedMusicianId, offeringManagerId);
-        bandOfferRepository.createBandOffer(newOffer);
-        return newOffer;
+        return bandOfferRepository.createBandOffer(newOffer);
     }
 
     public void revokeBandOffer(Long bandOfferId) {
