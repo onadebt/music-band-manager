@@ -6,12 +6,10 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <modules>
-        <module>service-registry</module>
         <module>user-service</module>
         <module>music-catalog-service</module>
         <module>band-service</module>
         <module>tour-service</module>
-        <module>api-gateway</module>
     </modules>
     <dependencyManagement>
         <dependencies>
