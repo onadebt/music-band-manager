@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/artists")
@@ -42,19 +43,13 @@ public class ArtistController {
         return ResponseEntity.ok(artistFacade.findByUsername(username));
     }
 
+    @PostMapping("/bands/{artistId}")
+    public ResponseEntity<ArtistDTO> updateBands(@PathVariable Long artistId, @RequestBody Set<Long> bandIds) {
+        return ResponseEntity.ok(artistFacade.updateBandIds(artistId, bandIds));
+    }
 
-//    @PostMapping("/bands/{artistId}")
-//    public ResponseEntity<ArtistDTO> updateBands(@PathVariable Long artistId, @RequestBody Set<Long> bandIds) {
-//        return ResponseEntity.ok(artistFacade.updateBandIds(artistId, bandIds));
-//    }
-//
-//    @GetMapping("/bands")
-//    public ResponseEntity<List<ArtistDTO>> getArtistsByBandIds(@RequestParam Set<Long> bandIds) {
-//        return ResponseEntity.ok(artistFacade.findByBandIds(bandIds));
-//    }
-
-//    @GetMapping("/band/{bandId}")
-//    public ResponseEntity<List<ArtistDTO>> getArtistsByBandId(@PathVariable Long bandId) {
-//        return ResponseEntity.ok(artistFacade.findByBandId(bandId));
-//    }
+    @GetMapping("/bands")
+    public ResponseEntity<List<ArtistDTO>> getArtistsByBandIds(@RequestParam Set<Long> bandIds) {
+        return ResponseEntity.ok(artistFacade.findByBandIds(bandIds));
+    }
 }
