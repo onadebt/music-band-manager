@@ -4,6 +4,7 @@ import cz.muni.fi.userservice.TestDataFactory;
 import cz.muni.fi.userservice.dto.ManagerDTO;
 import cz.muni.fi.userservice.mappers.ManagerMapper;
 import cz.muni.fi.userservice.service.ManagerService;
+import cz.muni.fi.userservice.service.interfaces.IManagerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,7 +31,7 @@ public class ManagerFacadeTest {
     private ManagerFacade managerFacade;
 
     @Mock
-    private ManagerService managerService;
+    private IManagerService managerService;
 
     @Mock
     private ManagerMapper managerMapper;

@@ -4,6 +4,7 @@ import cz.muni.fi.userservice.TestDataFactory;
 import cz.muni.fi.userservice.dto.ArtistDTO;
 import cz.muni.fi.userservice.mappers.ArtistMapper;
 import cz.muni.fi.userservice.service.ArtistService;
+import cz.muni.fi.userservice.service.interfaces.IArtistService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,7 +31,7 @@ public class ArtistFacadeTest {
     private ArtistFacade artistFacade;
 
     @Mock
-    private ArtistService artistService;
+    private IArtistService artistService;
 
     @Mock
     private ArtistMapper artistMapper;
