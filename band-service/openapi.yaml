@@ -61,14 +61,14 @@ paths:
         "400":
           description: Cannot create given band
 
-  /api/bands:
+  /api/bands/{id}:
     get:
       tags:
         - BandService
       summary: Returns searched band
       operationId: getBand
       parameters:
-        - {name: id, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of queried band"}
+        - {name: id, in: path, required: true, schema: {type: integer, format: int64}, description: "Id of queried band"}
       responses:
         "200":
           description: OK
@@ -85,7 +85,7 @@ paths:
       summary: Updates basic band info - managerId, name, logo, musicalStyle
       operationId: updateBand
       parameters:
-        - { name: id, in: query, required: true, schema: { type: integer, format: int64 }, description: "Id of updated band" }
+        - { name: id, in: path, required: true, schema: { type: integer, format: int64 }, description: "Id of updated band" }
       requestBody:
         content:
           application/json:
@@ -140,14 +140,14 @@ paths:
         "400":
           description: cannot create given offer
 
-  /api/bands/offers:
+  /api/bands/offers/{offerId}:
     get:
       tags:
         - BandService
       summary: Gets required offer
       operationId: getBandOffer
       parameters:
-        - {name: offerId, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of searched band offer"}
+        - {name: offerId, in: path, required: true, schema: {type: integer, format: int64}, description: "Id of searched band offer"}
       responses:
         "200":
           description: OK
@@ -158,14 +158,14 @@ paths:
         "404":
           description: Given band offer cannot be found
 
-  /api/bands/offers/accept:
+  /api/bands/offers/accept/{offerId}:
     post:
       tags:
         - BandService
       summary: Accepts offer
       operationId: acceptBandOffer
       parameters:
-        - { name: offerId, in: query, required: true, schema: { type: integer, format: int64 }, description: "Id of accepted band offer" }
+        - { name: offerId, in: path, required: true, schema: { type: integer, format: int64 }, description: "Id of accepted band offer" }
       responses:
         "201":
           description: OK
@@ -178,14 +178,14 @@ paths:
         "400":
           description: Band offer could not be accepted
 
-  /api/bands/offers/reject:
+  /api/bands/offers/reject/{offerId}:
     post:
       tags:
         - BandService
       summary: Rejects required offer
       operationId: rejectBandOffer
       parameters:
-        - { name: offerId, in: query, required: true, schema: {type: integer, format: int64 }, description: "Id of rejected band offer"}
+        - { name: offerId, in: path, required: true, schema: {type: integer, format: int64 }, description: "Id of rejected band offer"}
       responses:
         "201":
           description: OK
@@ -198,14 +198,14 @@ paths:
         "400":
           description: Band offer could not be rejected
 
-  /api/bands/offers/revoke:
+  /api/bands/offers/revoke/{offerId}:
     post:
       tags:
         - BandService
       summary: Revokes required offer
       operationId: revokeBandOffer
       parameters:
-        - { name: offerId, in: query, required: true, schema: { type: integer, format: int64 }, description: "Id of revoked band offer" }
+        - { name: offerId, in: path, required: true, schema: { type: integer, format: int64 }, description: "Id of revoked band offer" }
       responses:
         "201":
           description: OK
@@ -230,14 +230,14 @@ paths:
                 items:
                   $ref: "#/components/schemas/BandOfferDto"
 
-  /api/bands/offers/byBand:
+  /api/bands/offers/byBand/{bandId}:
     get:
       tags:
         - BandService
       summary: Returns all band offers for by given band
       operationId: getBandOffersByBand
       parameters:
-        - {name: id, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of offering band"}
+        - {name: bandId, in: path, required: true, schema: {type: integer, format: int64}, description: "Id of offering band"}
       responses:
         "200":
           description: OK
@@ -248,14 +248,14 @@ paths:
                 items:
                   $ref: "#/components/schemas/BandOfferDto"
 
-  /api/bands/offers/byMusician:
+  /api/bands/offers/byMusician/{musicianId}:
     get:
       tags:
         - BandService
       summary: Returns all band offers created for given musician
       operationId: getBandOffersByMusician
       parameters:
-        - {name: id, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of invited manager"}
+        - {name: musicianId, in: path, required: true, schema: {type: integer, format: int64}, description: "Id of invited manager"}
       responses:
         "200":
           description: OK
