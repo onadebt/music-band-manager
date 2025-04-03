@@ -13,7 +13,7 @@ import java.util.Optional;
  * @author Tomáš MAREK
  */
 @Component
-public class BandRepositoryImpl implements BandRepository {
+public class InMemoryBandRepository implements BandRepository {
     private Long nextId = 1L;
     private final Map<Long, Band> bands = new HashMap<>();
 
