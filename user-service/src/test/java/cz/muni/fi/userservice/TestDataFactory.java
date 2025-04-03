@@ -1,6 +1,7 @@
 package cz.muni.fi.userservice;
 
 import cz.muni.fi.userservice.dto.ArtistDTO;
+import cz.muni.fi.userservice.dto.ManagerDTO;
 import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.model.Manager;
 import cz.muni.fi.userservice.model.Role;
@@ -17,6 +18,8 @@ public class TestDataFactory {
     public static final ArtistDTO TEST_ARTIST_2_DTO = setUpTestArtist2Dto();
     public static final Manager TEST_MANAGER_1 = setUpTestManager1();
     public static final Manager TEST_MANAGER_2 = setUpTestManager2();
+    public static final ManagerDTO TEST_MANAGER_1_DTO = setUpTestManager1Dto();
+    public static final ManagerDTO TEST_MANAGER_2_DTO = setUpTestManager2Dto();
 
 
     private static Manager setUpTestManager1() {
@@ -33,8 +36,36 @@ public class TestDataFactory {
         return testManager;
     }
 
+    private static ManagerDTO setUpTestManager1Dto(){
+        ManagerDTO testManager = new ManagerDTO();
+        testManager.setManagedBandIds(Set.of(1L, 2L, 3L));
+        testManager.setCompanyName("Test Music Management Company");
+        testManager.setId(3L);
+        testManager.setUsername("xdoe7");
+        testManager.setEmail("john_doe@email.com");
+        testManager.setFirstName("John");
+        testManager.setLastName("Doe");
+        testManager.setRole(Role.MANAGER);
+        testManager.setPassword("password123");
+        return testManager;
+    }
+
     private static Manager setUpTestManager2() {
         Manager testManager = new Manager();
+        testManager.setManagedBandIds(Set.of(2L, 3L, 4L));
+        testManager.setCompanyName("Managers of Music");
+        testManager.setId(4L);
+        testManager.setUsername("mustermann123");
+        testManager.setEmail("mustermann_m@email.de");
+        testManager.setFirstName("Max");
+        testManager.setLastName("Mustermann");
+        testManager.setRole(Role.MANAGER);
+        testManager.setPassword("MustermannRules!");
+        return testManager;
+    }
+
+    private static ManagerDTO setUpTestManager2Dto() {
+        ManagerDTO testManager = new ManagerDTO();
         testManager.setManagedBandIds(Set.of(2L, 3L, 4L));
         testManager.setCompanyName("Managers of Music");
         testManager.setId(4L);
