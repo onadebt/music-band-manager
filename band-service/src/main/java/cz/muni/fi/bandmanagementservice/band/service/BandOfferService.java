@@ -48,7 +48,7 @@ public class BandOfferService {
         bandOfferRepository.deleteBandOffer(bandOffer);
     }
 
-    public void acceptOffer(Long bandOfferId){
+    public BandOffer acceptOffer(Long bandOfferId){
         BandOffer bandOffer = getBandOffer(bandOfferId);
         bandOffer.acceptOffer();
         bandOfferRepository.updateBandOffer(bandOffer);
@@ -61,7 +61,7 @@ public class BandOfferService {
         bandRepository.updateBand(newBand.get());
     }
 
-    public void rejectOffer(Long bandOfferId){
+    public BandOffer rejectOffer(Long bandOfferId){
         BandOffer bandOffer = getBandOffer(bandOfferId);
         bandOffer.rejectOffer();
         bandOfferRepository.updateBandOffer(bandOffer);

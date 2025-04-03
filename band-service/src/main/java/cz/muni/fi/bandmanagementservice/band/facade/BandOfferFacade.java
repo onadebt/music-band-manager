@@ -19,8 +19,7 @@ public class BandOfferFacade {
     }
 
     public BandOfferDto acceptBandOffer(Long offerId) {
-        bandOfferService.acceptOffer(offerId);
-        return BandOfferMapper.mapToDto(bandOfferService.getBandOffer(offerId));
+        return BandOfferMapper.mapToDto(bandOfferService.acceptOffer(offerId));
     }
 
     public BandOfferDto getBandOffer(Long offerId) {
@@ -32,7 +31,6 @@ public class BandOfferFacade {
     }
 
     public BandOfferDto rejectBandOffer(Long offerId) {
-        bandOfferService.rejectOffer(offerId);
-        return BandOfferMapper.mapToDto(bandOfferService.getBandOffer(offerId));
+        return BandOfferMapper.mapToDto(bandOfferService.rejectOffer(offerId));
     }
 }
