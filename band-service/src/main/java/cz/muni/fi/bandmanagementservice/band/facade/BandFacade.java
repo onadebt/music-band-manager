@@ -33,7 +33,7 @@ public class BandFacade {
         return BandMapper.mapToDto(bandService.getBand(id));
     }
 
-    public BandDto updateBand(Long id, BandInfoUpdateRequest request){
+    public BandDto updateBand(BandInfoUpdateRequest request){
         BandInfoUpdate bandInfoUpdate = BandMapper.mapFromInfoUpdateRequest(request);
         return BandMapper.mapToDto(bandService.updateBand(bandInfoUpdate));
     }

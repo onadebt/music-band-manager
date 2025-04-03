@@ -84,9 +84,9 @@ public ResponseEntity<BandOfferDto> acceptBandOffer(Long offerId) {
     }
 
     @Override
-    public ResponseEntity<BandDto> updateBand(Long id, BandInfoUpdateRequest bandInfoUpdateRequest) {
+    public ResponseEntity<BandDto> updateBand(BandInfoUpdateRequest bandInfoUpdateRequest) {
         try {
-            return new ResponseEntity<>(bandFacade.updateBand(id, bandInfoUpdateRequest), HttpStatus.CREATED);
+            return new ResponseEntity<>(bandFacade.updateBand(bandInfoUpdateRequest), HttpStatus.CREATED);
         } catch (ResourceNotFoundException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

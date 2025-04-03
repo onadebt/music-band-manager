@@ -43,11 +43,12 @@ public class BandService {
     public Band updateBand(BandInfoUpdate bandInfoUpdate){
         Band updatedBand = new Band(bandInfoUpdate.id(), bandInfoUpdate
                 .name(), bandInfoUpdate.musicalStyle(), bandInfoUpdate.managerId(),
-                bandInfoUpdate.logoUrl());
+                bandInfoUpdate.logoUrl());;
         if (bandRepository.getBandById(updatedBand.getId()).isEmpty()){
             throw new ResourceNotFoundException("Band with id %d does not exists".formatted(updatedBand.getId()));
         }
         Band originalBand = bandRepository.getBandById(updatedBand.getId()).get();
+        updatedBand.setMembers(originalBand.getMembers());
         if (originalBand.getMembers() != updatedBand.getMembers()){
             throw new InvalidOperationException("Band members can only be managed through BandOffers");
         }

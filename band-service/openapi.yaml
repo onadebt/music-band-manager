@@ -79,13 +79,12 @@ paths:
         "404":
           description: Given band not found
 
+  /api/bands/update:
     post:
       tags:
         - BandService
       summary: Updates basic band info - managerId, name, logo, musicalStyle
       operationId: updateBand
-      parameters:
-        - { name: id, in: path, required: true, schema: { type: integer, format: int64 }, description: "Id of updated band" }
       requestBody:
         content:
           application/json:

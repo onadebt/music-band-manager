@@ -41,7 +41,7 @@ public class Band {
         return Collections.unmodifiableCollection(members);
     }
 
-    public void setMembers(List<Long> members) {
+    public void setMembers(Collection<Long> members) {
         this.members.clear();
         this.members.addAll(members);
     }
