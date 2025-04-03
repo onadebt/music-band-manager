@@ -50,11 +50,6 @@ public class BandOfferService {
         return bandOfferRepository.createBandOffer(newOffer);
     }
 
-    public void revokeBandOffer(Long bandOfferId) {
-        BandOffer bandOffer = getBandOffer(bandOfferId);
-        bandOfferRepository.deleteBandOffer(bandOffer);
-    }
-
     public BandOffer acceptOffer(Long bandOfferId){
         BandOffer bandOffer = getBandOffer(bandOfferId);
         bandOffer.acceptOffer();
