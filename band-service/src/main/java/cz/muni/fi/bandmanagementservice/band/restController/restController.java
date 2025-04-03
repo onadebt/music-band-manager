@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * @author Tomáš MAREK
  */
@@ -88,5 +90,10 @@ public ResponseEntity<BandOfferDto> acceptBandOffer(Long offerId) {
         } catch (ResourceNotFoundException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Override
+    public ResponseEntity<List<BandDto>> getAllBands() {
+        return new ResponseEntity<>(bandFacade.getAllBands(), HttpStatus.OK);
     }
 }

@@ -103,6 +103,23 @@ paths:
         "400":
           description: Band could not be updated
 
+  /api/bands/all:
+    get:
+      tags:
+        - BandService
+      summary: Returns all stored bands
+      operationId: getAllBands
+      responses: 
+        "200":
+          description: OK
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BandDto"
+
+
   /api/bands/offers/create:
     post:
       tags:

@@ -9,6 +9,9 @@ import cz.muni.fi.bandmanagementservice.band.model.BandInfoUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author Tomáš MAREK
  */
@@ -32,7 +35,10 @@ public class BandFacade {
 
     public BandDto updateBand(Long id, BandInfoUpdateRequest request){
         BandInfoUpdate bandInfoUpdate = BandMapper.mapFromInfoUpdateRequest(request);
-        bandService.updateBand(bandInfoUpdate);
-        return BandMapper.mapToDto(bandService.getBand(id));
+        return BandMapper.mapToDto(bandService.updateBand(bandInfoUpdate));
+    }
+
+    public List<BandDto> getAllBands(){
+        return bandService.getAllBands().stream().map(BandMapper::mapToDto).collect(Collectors.toList());
     }
 }
