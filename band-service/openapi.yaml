@@ -197,3 +197,71 @@ paths:
           description: Band offer does not exists
         "400":
           description: Band offer could not be rejected
+
+  /api/bands/offers/revoke:
+    post:
+      tags:
+        - BandService
+      summary: Revokes required offer
+      operationId: revokeBandOffer
+      parameters:
+        - { name: offerId, in: query, required: true, schema: { type: integer, format: int64 }, description: "Id of revoked band offer" }
+      responses:
+        "201":
+          description: OK
+        "404":
+          description: Band offer does not exists
+        "400":
+          description: Band offer could not be revoked
+
+  /api/bands/offers/all:
+    get:
+      tags:
+        - BandService
+      summary: Returns all stored band offers
+      operationId: getAllBandOffers
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BandOfferDto"
+
+  /api/bands/offers/byManager:
+    get:
+      tags:
+        - BandService
+      summary: Returns all band offers created by given manager
+      operationId: getBandOffersByManager
+      parameters:
+        - {name: id, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of offering manager"}
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BandOfferDto"
+
+  /api/bands/offers/byMusician:
+    get:
+      tags:
+        - BandService
+      summary: Returns all band offers created for given musician
+      operationId: getBandOffersByMusician
+      parameters:
+        - {name: id, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of invited manager"}
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BandOfferDto"
