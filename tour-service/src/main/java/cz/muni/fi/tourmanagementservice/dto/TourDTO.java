@@ -1,9 +1,6 @@
 package cz.muni.fi.tourmanagementservice.dto;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 
-import java.util.Date;
 
 public class TourDTO {
     private Long id;

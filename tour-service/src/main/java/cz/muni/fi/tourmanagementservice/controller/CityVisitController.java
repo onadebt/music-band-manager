@@ -2,7 +2,6 @@ package cz.muni.fi.tourmanagementservice.controller;
 
 
 import cz.muni.fi.tourmanagementservice.dto.CityVisitDTO;
-import cz.muni.fi.tourmanagementservice.dto.TourDTO;
 import cz.muni.fi.tourmanagementservice.service.CityVisitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
