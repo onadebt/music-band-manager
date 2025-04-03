@@ -4,8 +4,10 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author Tomáš MAREK
@@ -23,7 +25,7 @@ public class Band {
     private Long managerId;
 
     private String logoUrl;
-    private final Collection<Long> members = new ArrayList<>();
+    private final Set<Long> members = new HashSet<>();
 
     public Band(Long id, String name, String musicalStyle, Long managerId) {
         this.id = id;
@@ -37,11 +39,11 @@ public class Band {
         this.logoUrl = logoUrl;
     }
 
-    public Collection<Long> getMembers() {
-        return Collections.unmodifiableCollection(members);
+    public Set<Long> getMembers() {
+        return Collections.unmodifiableSet(members);
     }
 
-    public void setMembers(Collection<Long> members) {
+    public void setMembers(Set<Long> members) {
         this.members.clear();
         this.members.addAll(members);
     }

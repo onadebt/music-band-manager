@@ -5,6 +5,9 @@ import cz.muni.fi.bandmanagementservice.band.data.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.band.model.BandDto;
 import cz.muni.fi.bandmanagementservice.band.model.BandInfoUpdateRequest;
 
+import java.util.HashSet;
+import java.util.stream.Collectors;
+
 /**
  * @author Tomáš MAREK
  */
@@ -23,7 +26,7 @@ public class BandMapper {
     public static Band mapFromDto(BandDto bandDto){
         Band band = new Band(bandDto.getId(), bandDto.getName(), bandDto.getMusicalStyle(), bandDto.getManagerId());
         band.setLogoUrl(bandDto.getLogo().get());
-        band.setMembers(bandDto.getMembers());
+        band.setMembers(new HashSet<>(bandDto.getMembers()));
         return band;
     };
 
