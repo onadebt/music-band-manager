@@ -55,7 +55,7 @@ public class BandServiceTest {
     @Test
     public void testUpdateBand() {
         Band band = new Band(1L, "Updated Band", "Jazz", 1L);
-        when(bandRepository.createBand(any(Band.class))).thenReturn(band);
+        when(bandRepository.updateBand(any(Band.class))).thenReturn(band);
 
         BandInfoUpdate bandInfoUpdate = new BandInfoUpdate(1L, "Updated Band", "Jazz", 1L, "logoUrl");
         when(bandRepository.getBandById(1L)).thenReturn(Optional.of(band));
@@ -63,7 +63,7 @@ public class BandServiceTest {
         Band updatedBand = bandService.updateBand(bandInfoUpdate);
 
         assertEquals("Updated Band", updatedBand.getName());
-        verify(bandRepository, times(1)).createBand(any(Band.class));
+        verify(bandRepository, times(1)).updateBand(any(Band.class));
     }
 
     @Test
@@ -80,13 +80,14 @@ public class BandServiceTest {
     @Test
     public void testRemoveMember() {
         Band band = new Band(1L, "Band Name", "Rock", 1L);
+        band.addMember(2L);
         when(bandRepository.getBandById(1L)).thenReturn(Optional.of(band));
-        when(bandRepository.createBand(any(Band.class))).thenReturn(band);
+        when(bandRepository.updateBand(any(Band.class))).thenReturn(band);
 
         Band updatedBand = bandService.removeMember(1L, 2L);
 
         assertEquals("Band Name", updatedBand.getName());
         verify(bandRepository, times(1)).getBandById(1L);
-        verify(bandRepository, times(1)).createBand(any(Band.class));
+        verify(bandRepository, times(1)).updateBand(any(Band.class));
     }
 }
