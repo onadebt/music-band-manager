@@ -76,6 +76,25 @@
 					<argLine>-Xshare:off -javaagent:${org.mockito:mockito-core:jar}</argLine>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<!-- remove the unwanted generated testcases by the spring generator of openapi -->
+								<delete dir="${project.build.directory}/generated-sources/openapi/src/test" />
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
