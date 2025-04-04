@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: user-service
+  datasource:
+#    url: jdbc:h2:file:./data/mydb
+    url: jdbc:h2:file:./data/userdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        trace: false
+        web-allow-others: false
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.H2Dialect
+
+server:
+  port: 8091
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
