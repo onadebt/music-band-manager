@@ -31,7 +31,8 @@ public class BandMapper {
     };
 
     public static BandInfoUpdate mapFromInfoUpdateRequest(BandInfoUpdateRequest updateRequest){
-        return new BandInfoUpdate(updateRequest.getId(), updateRequest.getName(), updateRequest.getMusicalStyle(), updateRequest.getManagerId(), updateRequest.getLogo().get());
+        String logo = updateRequest.getLogo().isPresent() ? updateRequest.getLogo().get() : null;
+        return new BandInfoUpdate(updateRequest.getId(), updateRequest.getName(), updateRequest.getMusicalStyle(), updateRequest.getManagerId(), logo);
     };
 
 }
