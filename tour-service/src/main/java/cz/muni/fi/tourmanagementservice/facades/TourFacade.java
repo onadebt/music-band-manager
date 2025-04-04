@@ -19,7 +19,7 @@ public class TourFacade {
         this.tourService = tourService;
     }
 
-    public List<TourDTO> getAllSongs() {
+    public List<TourDTO> getAllTours() {
         return tourService.getAllTours();
     }
 

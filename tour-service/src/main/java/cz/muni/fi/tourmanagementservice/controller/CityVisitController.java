@@ -2,6 +2,7 @@ package cz.muni.fi.tourmanagementservice.controller;
 
 
 import cz.muni.fi.tourmanagementservice.dto.CityVisitDTO;
+import cz.muni.fi.tourmanagementservice.facades.CityVisitFacade;
 import cz.muni.fi.tourmanagementservice.service.CityVisitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,57 +22,45 @@ import java.util.List;
 @RequestMapping("/api/cityVisits")
 public class CityVisitController {
 
-    private final CityVisitService cityVisitService;
+    private final CityVisitFacade cityVisitFacade;
 
     @Autowired
-    public CityVisitController(CityVisitService cityVisitService) {
-        this.cityVisitService = cityVisitService;
+    public CityVisitController(CityVisitFacade cityVisitFacade) {
+        this.cityVisitFacade = cityVisitFacade;
     }
 
     @GetMapping
     public ResponseEntity<List<CityVisitDTO>> getAllCityVisits() {
-        return ResponseEntity.ok(cityVisitService.getAllCityVisits());
+        return ResponseEntity.ok(cityVisitFacade.getAllCityVisits());
     }
 
     @GetMapping("/tour/{tourId}")
     public ResponseEntity<List<CityVisitDTO>> getCityVisitsByTour(@PathVariable Long tourId) {
-        return ResponseEntity.ok(cityVisitService.getCityVisitByTour(tourId));
+        return ResponseEntity.ok(cityVisitFacade.getCityVisitsByTour(tourId));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CityVisitDTO> getCityVisitById(@PathVariable Long id) {
-        return cityVisitService.getCityVisitById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(cityVisitFacade.getCityVisitById(id));
     }
 
 
     @PostMapping
     public ResponseEntity<CityVisitDTO> createCityVisit(@RequestBody CityVisitDTO cityVisitDTO) {
-        CityVisitDTO createdCityVisit = cityVisitService.createCityVisit(cityVisitDTO);
+        CityVisitDTO createdCityVisit = cityVisitFacade.createCityVisit(cityVisitDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCityVisit);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CityVisitDTO> updateCityVisit(@PathVariable Long id, @RequestBody CityVisitDTO cityVisitDTO) {
-        CityVisitDTO updatedCityVisit = cityVisitService.updateCityVisit(id, cityVisitDTO);
-
-        if (updatedCityVisit != null) {
-            return ResponseEntity.ok(updatedCityVisit);
-        }
-
-        return ResponseEntity.notFound().build();
+        CityVisitDTO updatedCityVisit = cityVisitFacade.updateCityVisit(id, cityVisitDTO);
+        return ResponseEntity.ok(updatedCityVisit);
     }
 
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCityVisit(@PathVariable Long id) {
-        boolean deleted = cityVisitService.deleteCityVisit(id);
-
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        }
-
+        cityVisitFacade.deleteCityVisit(id);
         return ResponseEntity.notFound().build();
     }
 }

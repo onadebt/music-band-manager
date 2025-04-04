@@ -20,7 +20,7 @@ public class CityVisitFacade {
         this.cityVisitService = cityVisitService;
     }
 
-    public List<CityVisitDTO> getAllSongs() {
+    public List<CityVisitDTO> getAllCityVisits() {
         return cityVisitService.getAllCityVisits();
     }
 
