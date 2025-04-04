@@ -43,4 +43,5 @@ Key functionality includes:
 Both actors share a common **Login** system, while other use cases are specific to their roles.
 
 ## Class diagram
+This diagram illustrates the core data structures and relationships between key entities in the system. The classes map to the microservices described and support functionalities like band management, music cataloging, user roles, and tour scheduling.
 ![Class diagram](assets/ClassDiagram.png)
