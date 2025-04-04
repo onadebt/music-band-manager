@@ -16,7 +16,7 @@ The web application allows one music band to manage their activities.
 - Allows adding, editing, deleting albums and songs
 
 ### Band Management Service
-- stores band details
+- Stores band details
 - Handles band creatin and management
 - Manages the hiring process (sending invitations to team members)
 
@@ -26,10 +26,7 @@ The web application allows one music band to manage their activities.
 - Stores information about tour dates, locations, and participating bands
 
 ## Use case diagram
-
-Below is the use case diagram for the Music Band Manager web application:
-
-![Music Band Manager Use Case Diagram](assets/UsecaseDiagram.png)
+![Use case diagram](assets/UsecaseDiagram.png)
 
 ### Diagram Overview
 This diagram shows the interactions between two primary actors:
@@ -46,4 +43,4 @@ Key functionality includes:
 Both actors share a common **Login** system, while other use cases are specific to their roles.
 
 ## Class diagram
-...
+![Class diagram](assets/ClassDiagram.png)
