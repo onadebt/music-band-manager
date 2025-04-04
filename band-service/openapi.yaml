@@ -178,7 +178,7 @@ paths:
         "404":
           description: Given band offer cannot be found
 
-  /api/bands/offers/accept/{offerId}:
+  /api/bands/offers/{offerId}/accept:
     post:
       tags:
         - BandService
@@ -198,7 +198,7 @@ paths:
         "400":
           description: Band offer could not be accepted
 
-  /api/bands/offers/reject/{offerId}:
+  /api/bands/offers/{offerId}/reject:
     post:
       tags:
         - BandService
@@ -218,7 +218,7 @@ paths:
         "400":
           description: Band offer could not be rejected
 
-  /api/bands/offers/revoke/{offerId}:
+  /api/bands/offers/{offerId}/revoke:
     post:
       tags:
         - BandService
