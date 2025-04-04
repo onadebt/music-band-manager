@@ -5,7 +5,25 @@
 The web application allows one music band to manage their activities.
 
 ## Microservices description
-...
+### User Management Service
+- Handles authentication and authorization
+- Stores user profiles and their role in the system
+- Allows team members to accept / reject offers, view planned activities and their bandmates
+
+### Music Catalog Service
+- Stores song details
+- Manages albums and songs
+- Allows adding, editing, deleting albums and songs
+
+### Band Management Service
+- stores band details
+- Handles band creatin and management
+- Manages the hiring process (sending invitations to team members)
+
+### Tour Management Service
+- Manages tour schedules
+- Allows band managers to create, update, and cancel tours
+- Stores information about tour dates, locations, and participating bands
 
 ## Use case diagram
 
