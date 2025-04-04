@@ -118,6 +118,27 @@ paths:
                 items:
                   $ref: "#/components/schemas/BandDto"
 
+  /api/bands/{bandId}/removeMember:
+    post:
+      tags:
+        - BandService
+      summary: Removes member from the band
+      operationId: removeMember
+      parameters:
+        - {name: bandId, in: path, required: true, schema: { type: integer, format: int64 }, description: "Id of updated band" }
+        - {name: memberId, in: query, required: true, schema: {type: integer, format: int64}, description: "Id of removed member"}
+
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BandDto"
+        "400":
+          description: Member could not be removed
+        "404":
+          description: Update band does not exists
 
   /api/bands/offers/create:
     post:

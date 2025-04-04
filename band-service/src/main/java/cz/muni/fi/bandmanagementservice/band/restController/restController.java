@@ -124,4 +124,15 @@ public ResponseEntity<BandOfferDto> acceptBandOffer(Long offerId) {
     public ResponseEntity<List<BandOfferDto>> getBandOffersByBand(Long id) {
         return new ResponseEntity<>(bandOfferFacade.getBandOffersByBandId(id), HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<BandDto> removeMember(Long bandId, Long memberId) {
+        try {
+            return new ResponseEntity<>(bandFacade.removeMember(bandId, memberId), HttpStatus.CREATED);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (InvalidOperationException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

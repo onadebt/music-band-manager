@@ -40,4 +40,8 @@ public class BandFacade {
     public List<BandDto> getAllBands(){
         return bandService.getAllBands().stream().map(BandMapper::mapToDto).collect(Collectors.toList());
     }
+
+    public BandDto removeMember(Long bandId, Long memberId) {
+        return BandMapper.mapToDto(bandService.removeMember(bandId, memberId));
+    }
 }

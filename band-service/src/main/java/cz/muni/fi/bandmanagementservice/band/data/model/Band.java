@@ -52,6 +52,10 @@ public class Band {
         this.members.add(memberId);
     }
 
+    public void removeMember(Long memberId) {
+        this.members.remove(memberId);
+    }
+
     public Long getManagerId() {
         return managerId;
     }

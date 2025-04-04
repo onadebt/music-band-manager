@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Tomáš MAREK
@@ -50,6 +51,15 @@ public class BandService {
         Band originalBand = bandRepository.getBandById(updatedBand.getId()).get();
         updatedBand.setMembers(originalBand.getMembers());
         return bandRepository.updateBand(updatedBand);
+    }
+
+    public Band removeMember(Long bandId, Long memberId){
+        Band band = getBand(bandId);
+        if (!band.getMembers().contains(memberId)){
+            throw new InvalidOperationException("Member with id %d is not part of band %d".formatted(memberId, bandId));
+        }
+        band.removeMember(memberId);
+        return bandRepository.updateBand(band);
     }
 
 
