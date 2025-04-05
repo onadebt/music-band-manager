@@ -29,7 +29,7 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<inputSpec>openapi.yaml</inputSpec>
+							<inputSpec>${project.basedir}/openapi.yaml</inputSpec>
 							<generatorName>spring</generatorName>
 							<apiPackage>cz.muni.fi.bandmanagementservice.band.api</apiPackage>
 							<modelPackage>cz.muni.fi.bandmanagementservice.band.model</modelPackage>
