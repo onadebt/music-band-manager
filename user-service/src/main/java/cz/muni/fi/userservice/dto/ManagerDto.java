@@ -7,15 +7,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
-public class ManagerDTO extends UserDTO {
+public class ManagerDto extends UserDto {
     private String companyName;
     private Set<Long> managedBandIds = new HashSet<>();
 
-    public ManagerDTO() {
+    public ManagerDto() {
         this.setRole(Role.MANAGER);
     }
 
-    public ManagerDTO(String companyName, Set<Long> managedBandIds) {
+    public ManagerDto(String companyName, Set<Long> managedBandIds) {
         super();
         this.setRole(Role.MANAGER);
         this.companyName = companyName;
