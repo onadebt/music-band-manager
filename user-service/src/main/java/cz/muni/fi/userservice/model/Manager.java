@@ -2,15 +2,19 @@ package cz.muni.fi.userservice.model;
 
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
-@Entity
 @DiscriminatorValue("MANAGER")
 @Table(name = "managers")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Entity
 public class Manager extends User {
 
     @ElementCollection
@@ -20,23 +24,4 @@ public class Manager extends User {
 
     @Column
     private String companyName;
-
-    public Manager() {
-    }
-
-    public Set<Long> getManagedBandIds() {
-        return managedBandIds;
-    }
-
-    public void setManagedBandIds(Set<Long> managedBandIds) {
-        this.managedBandIds = managedBandIds;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
 }
