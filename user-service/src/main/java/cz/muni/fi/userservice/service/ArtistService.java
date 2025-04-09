@@ -1,5 +1,6 @@
 package cz.muni.fi.userservice.service;
 
+import cz.muni.fi.userservice.exception.UserNotFoundException;
 import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.repository.ArtistRepository;
 import cz.muni.fi.userservice.service.interfaces.IArtistService;
@@ -17,19 +18,23 @@ public class ArtistService implements IArtistService {
 
     @Override
     public Artist save(Artist artist) {
-        System.out.println("Saving artist: " + artist.getUsername());
+        var existingArtist = artistRepository.findByUsername(artist.getUsername());
+        if (existingArtist.isPresent()) {
+            throw new UserNotFoundException(artist.getUsername());
+        }
+
         artistRepository.save(artist);
         return artist;
     }
 
     @Override
     public Artist findById(Long id) {
-        return artistRepository.findById(id).orElse(null);
+        return artistRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @Override
     public Artist findByUsername(String username) {
-        return artistRepository.findByUsername(username).orElse(null);
+        return artistRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
     }
 
     @Override
@@ -39,7 +44,12 @@ public class ArtistService implements IArtistService {
 
     @Override
     public void deleteById(Long id) {
-        artistRepository.deleteById(id);
+        var maybeArtist = artistRepository.findById(id);
+        if (maybeArtist.isEmpty()) {
+            throw new UserNotFoundException(id);
+        }
+
+        artistRepository.deleteById(maybeArtist.get().getId());
     }
 
     @Override
@@ -49,11 +59,23 @@ public class ArtistService implements IArtistService {
 
     @Override
     public Artist updateArtistByBandIds(Long artistId, Set<Long> bandIds) {
-        Artist artist = artistRepository.findById(artistId).orElse(null);
-        if (artist == null) {
-            throw new IllegalArgumentException("Artist with ID " + artistId + " does not exist");
-        }
+        Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new UserNotFoundException(artistId));
         artist.setBandIds(bandIds);
         return artistRepository.save(artist);
+    }
+
+    @Override
+    public Artist updateArtist(Long id, Artist artist) {
+        Artist existingArtist = artistRepository.findById(artist.getId()).orElseThrow(() -> new UserNotFoundException(artist.getId()));
+        existingArtist.setUsername(artist.getUsername());
+        existingArtist.setEmail(artist.getEmail());
+        existingArtist.setPassword(artist.getPassword());
+        existingArtist.setFirstName(artist.getFirstName());
+        existingArtist.setLastName(artist.getLastName());
+        existingArtist.setStageName(artist.getStageName());
+        existingArtist.setBio(artist.getBio());
+        existingArtist.setSkills(artist.getSkills());
+        existingArtist.setBandIds(artist.getBandIds());
+        return artistRepository.save(existingArtist);
     }
 }

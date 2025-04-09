@@ -19,4 +19,6 @@ public interface IArtistService {
     List<Artist> findByBandIds (Set<Long> bandIds);
 
     Artist updateArtistByBandIds(Long artistId, Set<Long> bandIds);
+
+    Artist updateArtist(Long id, Artist artist);
 }

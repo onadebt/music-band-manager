@@ -1,6 +1,7 @@
 package cz.muni.fi.userservice.service;
 
 import cz.muni.fi.userservice.TestDataFactory;
+import cz.muni.fi.userservice.exception.UserNotFoundException;
 import cz.muni.fi.userservice.model.Manager;
 import cz.muni.fi.userservice.repository.ManagerRepository;
 import org.junit.jupiter.api.Test;
@@ -14,10 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Tomáš MAREK
@@ -55,16 +53,12 @@ public class ManagerServiceTest {
     }
 
     @Test
-    void findById_managerNotFound_returnsNull() {
+    void findById_managerNotFound_throwsUserNotFoundException() {
         // Arrange
         Long invalidId = 42L;
-        Mockito.when(managerRepository.findById(invalidId)).thenReturn(Optional.empty());
 
-        // Act
-        Manager found = managerService.findById(invalidId);
-
-        // Assert
-        assertNull(found);
+        // Act & Assert
+        assertThrows(UserNotFoundException.class, () -> managerService.findById(invalidId));
     }
 
 
@@ -96,6 +90,9 @@ public class ManagerServiceTest {
 
     @Test
     void deleteById_managerPresent_noReturn() {
+        // Arrange
+        Mockito.when(managerRepository.findById(TestDataFactory.TEST_MANAGER_1.getId())).thenReturn(Optional.of(TestDataFactory.TEST_MANAGER_1));
+
         // Act
         managerService.deleteById(TestDataFactory.TEST_MANAGER_1.getId());
 
@@ -188,12 +185,12 @@ public class ManagerServiceTest {
     }
 
     @Test
-    void updateManagerByBandsIds_invalidManagerId_throwsIllegalArgumentException() {
+    void updateManagerByBandsIds_invalidManagerId_throwsUserNotFoundException() {
         // Arrange
         Long invalidId = 42L;
         Mockito.when(managerRepository.findById(invalidId)).thenReturn(Optional.empty());
 
-        // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> managerService.updateManagerBandIds(invalidId, Set.of(1L, 2L, 3L)));
+        // Act & Assert
+        assertThrows(UserNotFoundException.class, () -> managerService.updateManagerBandIds(invalidId, Set.of(1L, 2L, 3L)));
     }
 }

@@ -18,4 +18,5 @@ public interface IManagerService {
 
     Manager updateManagerBandIds(Long managerId, Set<Long> bandIds);
 
+    Manager updateManager(Long id, Manager manager);
 }

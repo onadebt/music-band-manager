@@ -1,6 +1,7 @@
 package cz.muni.fi.userservice.service;
 
 import cz.muni.fi.userservice.TestDataFactory;
+import cz.muni.fi.userservice.exception.UserNotFoundException;
 import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.repository.ArtistRepository;
 import org.junit.jupiter.api.Test;
@@ -10,16 +11,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Tomáš MAREK
@@ -58,18 +54,13 @@ public class ArtistServiceTest {
     }
 
     @Test
-    void findById_artistNotFound_returnsNull() {
+    void findById_artistNotFound_throwsUserNotFoundException() {
         // Arrange
         Long invalidId = 42L;
-        Mockito.when(artistRepository.findById(invalidId)).thenReturn(Optional.empty());
 
-        // Act
-        Artist found = artistService.findById(invalidId);
-
-        // Assert
-        assertNull(found);
+        // Act & Assert
+        assertThrows(UserNotFoundException.class, () -> artistService.findById(invalidId));
     }
-
 
 
     @Test
@@ -85,16 +76,12 @@ public class ArtistServiceTest {
     }
 
     @Test
-    void findByUsername_artistNotFound_returnsNull() {
+    void findByUsername_artistNotFound_throwsUserNotFoundException() {
         // Arrange
         String invalidUsername = "Invalid username";
-        Mockito.when(artistRepository.findByUsername(invalidUsername)).thenReturn(Optional.empty());
 
-        // Act
-        Artist found = artistService.findByUsername(invalidUsername);
-
-        // Assert
-        assertNull(found);
+        // Act & Assert
+        assertThrows(UserNotFoundException.class, () -> artistService.findByUsername(invalidUsername));
     }
 
     @Test
@@ -124,11 +111,16 @@ public class ArtistServiceTest {
     }
 
     @Test
-    void deleteById_artistPresent_noReturn() {
+    void deleteById_artistPresent_noException() {
+        // Arrange
+        Mockito.when(artistRepository.findById(TestDataFactory.TEST_ARTIST_1.getId()))
+                .thenReturn(Optional.of(TestDataFactory.TEST_ARTIST_1));
+
         // Act
         artistService.deleteById(TestDataFactory.TEST_ARTIST_1.getId());
 
         // Assert
+        Mockito.verify(artistRepository, Mockito.times(1)).findById(TestDataFactory.TEST_ARTIST_1.getId());
         Mockito.verify(artistRepository, Mockito.times(1)).deleteById(TestDataFactory.TEST_ARTIST_1.getId());
     }
 
@@ -217,12 +209,12 @@ public class ArtistServiceTest {
     }
 
     @Test
-    void updateArtistByBandsIds_invalidArtistId_throwsIllegalArgumentException() {
+    void updateArtistByBandsIds_invalidArtistId_throwsUserNotFoundException() {
         // Arrange
         Long invalidId = 42L;
         Mockito.when(artistRepository.findById(invalidId)).thenReturn(Optional.empty());
 
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> artistService.updateArtistByBandIds(invalidId, Set.of(1L, 2L, 3L)));
+        assertThrows(UserNotFoundException.class, () -> artistService.updateArtistByBandIds(invalidId, Set.of(1L, 2L, 3L)));
     }
 }
