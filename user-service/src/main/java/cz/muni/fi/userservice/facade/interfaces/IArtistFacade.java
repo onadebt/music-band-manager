@@ -1,22 +1,25 @@
 package cz.muni.fi.userservice.facade.interfaces;
 
-import cz.muni.fi.userservice.dto.ArtistDTO;
+import cz.muni.fi.userservice.dto.ArtistDto;
+import cz.muni.fi.userservice.dto.ArtistUpdateDto;
 
 import java.util.List;
 import java.util.Set;
 
 public interface IArtistFacade {
-    ArtistDTO register(ArtistDTO artistDTO);
+    ArtistDto register(ArtistDto artistDTO);
 
-    ArtistDTO findById(Long id);
+    ArtistDto findById(Long id);
 
-    ArtistDTO findByUsername(String username);
+    ArtistDto findByUsername(String username);
 
-    List<ArtistDTO> findAll();
+    List<ArtistDto> findAll();
 
-    List<ArtistDTO> findByBandIds(Set<Long> bandIds);
+    List<ArtistDto> findByBandIds(Set<Long> bandIds);
 
     void deleteById(Long id);
 
-    ArtistDTO updateBandIds(Long artistId, Set<Long> bandsIds);
+    ArtistDto updateBandIds(Long artistId, Set<Long> bandsIds);
+
+    ArtistDto update(Long id, ArtistUpdateDto artistUpdateDto);
 }

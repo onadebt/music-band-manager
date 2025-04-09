@@ -1,15 +1,18 @@
 package cz.muni.fi.userservice.facade.interfaces;
 
-import cz.muni.fi.userservice.dto.ManagerDTO;
+import cz.muni.fi.userservice.dto.ManagerDto;
+import cz.muni.fi.userservice.dto.ManagerUpdateDto;
 
 import java.util.List;
 
 public interface IManagerFacade {
-    ManagerDTO register(ManagerDTO managerDTO);
+    ManagerDto register(ManagerDto managerDto);
 
-    ManagerDTO findById(Long id);
+    ManagerDto findById(Long id);
 
-    List<ManagerDTO> findAll();
+    List<ManagerDto> findAll();
 
     void deleteById(Long id);
+
+    ManagerDto update(Long id, ManagerUpdateDto updateDto);
 }

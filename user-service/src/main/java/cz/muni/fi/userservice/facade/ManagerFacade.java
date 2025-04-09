@@ -1,6 +1,7 @@
 package cz.muni.fi.userservice.facade;
 
-import cz.muni.fi.userservice.dto.ManagerDTO;
+import cz.muni.fi.userservice.dto.ManagerDto;
+import cz.muni.fi.userservice.dto.ManagerUpdateDto;
 import cz.muni.fi.userservice.facade.interfaces.IManagerFacade;
 import cz.muni.fi.userservice.mappers.ManagerMapper;
 import cz.muni.fi.userservice.model.Manager;
@@ -21,16 +22,30 @@ public class ManagerFacade implements IManagerFacade {
     private ManagerMapper managerMapper;
 
 
-    public ManagerDTO register(ManagerDTO managerDTO) {
-        if (managerDTO == null) {
+    public ManagerDto register(ManagerDto managerDto) {
+        if (managerDto == null) {
             throw new IllegalArgumentException("ManagerDTO cannot be null");
         }
-        Manager manager = managerMapper.toEntity(managerDTO);
+        Manager manager = managerMapper.toEntity(managerDto);
         manager = managerService.save(manager);
         return managerMapper.toDTO(manager);
     }
 
-    public ManagerDTO findById(Long id) {
+    public ManagerDto update(Long id, ManagerUpdateDto updateDto) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
+        if (updateDto == null) {
+            throw new IllegalArgumentException("ManagerDTO cannot be null");
+        }
+
+        Manager manager = managerService.findById(id);
+        Manager updatedManager = managerMapper.updateManagerFromDto(updateDto, manager);
+        updatedManager = managerService.save(updatedManager);
+        return managerMapper.toDTO(updatedManager);
+    }
+
+    public ManagerDto findById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("ID cannot be null");
         }
@@ -41,7 +56,7 @@ public class ManagerFacade implements IManagerFacade {
         return managerMapper.toDTO(manager);
     }
 
-    public List<ManagerDTO> findAll() {
+    public List<ManagerDto> findAll() {
         return managerService.findAll().stream()
                 .map(managerMapper::toDTO)
                 .collect(Collectors.toList());
@@ -57,8 +72,7 @@ public class ManagerFacade implements IManagerFacade {
         managerService.deleteById(id);
     }
 
-
-    public List<ManagerDTO> findByBandIds(Set<Long> bandIds) {
+    public List<ManagerDto> findByBandIds(Set<Long> bandIds) {
         if (bandIds == null) {
             throw new IllegalArgumentException("Band IDs cannot be null or empty");
         }
@@ -67,7 +81,7 @@ public class ManagerFacade implements IManagerFacade {
                 .collect(Collectors.toList());
     }
 
-    public ManagerDTO updateBandIds(Long managerId, Set<Long> bandIds) {
+    public ManagerDto updateBandIds(Long managerId, Set<Long> bandIds) {
         if (managerId == null) {
             throw new IllegalArgumentException("Manager ID cannot be null");
         }

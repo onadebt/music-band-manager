@@ -1,9 +1,8 @@
 package cz.muni.fi.userservice.facade;
 
 import cz.muni.fi.userservice.TestDataFactory;
-import cz.muni.fi.userservice.dto.ManagerDTO;
+import cz.muni.fi.userservice.dto.ManagerDto;
 import cz.muni.fi.userservice.mappers.ManagerMapper;
-import cz.muni.fi.userservice.service.ManagerService;
 import cz.muni.fi.userservice.service.interfaces.IManagerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,9 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -51,7 +48,7 @@ public class ManagerFacadeTest {
         Mockito.when(managerMapper.toDTO(TestDataFactory.TEST_MANAGER_1)).thenReturn(TestDataFactory.TEST_MANAGER_1_DTO);
 
         // Act
-        ManagerDTO registered = managerFacade.register(TestDataFactory.TEST_MANAGER_1_DTO);
+        ManagerDto registered = managerFacade.register(TestDataFactory.TEST_MANAGER_1_DTO);
 
         // Assert
         verify(managerService, times(1)).save(TestDataFactory.TEST_MANAGER_1);
@@ -81,7 +78,7 @@ public class ManagerFacadeTest {
         Mockito.when(managerService.findById(TestDataFactory.TEST_MANAGER_1.getId())).thenReturn(TestDataFactory.TEST_MANAGER_1);
         Mockito.when(managerMapper.toDTO(TestDataFactory.TEST_MANAGER_1)).thenReturn(TestDataFactory.TEST_MANAGER_1_DTO);
         // Act
-        ManagerDTO found = managerFacade.findById(TestDataFactory.TEST_MANAGER_1.getId());
+        ManagerDto found = managerFacade.findById(TestDataFactory.TEST_MANAGER_1.getId());
 
         // Assert
         assertEquals(TestDataFactory.TEST_MANAGER_1_DTO, found);
@@ -94,7 +91,7 @@ public class ManagerFacadeTest {
         Mockito.when(managerService.findAll()).thenReturn(List.of());
 
         // Act
-        List<ManagerDTO> found = managerFacade.findAll();
+        List<ManagerDto> found = managerFacade.findAll();
 
         // Assert
         assertEquals(0, found.size());
@@ -109,7 +106,7 @@ public class ManagerFacadeTest {
         Mockito.when(managerMapper.toDTO(TestDataFactory.TEST_MANAGER_2)).thenReturn(TestDataFactory.TEST_MANAGER_2_DTO);
 
         // Act
-        List<ManagerDTO> found = managerFacade.findAll();
+        List<ManagerDto> found = managerFacade.findAll();
 
         // Assert
         assertEquals(2, found.size());
@@ -134,7 +131,7 @@ public class ManagerFacadeTest {
         Mockito.when(managerMapper.toDTO(TestDataFactory.TEST_MANAGER_2)).thenReturn(TestDataFactory.TEST_MANAGER_2_DTO);
 
         // Act
-        List<ManagerDTO> found = managerFacade.findByBandIds(bandIds);
+        List<ManagerDto> found = managerFacade.findByBandIds(bandIds);
 
         // Assert
         verify(managerService, times(1)).findByManagedBandIds(bandIds);
@@ -191,7 +188,7 @@ public class ManagerFacadeTest {
         Mockito.when(managerMapper.toDTO(TestDataFactory.TEST_MANAGER_1)).thenReturn(TestDataFactory.TEST_MANAGER_1_DTO);
 
         // Act
-        ManagerDTO updated = managerFacade.updateBandIds(TestDataFactory.TEST_MANAGER_1.getId(), bandIds);
+        ManagerDto updated = managerFacade.updateBandIds(TestDataFactory.TEST_MANAGER_1.getId(), bandIds);
 
         // Assert
         assertEquals(TestDataFactory.TEST_MANAGER_1_DTO, updated);

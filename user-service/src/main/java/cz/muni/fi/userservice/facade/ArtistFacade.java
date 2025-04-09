@@ -1,6 +1,7 @@
 package cz.muni.fi.userservice.facade;
 
-import cz.muni.fi.userservice.dto.ArtistDTO;
+import cz.muni.fi.userservice.dto.ArtistDto;
+import cz.muni.fi.userservice.dto.ArtistUpdateDto;
 import cz.muni.fi.userservice.facade.interfaces.IArtistFacade;
 import cz.muni.fi.userservice.mappers.ArtistMapper;
 import cz.muni.fi.userservice.model.Artist;
@@ -20,16 +21,16 @@ public class ArtistFacade implements IArtistFacade {
     @Autowired
     private ArtistMapper artistMapper;
 
-    public ArtistDTO register(ArtistDTO artistDTO) {
+    public ArtistDto register(ArtistDto artistDTO) {
         if (artistDTO == null) {
             throw new IllegalArgumentException("ArtistDTO cannot be null");
         }
         Artist artist = artistMapper.toEntity(artistDTO);
         artistService.save(artist);
-        return artistMapper.toDTO(artist);
+        return artistMapper.toDto(artist);
     }
 
-    public ArtistDTO findById(Long id) {
+    public ArtistDto findById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("ID cannot be null");
         }
@@ -37,10 +38,10 @@ public class ArtistFacade implements IArtistFacade {
         if (artist == null) {
             throw new IllegalArgumentException("Artist with ID " + id + " does not exist");
         }
-        return artistMapper.toDTO(artist);
+        return artistMapper.toDto(artist);
     }
 
-    public ArtistDTO findByUsername(String username) {
+    public ArtistDto findByUsername(String username) {
         if (username == null) {
             throw new IllegalArgumentException("Username cannot be null");
         }
@@ -48,22 +49,22 @@ public class ArtistFacade implements IArtistFacade {
         if (artist == null) {
             throw new IllegalArgumentException("Artist with username " + username + " does not exist");
         }
-        return artistMapper.toDTO(artist);
+        return artistMapper.toDto(artist);
     }
 
-    public List<ArtistDTO> findAll() {
+    public List<ArtistDto> findAll() {
         return artistService.findAll().stream()
-                .map(artistMapper::toDTO)
+                .map(artistMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public List<ArtistDTO> findByBandIds(Set<Long> bandIds) {
+    public List<ArtistDto> findByBandIds(Set<Long> bandIds) {
         if (bandIds == null) {
             throw new IllegalArgumentException("Band IDs cannot be null");
         }
         List<Artist> artists = artistService.findByBandIds(bandIds);
         return artists.stream()
-                .map(artistMapper::toDTO)
+                .map(artistMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -78,7 +79,7 @@ public class ArtistFacade implements IArtistFacade {
         artistService.deleteById(id);
     }
 
-    public ArtistDTO updateBandIds(Long artistId, Set<Long> bandsIds) {
+    public ArtistDto updateBandIds(Long artistId, Set<Long> bandsIds) {
         if (bandsIds == null) {
             throw new IllegalArgumentException("Band IDs cannot be null");
         }
@@ -88,6 +89,20 @@ public class ArtistFacade implements IArtistFacade {
         }
 
         Artist updatedArtist = artistService.updateArtistByBandIds(artistId, bandsIds);
-        return artistMapper.toDTO(updatedArtist);
+        return artistMapper.toDto(updatedArtist);
+    }
+
+    public ArtistDto update(Long id, ArtistUpdateDto artistUpdateDto) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
+        if (artistUpdateDto == null) {
+            throw new IllegalArgumentException("ArtistDTO cannot be null");
+        }
+
+        Artist artist = artistService.findById(id);
+        Artist updatedArtist = artistMapper.updateArtistFromDto(artistUpdateDto, artist);
+        artistService.save(updatedArtist);
+        return artistMapper.toDto(updatedArtist);
     }
 }
