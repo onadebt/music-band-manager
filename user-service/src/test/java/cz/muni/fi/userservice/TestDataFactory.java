@@ -1,7 +1,7 @@
 package cz.muni.fi.userservice;
 
-import cz.muni.fi.userservice.dto.ArtistDTO;
-import cz.muni.fi.userservice.dto.ManagerDTO;
+import cz.muni.fi.userservice.dto.ArtistDto;
+import cz.muni.fi.userservice.dto.ManagerDto;
 import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.model.Manager;
 import cz.muni.fi.userservice.model.Role;
@@ -14,12 +14,12 @@ import java.util.Set;
 public class TestDataFactory {
     public static final Artist TEST_ARTIST_1 = setUpTestArtist1();
     public static final Artist TEST_ARTIST_2 = setUpTestArtist2();
-    public static final ArtistDTO TEST_ARTIST_1_DTO = setUpTestArtist1Dto();
-    public static final ArtistDTO TEST_ARTIST_2_DTO = setUpTestArtist2Dto();
+    public static final ArtistDto TEST_ARTIST_1_DTO = setUpTestArtist1Dto();
+    public static final ArtistDto TEST_ARTIST_2_DTO = setUpTestArtist2Dto();
     public static final Manager TEST_MANAGER_1 = setUpTestManager1();
     public static final Manager TEST_MANAGER_2 = setUpTestManager2();
-    public static final ManagerDTO TEST_MANAGER_1_DTO = setUpTestManager1Dto();
-    public static final ManagerDTO TEST_MANAGER_2_DTO = setUpTestManager2Dto();
+    public static final ManagerDto TEST_MANAGER_1_DTO = setUpTestManager1Dto();
+    public static final ManagerDto TEST_MANAGER_2_DTO = setUpTestManager2Dto();
 
 
     private static Manager setUpTestManager1() {
@@ -36,8 +36,8 @@ public class TestDataFactory {
         return testManager;
     }
 
-    private static ManagerDTO setUpTestManager1Dto(){
-        ManagerDTO testManager = new ManagerDTO();
+    private static ManagerDto setUpTestManager1Dto(){
+        ManagerDto testManager = new ManagerDto();
         testManager.setManagedBandIds(Set.of(1L, 2L, 3L));
         testManager.setCompanyName("Test Music Management Company");
         testManager.setId(3L);
@@ -64,8 +64,8 @@ public class TestDataFactory {
         return testManager;
     }
 
-    private static ManagerDTO setUpTestManager2Dto() {
-        ManagerDTO testManager = new ManagerDTO();
+    private static ManagerDto setUpTestManager2Dto() {
+        ManagerDto testManager = new ManagerDto();
         testManager.setManagedBandIds(Set.of(2L, 3L, 4L));
         testManager.setCompanyName("Managers of Music");
         testManager.setId(4L);
@@ -90,8 +90,8 @@ public class TestDataFactory {
         return testArtist;
     }
 
-    private static ArtistDTO setUpTestArtist1Dto() {
-        ArtistDTO artistDTO = new ArtistDTO();
+    private static ArtistDto setUpTestArtist1Dto() {
+        ArtistDto artistDTO = new ArtistDto();
         artistDTO.setId(1L);
         artistDTO.setUsername("xlindemann");
         artistDTO.setEmail("lindemann_till@email.com");
@@ -118,8 +118,8 @@ public class TestDataFactory {
         return testArtis;
     }
 
-    private static ArtistDTO setUpTestArtist2Dto() {
-        ArtistDTO artistDTO = new ArtistDTO();
+    private static ArtistDto setUpTestArtist2Dto() {
+        ArtistDto artistDTO = new ArtistDto();
         artistDTO.setId(2L);
         artistDTO.setUsername("brodenj");
         artistDTO.setEmail("joakim_broden@example.com");
