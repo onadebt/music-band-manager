@@ -1,7 +1,7 @@
-package cz.muni.fi.userservice.controller;
+package cz.muni.fi.userservice.rest;
 
 import cz.muni.fi.userservice.TestDataFactory;
-import cz.muni.fi.userservice.dto.ManagerDTO;
+import cz.muni.fi.userservice.dto.ManagerDto;
 import cz.muni.fi.userservice.facade.ManagerFacade;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,10 +37,10 @@ public class ManagerControllerTest {
         // Arrange
         Mockito.when(managerFacade.register(TestDataFactory.TEST_MANAGER_1_DTO)).thenReturn(TestDataFactory.TEST_MANAGER_1_DTO);
         // Act
-        ResponseEntity<ManagerDTO> response = managerController.register(TestDataFactory.TEST_MANAGER_1_DTO);
+        ResponseEntity<ManagerDto> response = managerController.register(TestDataFactory.TEST_MANAGER_1_DTO);
 
         // Assert
-        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getStatusCode().value()).isEqualTo(201);
         assertThat(response.hasBody()).isTrue();
         assertThat(response.getBody()).isEqualTo(TestDataFactory.TEST_MANAGER_1_DTO);
         verify(managerFacade, times(1)).register(any());
@@ -52,7 +52,7 @@ public class ManagerControllerTest {
         Mockito.when(managerFacade.findAll()).thenReturn(List.of(TestDataFactory.TEST_MANAGER_1_DTO, TestDataFactory.TEST_MANAGER_2_DTO));
 
         // Act
-        ResponseEntity<List<ManagerDTO>> response = managerController.getAllManagers();
+        ResponseEntity<List<ManagerDto>> response = managerController.getAllManagers();
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -67,7 +67,7 @@ public class ManagerControllerTest {
         Mockito.when(managerFacade.findById(TestDataFactory.TEST_MANAGER_1.getId())).thenReturn(TestDataFactory.TEST_MANAGER_1_DTO);
 
         // Act
-        ResponseEntity<ManagerDTO> response = managerController.getById(TestDataFactory.TEST_MANAGER_1.getId());
+        ResponseEntity<ManagerDto> response = managerController.getById(TestDataFactory.TEST_MANAGER_1.getId());
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -93,7 +93,7 @@ public class ManagerControllerTest {
                 .thenReturn(TestDataFactory.TEST_MANAGER_1_DTO);
 
         // Act
-        ResponseEntity<ManagerDTO> response = managerController.updateBands(TestDataFactory.TEST_MANAGER_1_DTO.getId(), TestDataFactory.TEST_MANAGER_1_DTO.getManagedBandIds());
+        ResponseEntity<ManagerDto> response = managerController.updateBands(TestDataFactory.TEST_MANAGER_1_DTO.getId(), TestDataFactory.TEST_MANAGER_1_DTO.getManagedBandIds());
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -104,11 +104,11 @@ public class ManagerControllerTest {
     @Test
     void getManagersByBandIds_twoManagersMatch_returnsListWithOkStatus() {
         // Arrange
-        Set<Long> bandIds = Set.of(2L,3L);
+        Set<Long> bandIds = Set.of(2L, 3L);
         Mockito.when(managerFacade.findByBandIds(bandIds)).thenReturn(List.of(TestDataFactory.TEST_MANAGER_1_DTO, TestDataFactory.TEST_MANAGER_2_DTO));
 
         // Act
-        ResponseEntity<List<ManagerDTO>> response = managerController.getManagersByBandIds(Set.of(2L,3L));
+        ResponseEntity<List<ManagerDto>> response = managerController.getManagersByBandIds(Set.of(2L, 3L));
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);

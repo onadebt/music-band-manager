@@ -1,9 +1,8 @@
-package cz.muni.fi.userservice.controller;
+package cz.muni.fi.userservice.rest;
 
 import cz.muni.fi.userservice.TestDataFactory;
-import cz.muni.fi.userservice.dto.ArtistDTO;
+import cz.muni.fi.userservice.dto.ArtistDto;
 import cz.muni.fi.userservice.facade.ArtistFacade;
-import cz.muni.fi.userservice.facade.interfaces.IArtistFacade;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,7 +37,7 @@ public class ArtistControllerTest {
         // Arrange
         Mockito.when(artistFacade.register(TestDataFactory.TEST_ARTIST_1_DTO)).thenReturn(TestDataFactory.TEST_ARTIST_1_DTO);
         // Act
-        ResponseEntity<ArtistDTO> response = artistController.register(TestDataFactory.TEST_ARTIST_1_DTO);
+        ResponseEntity<ArtistDto> response = artistController.register(TestDataFactory.TEST_ARTIST_1_DTO);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -53,7 +52,7 @@ public class ArtistControllerTest {
         Mockito.when(artistFacade.findAll()).thenReturn(List.of(TestDataFactory.TEST_ARTIST_1_DTO, TestDataFactory.TEST_ARTIST_2_DTO));
 
         // Act
-        ResponseEntity<List<ArtistDTO>> response = artistController.getAllArtists();
+        ResponseEntity<List<ArtistDto>> response = artistController.getAllArtists();
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -68,7 +67,7 @@ public class ArtistControllerTest {
         Mockito.when(artistFacade.findById(TestDataFactory.TEST_ARTIST_1.getId())).thenReturn(TestDataFactory.TEST_ARTIST_1_DTO);
 
         // Act
-        ResponseEntity<ArtistDTO> response = artistController.getArtistById(TestDataFactory.TEST_ARTIST_1.getId());
+        ResponseEntity<ArtistDto> response = artistController.getArtistById(TestDataFactory.TEST_ARTIST_1.getId());
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -93,7 +92,7 @@ public class ArtistControllerTest {
         Mockito.when(artistFacade.findByUsername(TestDataFactory.TEST_ARTIST_1_DTO.getUsername())).thenReturn(TestDataFactory.TEST_ARTIST_1_DTO);
 
         // Act
-        ResponseEntity<ArtistDTO> response = artistController.getArtistByUsername(TestDataFactory.TEST_ARTIST_1_DTO.getUsername());
+        ResponseEntity<ArtistDto> response = artistController.getArtistByUsername(TestDataFactory.TEST_ARTIST_1_DTO.getUsername());
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -108,7 +107,7 @@ public class ArtistControllerTest {
                 .thenReturn(TestDataFactory.TEST_ARTIST_1_DTO);
 
         // Act
-        ResponseEntity<ArtistDTO> response = artistController.updateBands(TestDataFactory.TEST_ARTIST_1_DTO.getId(), TestDataFactory.TEST_ARTIST_1_DTO.getBandIds());
+        ResponseEntity<ArtistDto> response = artistController.updateBands(TestDataFactory.TEST_ARTIST_1_DTO.getId(), TestDataFactory.TEST_ARTIST_1_DTO.getBandIds());
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -119,11 +118,11 @@ public class ArtistControllerTest {
     @Test
     void getArtistsByBandIds_twoArtistsMatch_returnsListWithOkStatus() {
         // Arrange
-        Set<Long> bandIds = Set.of(2L,3L);
+        Set<Long> bandIds = Set.of(2L, 3L);
         Mockito.when(artistFacade.findByBandIds(bandIds)).thenReturn(List.of(TestDataFactory.TEST_ARTIST_1_DTO, TestDataFactory.TEST_ARTIST_2_DTO));
 
         // Act
-        ResponseEntity<List<ArtistDTO>> response = artistController.getArtistsByBandIds(Set.of(2L,3L));
+        ResponseEntity<List<ArtistDto>> response = artistController.getArtistsByBandIds(Set.of(2L, 3L));
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
