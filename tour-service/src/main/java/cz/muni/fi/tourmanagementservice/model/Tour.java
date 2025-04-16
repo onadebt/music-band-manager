@@ -1,14 +1,17 @@
 package cz.muni.fi.tourmanagementservice.model;
 
 
-
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+
+@Getter
+@Setter
 @Entity
-@Getter // Add Lombok getter for all fields
-@Setter // Add Lombok setter for all fields
 public class Tour {
 
     @Id
@@ -19,8 +22,6 @@ public class Tour {
     private Long bandId;
 
     private String tourName;
-
-    //private Map<String, List<Date>> cityVisit;
 
     public Tour() {
     }
