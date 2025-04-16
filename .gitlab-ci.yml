@@ -1,0 +1,37 @@
+image: maven:3.9.6-eclipse-temurin-21-alpine
+
+default:
+  tags:
+    - shared-fi
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+
+  script:
+    - echo "Building the project..."
+    - mvn clean compile --no-transfer-progress
+    - mvn package
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 1 month
+
+test:
+  stage: test
+
+  script:
+    - mvn test --no-transfer-progress
+    - cat target/surefire-reports/*.txt
+  dependencies:
+    - build
+  artifacts:
+    when: always
+    reports:
+      junit: target/surefire-reports/*.xml
+    paths:
+      - target/surefire-reports/
+    expire_in: 1 month
