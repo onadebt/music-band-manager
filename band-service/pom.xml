@@ -9,7 +9,7 @@
 		<version>1.0.0</version>
 	</parent>
 	<artifactId>band-service</artifactId>
-	<version>0.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>Band service</name>
 	<description>Band service server generated from OpenAPI</description>
