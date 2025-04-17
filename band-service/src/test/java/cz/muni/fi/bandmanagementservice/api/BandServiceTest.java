@@ -1,8 +1,8 @@
 package cz.muni.fi.bandmanagementservice.api;
 
-import cz.muni.fi.bandmanagementservice.band.data.model.Band;
-import cz.muni.fi.bandmanagementservice.band.data.model.BandInfoUpdate;
-import cz.muni.fi.bandmanagementservice.band.data.repository.BandRepository;
+import cz.muni.fi.bandmanagementservice.band.model.Band;
+import cz.muni.fi.bandmanagementservice.band.model.BandInfoUpdate;
+import cz.muni.fi.bandmanagementservice.band.repository.BandRepository;
 import cz.muni.fi.bandmanagementservice.band.service.BandService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

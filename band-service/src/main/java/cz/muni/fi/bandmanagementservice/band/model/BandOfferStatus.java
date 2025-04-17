@@ -1,4 +1,4 @@
-package cz.muni.fi.bandmanagementservice.band.data.model;
+package cz.muni.fi.bandmanagementservice.band.model;
 
 /**
  * @author Tomáš MAREK

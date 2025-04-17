@@ -1,9 +1,8 @@
-package cz.muni.fi.bandmanagementservice.band.data.repository;
+package cz.muni.fi.bandmanagementservice.band.repository;
 
-import cz.muni.fi.bandmanagementservice.band.data.model.Band;
-import cz.muni.fi.bandmanagementservice.band.data.model.BandOfferStatus;
+import cz.muni.fi.bandmanagementservice.band.model.BandOfferStatus;
 import cz.muni.fi.bandmanagementservice.band.exceptions.DataStorageException;
-import cz.muni.fi.bandmanagementservice.band.data.model.BandOffer;
+import cz.muni.fi.bandmanagementservice.band.model.BandOffer;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;

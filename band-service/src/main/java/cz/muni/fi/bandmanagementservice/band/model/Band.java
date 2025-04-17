@@ -1,11 +1,9 @@
-package cz.muni.fi.bandmanagementservice.band.data.model;
+package cz.muni.fi.bandmanagementservice.band.model;
 
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collection;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 

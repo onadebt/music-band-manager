@@ -1,10 +1,10 @@
 package cz.muni.fi.bandmanagementservice.band.service;
 
-import cz.muni.fi.bandmanagementservice.band.data.model.Band;
-import cz.muni.fi.bandmanagementservice.band.data.model.BandOffer;
-import cz.muni.fi.bandmanagementservice.band.data.model.BandOfferStatus;
-import cz.muni.fi.bandmanagementservice.band.data.repository.BandOfferRepository;
-import cz.muni.fi.bandmanagementservice.band.data.repository.BandRepository;
+import cz.muni.fi.bandmanagementservice.band.model.Band;
+import cz.muni.fi.bandmanagementservice.band.model.BandOffer;
+import cz.muni.fi.bandmanagementservice.band.model.BandOfferStatus;
+import cz.muni.fi.bandmanagementservice.band.repository.BandOfferRepository;
+import cz.muni.fi.bandmanagementservice.band.repository.BandRepository;
 import cz.muni.fi.bandmanagementservice.band.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.band.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
 package cz.muni.fi.bandmanagementservice.band.mappers;
 
-import cz.muni.fi.bandmanagementservice.band.data.model.BandOffer;
-import cz.muni.fi.bandmanagementservice.band.data.model.BandOfferStatus;
-import cz.muni.fi.bandmanagementservice.band.model.BandOfferDto;
+import cz.muni.fi.bandmanagementservice.band.model.BandOffer;
+import cz.muni.fi.bandmanagementservice.band.model.BandOfferStatus;
+import cz.muni.fi.bandmanagementservice.band.dto.BandOfferDto;
 
 /**
  * @author Tomáš MAREK
