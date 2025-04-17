@@ -27,17 +27,17 @@ import cz.muni.fi.bandmanagementservice.band.model.BandOfferDto;
 
     private static BandOfferDto.StatusEnum mapStatusToDto(BandOfferStatus status){
         return switch (status) {
-            case BandOfferStatus.PENDING -> BandOfferDto.StatusEnum.PENDING;
-            case BandOfferStatus.ACCEPTED -> BandOfferDto.StatusEnum.ACCEPTED;
-            case BandOfferStatus.REJECTED -> BandOfferDto.StatusEnum.REJECTED;
+            case PENDING -> BandOfferDto.StatusEnum.PENDING;
+            case ACCEPTED -> BandOfferDto.StatusEnum.ACCEPTED;
+            case REJECTED -> BandOfferDto.StatusEnum.REJECTED;
         };
     }
 
     private static BandOfferStatus mapStatusFromDto(BandOfferDto.StatusEnum status){
          return switch (status) {
-             case BandOfferDto.StatusEnum.PENDING -> BandOfferStatus.PENDING;
-             case BandOfferDto.StatusEnum.ACCEPTED -> BandOfferStatus.ACCEPTED;
-             case BandOfferDto.StatusEnum.REJECTED -> BandOfferStatus.REJECTED;
+             case PENDING -> BandOfferStatus.PENDING;
+             case ACCEPTED -> BandOfferStatus.ACCEPTED;
+             case REJECTED -> BandOfferStatus.REJECTED;
          };
     }
 }
