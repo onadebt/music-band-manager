@@ -1,23 +1,18 @@
 package cz.muni.fi.bandmanagementservice.band.repository;
 
 import cz.muni.fi.bandmanagementservice.band.model.BandOffer;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
  * @author Tomáš MAREK
  */
-public interface BandOfferRepository {
-    public Collection<BandOffer> getAllBandOffers();
+public interface BandOfferRepository extends JpaRepository<BandOffer, Long> {
+    Optional<BandOffer> findByBandIdAndInvitedMusicianId(Long invitedMusicianId, Long bandId);
 
-    public Optional<BandOffer> getBandOfferById(Long id);
+    List<BandOffer> findByBandId(Long bandId);
 
-    public BandOffer createBandOffer(BandOffer bandOffer);
-
-    public BandOffer updateBandOffer(BandOffer bandOffer);
-
-    public void deleteBandOffer(BandOffer bandOffer);
-
-    public boolean pendingBandOfferExists(Long invitedMusicianId, Long bandId);
+    List<BandOffer> findByInvitedMusicianId(Long invitedMusicianId);
 }

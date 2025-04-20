@@ -33,61 +33,61 @@ public class BandServiceTest {
     @Test
     public void testCreateBand() {
         Band band = new Band(1L, "Band Name", "Rock", 1L);
-        when(bandRepository.createBand(any(Band.class))).thenReturn(band);
+        when(bandRepository.save(any(Band.class))).thenReturn(band);
 
         Band createdBand = bandService.createBand("Band Name", "Rock", 1L);
 
         assertEquals("Band Name", createdBand.getName());
-        verify(bandRepository, times(1)).createBand(any(Band.class));
+        verify(bandRepository, times(1)).save(any(Band.class));
     }
 
     @Test
     public void testGetBand() {
         Band band = new Band(1L, "Band Name", "Rock", 1L);
-        when(bandRepository.getBandById(1L)).thenReturn(Optional.of(band));
+        when(bandRepository.findById(1L)).thenReturn(Optional.of(band));
 
         Band foundBand = bandService.getBand(1L);
 
         assertEquals("Band Name", foundBand.getName());
-        verify(bandRepository, times(1)).getBandById(1L);
+        verify(bandRepository, times(1)).findById(1L);
     }
 
     @Test
     public void testUpdateBand() {
         Band band = new Band(1L, "Updated Band", "Jazz", 1L);
-        when(bandRepository.updateBand(any(Band.class))).thenReturn(band);
+        when(bandRepository.save(any(Band.class))).thenReturn(band);
 
         BandInfoUpdate bandInfoUpdate = new BandInfoUpdate(1L, "Updated Band", "Jazz", 1L, "logoUrl");
-        when(bandRepository.getBandById(1L)).thenReturn(Optional.of(band));
-        when(bandRepository.updateBand(any(Band.class))).thenReturn(band);
+        when(bandRepository.findById(1L)).thenReturn(Optional.of(band));
+        when(bandRepository.save(any(Band.class))).thenReturn(band);
         Band updatedBand = bandService.updateBand(bandInfoUpdate);
 
         assertEquals("Updated Band", updatedBand.getName());
-        verify(bandRepository, times(1)).updateBand(any(Band.class));
+        verify(bandRepository, times(1)).save(any(Band.class));
     }
 
     @Test
     public void testGetAllBands() {
         Band band = new Band(1L, "Band Name", "Rock", 1L);
-        when(bandRepository.getAllBands()).thenReturn(Collections.singletonList(band));
+        when(bandRepository.findAll()).thenReturn(Collections.singletonList(band));
 
         List<Band> bands = bandService.getAllBands();
 
         assertEquals(1, bands.size());
-        verify(bandRepository, times(1)).getAllBands();
+        verify(bandRepository, times(1)).findAll();
     }
 
     @Test
     public void testRemoveMember() {
         Band band = new Band(1L, "Band Name", "Rock", 1L);
         band.addMember(2L);
-        when(bandRepository.getBandById(1L)).thenReturn(Optional.of(band));
-        when(bandRepository.updateBand(any(Band.class))).thenReturn(band);
+        when(bandRepository.findById(1L)).thenReturn(Optional.of(band));
+        when(bandRepository.save(any(Band.class))).thenReturn(band);
 
         Band updatedBand = bandService.removeMember(1L, 2L);
 
         assertEquals("Band Name", updatedBand.getName());
-        verify(bandRepository, times(1)).getBandById(1L);
-        verify(bandRepository, times(1)).updateBand(any(Band.class));
+        verify(bandRepository, times(1)).findById(1L);
+        verify(bandRepository, times(1)).save(any(Band.class));
     }
 }

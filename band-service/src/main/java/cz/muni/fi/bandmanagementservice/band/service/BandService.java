@@ -25,11 +25,11 @@ public class BandService {
 
     public Band createBand(String name, String musicalStyle, Long managerId){
         Band newBand = new Band(null, name, musicalStyle, managerId);
-        return bandRepository.createBand(newBand);
+        return bandRepository.save(newBand);
     }
 
     public Band getBand(Long id){
-        Optional<Band> maybeBand = bandRepository.getBandById(id);
+        Optional<Band> maybeBand = bandRepository.findById(id);
         if (maybeBand.isEmpty()){
             throw new ResourceNotFoundException("Band with id %d does not exist".formatted(id));
         }
@@ -37,19 +37,19 @@ public class BandService {
     }
 
     public List<Band> getAllBands(){
-        return bandRepository.getAllBands().stream().toList();
+        return bandRepository.findAll().stream().toList();
     }
 
     public Band updateBand(BandInfoUpdate bandInfoUpdate){
         Band updatedBand = new Band(bandInfoUpdate.id(), bandInfoUpdate
                 .name(), bandInfoUpdate.musicalStyle(), bandInfoUpdate.managerId(),
-                bandInfoUpdate.logoUrl());;
-        if (bandRepository.getBandById(updatedBand.getId()).isEmpty()){
+                bandInfoUpdate.logoUrl());
+        Optional<Band> updated = bandRepository.findById(bandInfoUpdate.id());
+        if (updated.isEmpty()){
             throw new ResourceNotFoundException("Band with id %d does not exists".formatted(updatedBand.getId()));
         }
-        Band originalBand = bandRepository.getBandById(updatedBand.getId()).get();
-        updatedBand.setMembers(originalBand.getMembers());
-        return bandRepository.updateBand(updatedBand);
+        updatedBand.setMembers(updated.get().getMembers());
+        return bandRepository.save(updatedBand);
     }
 
     public Band removeMember(Long bandId, Long memberId){
@@ -58,7 +58,7 @@ public class BandService {
             throw new InvalidOperationException("Member with id %d is not part of band %d".formatted(memberId, bandId));
         }
         band.removeMember(memberId);
-        return bandRepository.updateBand(band);
+        return bandRepository.save(band);
     }
 
 

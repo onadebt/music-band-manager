@@ -1,24 +1,33 @@
 package cz.muni.fi.bandmanagementservice.band.model;
 
 import cz.muni.fi.bandmanagementservice.band.exceptions.InvalidOperationException;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 /**
  * @author Tomáš MAREK
  */
+@Entity
+@Table(name = "band_offers")
 public class BandOffer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Column(nullable = false)
     private Long bandId;
 
-    @NotNull
+    @Column(nullable = false)
     private Long invitedMusicianId;
 
-    @NotNull
+    @Column(nullable = false)
     private Long offeringManagerId;
 
-    @NotNull
+    @Column(nullable = false)
     private BandOfferStatus status = BandOfferStatus.PENDING;
 
     public BandOffer(Long id, Long bandId, Long invitedMusicianId, Long offeringManagerId) {
@@ -26,6 +35,9 @@ public class BandOffer {
         this.bandId = bandId;
         this.invitedMusicianId = invitedMusicianId;
         this.offeringManagerId = offeringManagerId;
+    }
+
+    public BandOffer() {
     }
 
     public void acceptOffer(){
