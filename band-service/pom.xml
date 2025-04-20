@@ -11,8 +11,8 @@
 
 	<artifactId>band-service</artifactId>
 	<version>1.0.0</version>
-	<name>Band Service</name>
-	<description>Microservice for managing band and offers to join them</description>
+	<name>band-service</name>
+	<description>microservice for managing bands</description>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -34,6 +34,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -78,7 +84,7 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.8.1</version>
 					<configuration>
-						<source>1.8</source>c
+						<source>1.8</source>
 						<target>1.8</target>
 						<annotationProcessorPaths>
 							<annotationProcessorPath>
