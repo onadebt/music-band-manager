@@ -1,212 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>cz.muni.fi</groupId>
-		<artifactId>music-band-manager</artifactId>
-		<version>1.0.0</version>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.4.4</version>
+		<relativePath/>
 	</parent>
+
 	<artifactId>band-service</artifactId>
 	<version>1.0.0</version>
+	<name>band-service</name>
+	<description>microservice for managing bands</description>
 	<packaging>jar</packaging>
-	<name>Band service</name>
-	<description>Band service server generated from OpenAPI</description>
+
 	<properties>
-		<swagger-jakarta-version>2.2.22</swagger-jakarta-version>
-		<openapi-generator-maven-plugin>7.12.0</openapi-generator-maven-plugin>
+		<java.version>21</java.version>
+		<mapstruct.version>1.6.3</mapstruct.version>
 	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>3.4.4</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.github.ben-manes.caffeine</groupId>
-				<artifactId>caffeine</artifactId>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springdoc</groupId>
-				<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-				<version>2.8.5</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-text</artifactId>
-				<version>1.13.0</version>
-			</dependency>
-			<dependency>
-				<groupId>com.google.code.findbugs</groupId>
-				<artifactId>jsr305</artifactId>
-				<version>3.0.2</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openapitools</groupId>
-				<artifactId>jackson-databind-nullable</artifactId>
-				<version>0.2.6</version>
-			</dependency>
-			<dependency>
-				<groupId>io.swagger</groupId>
-				<artifactId>swagger-annotations</artifactId>
-				<version>1.6.15</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.validation</groupId>
-				<artifactId>validation-api</artifactId>
-				<version>2.0.1.Final</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.annotation</groupId>
-				<artifactId>javax.annotation-api</artifactId>
-				<version>1.3.2</version>
-			</dependency>
-			<dependency>
-				<groupId>io.swagger.core.v3</groupId>
-				<artifactId>swagger-models-jakarta</artifactId>
-				<version>${swagger-jakarta-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.swagger.core.v3</groupId>
-				<artifactId>swagger-annotations-jakarta</artifactId>
-				<version>${swagger-jakarta-version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-	<build>
-		<defaultGoal>spring-boot:run</defaultGoal>
-		<!-- name of executable JAR file -->
-		<finalName>band_service</finalName>
-
-		<plugins>
-			<plugin>
-				<groupId>org.openapitools</groupId>
-				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<inputSpec>${project.basedir}/openapi.yaml</inputSpec>
-							<generatorName>spring</generatorName>
-							<apiPackage>cz.muni.fi.bandmanagementservice.band.api</apiPackage>
-							<modelPackage>cz.muni.fi.bandmanagementservice.band.model</modelPackage>
-							<!-- https://openapi-generator.tech/docs/generators/spring -->
-							<configOptions>
-								<basePackage>cz.muni.fi.bandmanagementservice.band</basePackage>
-								<configPackage>cz.muni.fi.bandmanagementservice.band.config</configPackage>
-								<useSpringBoot3>true</useSpringBoot3>
-								<useTags>true</useTags>
-								<delegatePattern>true</delegatePattern>
-							</configOptions>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- create executable jar -->
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<executable>true</executable>
-				</configuration>
-			</plugin>
-			<!--
-            Mockito instrumentation for JDK 21+
-            https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
-            -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>properties</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- run integration tests in "mvn verify" phase -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<configuration>
-					<argLine>-Xshare:off -javaagent:${org.mockito:mockito-core:jar}</argLine>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>process-sources</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target>
-								<!-- remove the unwanted generated testcases by the spring generator of openapi -->
-								<delete dir="${project.build.directory}/generated-sources/openapi/src/test" />
-							</target>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>jakarta.annotation</groupId>
-			<artifactId>jakarta.annotation-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>jakarta.validation</groupId>
-			<artifactId>jakarta.validation-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.swagger.core.v3</groupId>
-			<artifactId>swagger-models-jakarta</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.swagger.core.v3</groupId>
-			<artifactId>swagger-annotations-jakarta</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.openapitools</groupId>
-			<artifactId>jackson-databind-nullable</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-		</dependency>
 
-		<!-- for including Swagger UI -->
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-		</dependency>
-
-		<!-- for testing -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${mapstruct.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>${mapstruct.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.8.5</version>
+		</dependency>
 	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.1</version>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+						<annotationProcessorPaths>
+							<annotationProcessorPath>
+								<groupId>org.mapstruct</groupId>
+								<artifactId>mapstruct-processor</artifactId>
+								<version>${mapstruct.version}</version>
+							</annotationProcessorPath>
+						</annotationProcessorPaths>
+						<compilerArgs>
+							<compilerArg>-Amapstruct.defaultComponentModel=spring</compilerArg>
+						</compilerArgs>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<argLine>
+							-javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+							-Xshare:off
+						</argLine>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
 </project>

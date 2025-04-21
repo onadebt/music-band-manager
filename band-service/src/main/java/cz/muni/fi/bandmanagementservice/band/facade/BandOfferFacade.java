@@ -2,7 +2,7 @@ package cz.muni.fi.bandmanagementservice.band.facade;
 
 import cz.muni.fi.bandmanagementservice.band.mappers.BandOfferMapper;
 import cz.muni.fi.bandmanagementservice.band.service.BandOfferService;
-import cz.muni.fi.bandmanagementservice.band.model.BandOfferDto;
+import cz.muni.fi.bandmanagementservice.band.dto.BandOfferDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,30 +1,44 @@
-package cz.muni.fi.bandmanagementservice.band.data.model;
+package cz.muni.fi.bandmanagementservice.band.model;
 
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collection;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 /**
  * @author Tomáš MAREK
  */
+@Entity
+@Table(name = "bands")
 public class Band {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Column(nullable = false)
     private String name;
 
-    @NotNull
+    @Column(nullable = false)
     private String musicalStyle;
 
-    @NotNull
+    @Column(nullable = false)
     private Long managerId;
 
+    @Column
     private String logoUrl;
+
+    @ElementCollection
+    @CollectionTable(name = "bands_members")
+    @Column(name = "members_id")
     private final Set<Long> members = new HashSet<>();
 
     public Band(Long id, String name, String musicalStyle, Long managerId) {
@@ -37,6 +51,9 @@ public class Band {
     public Band(Long id, String name, String musicalStyle, Long managerId, String logoUrl) {
         this(id, name, musicalStyle, managerId);
         this.logoUrl = logoUrl;
+    }
+
+    public Band() {
     }
 
     public Set<Long> getMembers() {

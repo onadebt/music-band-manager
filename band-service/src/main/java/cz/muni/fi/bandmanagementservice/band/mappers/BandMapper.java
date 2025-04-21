@@ -1,12 +1,11 @@
 package cz.muni.fi.bandmanagementservice.band.mappers;
 
-import cz.muni.fi.bandmanagementservice.band.data.model.Band;
-import cz.muni.fi.bandmanagementservice.band.data.model.BandInfoUpdate;
-import cz.muni.fi.bandmanagementservice.band.model.BandDto;
-import cz.muni.fi.bandmanagementservice.band.model.BandInfoUpdateRequest;
+import cz.muni.fi.bandmanagementservice.band.model.Band;
+import cz.muni.fi.bandmanagementservice.band.model.BandInfoUpdate;
+import cz.muni.fi.bandmanagementservice.band.dto.BandDto;
+import cz.muni.fi.bandmanagementservice.band.dto.BandInfoUpdateRequest;
 
 import java.util.HashSet;
-import java.util.stream.Collectors;
 
 /**
  * @author Tomáš MAREK
@@ -14,25 +13,24 @@ import java.util.stream.Collectors;
 public class BandMapper {
     public static BandDto mapToDto(Band band){
         BandDto dto = new BandDto();
-        dto.id(band.getId());
-        dto.name(band.getName());
-        dto.musicalStyle(band.getMusicalStyle());
-        dto.managerId(band.getManagerId());
-        dto.logo(band.getLogoUrl());
-        dto.members(band.getMembers().stream().toList());
+        dto.setId(band.getId());
+        dto.setName(band.getName());
+        dto.setMusicalStyle(band.getMusicalStyle());
+        dto.setManagerId(band.getManagerId());
+        dto.setLogo(band.getLogoUrl());
+        dto.setMembers(new HashSet<>(band.getMembers()));
         return dto;
-    };
+    }
 
     public static Band mapFromDto(BandDto bandDto){
         Band band = new Band(bandDto.getId(), bandDto.getName(), bandDto.getMusicalStyle(), bandDto.getManagerId());
-        band.setLogoUrl(bandDto.getLogo().get());
+        band.setLogoUrl(bandDto.getLogo());
         band.setMembers(new HashSet<>(bandDto.getMembers()));
         return band;
-    };
+    }
 
     public static BandInfoUpdate mapFromInfoUpdateRequest(BandInfoUpdateRequest updateRequest){
-        String logo = updateRequest.getLogo().isPresent() ? updateRequest.getLogo().get() : null;
-        return new BandInfoUpdate(updateRequest.getId(), updateRequest.getName(), updateRequest.getMusicalStyle(), updateRequest.getManagerId(), logo);
-    };
+        return new BandInfoUpdate(updateRequest.getId(), updateRequest.getName(), updateRequest.getMusicalStyle(), updateRequest.getManagerId(), updateRequest.getLogo());
+    }
 
 }

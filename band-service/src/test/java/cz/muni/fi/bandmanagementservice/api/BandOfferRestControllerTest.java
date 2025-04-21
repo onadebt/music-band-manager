@@ -1,42 +1,36 @@
 package cz.muni.fi.bandmanagementservice.api;
 
+import cz.muni.fi.bandmanagementservice.band.dto.BandOfferDto;
 import cz.muni.fi.bandmanagementservice.band.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.band.exceptions.ResourceNotFoundException;
-import cz.muni.fi.bandmanagementservice.band.facade.BandFacade;
 import cz.muni.fi.bandmanagementservice.band.facade.BandOfferFacade;
-import cz.muni.fi.bandmanagementservice.band.model.BandDto;
-import cz.muni.fi.bandmanagementservice.band.model.BandInfoUpdateRequest;
-import cz.muni.fi.bandmanagementservice.band.model.BandOfferDto;
-import cz.muni.fi.bandmanagementservice.band.restController.restController;
+import cz.muni.fi.bandmanagementservice.band.rest.BandOfferRestController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Collections;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-class RestControllerTest {
-
+/**
+ * Created by Ivan Yatskiv, changed during refactor by Tomáš Marek
+ */
+@ExtendWith(MockitoExtension.class)
+public class BandOfferRestControllerTest {
     @Mock
-    private BandFacade bandFacade;
-
-    @Mock
-    private BandOfferFacade bandOfferFacade;
+    BandOfferFacade bandOfferFacade;
 
     @InjectMocks
-    private restController controller;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+    BandOfferRestController controller;
 
     @Test
     void testAcceptBandOffer_Success() {
@@ -67,58 +61,6 @@ class RestControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
-    @Test
-    void testCreateBand() {
-        BandDto band = new BandDto();
-        when(bandFacade.createBand("BandName", "Rock", 1L)).thenReturn(band);
-
-        ResponseEntity<BandDto> response = controller.createBand("BandName", "Rock", 1L);
-
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(band, response.getBody());
-    }
-
-    @Test
-    void testGetAllBands() {
-        List<BandDto> bands = Collections.singletonList(new BandDto());
-        when(bandFacade.getAllBands()).thenReturn(bands);
-
-        ResponseEntity<List<BandDto>> response = controller.getAllBands();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(bands, response.getBody());
-    }
-
-    @Test
-    void testGetBand_NotFound() {
-        when(bandFacade.getBand(1L)).thenThrow(new ResourceNotFoundException("Not found"));
-
-        ResponseEntity<BandDto> response = controller.getBand(1L);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
-    @Test
-    void testUpdateBand_Success() {
-        BandDto updatedBand = new BandDto();
-        BandInfoUpdateRequest updateRequest = new BandInfoUpdateRequest();
-        when(bandFacade.updateBand(updateRequest)).thenReturn(updatedBand);
-
-        ResponseEntity<BandDto> response = controller.updateBand(updateRequest);
-
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(updatedBand, response.getBody());
-    }
-
-    @Test
-    void testUpdateBand_NotFound() {
-        BandInfoUpdateRequest updateRequest = new BandInfoUpdateRequest();
-        when(bandFacade.updateBand(updateRequest)).thenThrow(new ResourceNotFoundException("Not found"));
-
-        ResponseEntity<BandDto> response = controller.updateBand(updateRequest);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
 
     @Test
     void testRevokeBandOffer_Success() {
@@ -148,3 +90,4 @@ class RestControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 }
+
