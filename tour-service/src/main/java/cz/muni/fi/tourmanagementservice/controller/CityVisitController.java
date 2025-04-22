@@ -4,6 +4,9 @@ package cz.muni.fi.tourmanagementservice.controller;
 import cz.muni.fi.tourmanagementservice.dto.CityVisitDTO;
 import cz.muni.fi.tourmanagementservice.facades.CityVisitFacade;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,41 +34,69 @@ public class CityVisitController {
         this.cityVisitFacade = cityVisitFacade;
     }
 
-    @Operation(summary = "Retrieve all city visits")
     @GetMapping
+    @Operation(summary = "Retrieve all city visits")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of city visits retrieved successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
     public ResponseEntity<List<CityVisitDTO>> getAllCityVisits() {
         return ResponseEntity.ok(cityVisitFacade.getAllCityVisits());
     }
 
-    @Operation(summary = "Retrieve all city visits by tour")
     @GetMapping("/tour/{tourId}")
+    @Operation(summary = "Retrieve all city visits by tour")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "City visit found"),
+            @ApiResponse(responseCode = "404", description = "City visit not found", content = @Content(mediaType = "application/problem+json"))
+    })
     public ResponseEntity<List<CityVisitDTO>> getCityVisitsByTour(@PathVariable Long tourId) {
         return ResponseEntity.ok(cityVisitFacade.getCityVisitsByTour(tourId));
     }
 
-    @Operation(summary = "Retrieve all city visits by id")
     @GetMapping("/{id}")
+    @Operation(summary = "Retrieve all city visits by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "City visit found"),
+            @ApiResponse(responseCode = "404", description = "City visit not found", content = @Content(mediaType = "application/problem+json"))
+    })
     public ResponseEntity<CityVisitDTO> getCityVisitById(@PathVariable Long id) {
         return ResponseEntity.ok(cityVisitFacade.getCityVisitById(id));
     }
 
 
-    @Operation(summary = "Create new city visit")
     @PostMapping
+    @Operation(summary = "Create new city visit", description = "Create a new city visit"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "City visit created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/problem+json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json")),
+    })
     public ResponseEntity<CityVisitDTO> createCityVisit(@RequestBody CityVisitDTO cityVisitDTO) {
         CityVisitDTO createdCityVisit = cityVisitFacade.createCityVisit(cityVisitDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCityVisit);
     }
 
-    @Operation(summary = "Update a city visit")
     @PutMapping("/{id}")
+    @Operation(summary = "Update a city visit")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "City visit updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/problem+json")),
+            @ApiResponse(responseCode = "404", description = "City visit not found", content = @Content(mediaType = "application/problem+json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
     public ResponseEntity<CityVisitDTO> updateCityVisit(@PathVariable Long id, @RequestBody CityVisitDTO cityVisitDTO) {
         CityVisitDTO updatedCityVisit = cityVisitFacade.updateCityVisit(id, cityVisitDTO);
         return ResponseEntity.ok(updatedCityVisit);
     }
 
-    @Operation(summary = "Delete a city visit")
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a city visit")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "City visit deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "City visit not found", content = @Content(mediaType = "application/problem+json"))
+    })
     public ResponseEntity<Void> deleteCityVisit(@PathVariable Long id) {
         cityVisitFacade.deleteCityVisit(id);
         return ResponseEntity.notFound().build();
