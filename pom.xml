@@ -20,6 +20,7 @@
         <module>music-catalog-service</module>
         <module>band-service</module>
         <module>tour-service</module>
+        <module>shared</module>
     </modules>
 
     <build>

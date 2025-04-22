@@ -69,6 +69,11 @@
 			<artifactId>jackson-databind-nullable</artifactId>
 			<version>0.2.6</version>
 		</dependency>
+		<dependency>
+			<groupId>cz.muni.fi</groupId>
+			<artifactId>shared</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
