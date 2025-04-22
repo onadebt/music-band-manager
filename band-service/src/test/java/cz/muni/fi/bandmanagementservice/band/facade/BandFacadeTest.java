@@ -1,8 +1,7 @@
-package cz.muni.fi.bandmanagementservice.api;
+package cz.muni.fi.bandmanagementservice.band.facade;
 
 import cz.muni.fi.bandmanagementservice.band.model.Band;
 import cz.muni.fi.bandmanagementservice.band.model.BandInfoUpdate;
-import cz.muni.fi.bandmanagementservice.band.facade.BandFacade;
 import cz.muni.fi.bandmanagementservice.band.mappers.BandMapper;
 import cz.muni.fi.bandmanagementservice.band.dto.BandDto;
 import cz.muni.fi.bandmanagementservice.band.dto.BandInfoUpdateRequest;
