@@ -1,4 +1,4 @@
-package cz.muni.fi.bandmanagementservice.api;
+package cz.muni.fi.bandmanagementservice.band.service;
 
 import cz.muni.fi.bandmanagementservice.band.model.Band;
 import cz.muni.fi.bandmanagementservice.band.model.BandInfoUpdate;
