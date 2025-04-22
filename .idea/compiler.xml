@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
+        <module name="shared" />
         <module name="tour-service" />
         <module name="music-catalog-service" />
         <module name="service-registry" />
@@ -17,6 +18,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
+          <entry name="/home/ivan/.m2/repository/org/mapstruct/mapstruct-processor/1.6.3/mapstruct-processor-1.6.3.jar" />
+          <entry name="/home/ivan/.m2/repository/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
           <entry name="/home/ivan/.m2/repository/org/mapstruct/mapstruct-processor/1.6.3/mapstruct-processor-1.6.3.jar" />
           <entry name="/home/ivan/.m2/repository/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
         </processorPath>
@@ -51,6 +54,7 @@
       <module name="music-band-manager" options="" />
       <module name="music-catalog-service" options="-parameters" />
       <module name="service-registry" options="-parameters" />
+      <module name="shared" options="-parameters" />
       <module name="tour-service" options="-parameters" />
       <module name="user-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
     </option>
