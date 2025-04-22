@@ -26,6 +26,12 @@ public class CityVisit {
 
     private Date dateTo;
 
+    public CityVisit(Long id, String cityName, Date dateFrom, Date dateTo) {
+        this.id = id;
+        this.cityName = cityName;
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
+    }
 
     public CityVisit() {
     }

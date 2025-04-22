@@ -25,6 +25,12 @@ public class Tour {
 
     private String tourName;
 
+    public Tour(Long id, Long bandId, String tourName) {
+        this.id = id;
+        this.bandId = bandId;
+        this.tourName = tourName;
+    }
+
     public Tour() {
     }
 
