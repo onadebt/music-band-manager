@@ -1,6 +1,6 @@
 package cz.muni.fi.tourmanagementservice.service;
 
-import cz.muni.fi.tourmanagementservice.dto.TourDTO;
+import cz.muni.fi.tourmanagementservice.exception.ResourceNotFoundException;
 import cz.muni.fi.tourmanagementservice.model.Tour;
 import cz.muni.fi.tourmanagementservice.repository.TourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TourService {
@@ -21,76 +19,42 @@ public class TourService {
         this.tourRepository = tourRepository;
     }
 
-    public List<TourDTO> getAllTours() {
-        return tourRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Tour> getAllTours() {
+        return tourRepository.findAll();
     }
 
 
-    public Optional<TourDTO> getTourById(Long tourId) {
+    public Tour getTourById(Long tourId) {
         return tourRepository.findById(tourId)
-                .map(this::convertToDTO);
+                .orElseThrow(() -> new ResourceNotFoundException("Tour not found with id: " + tourId));
     }
 
 
-    public List<TourDTO> getToursByBand(Long bandId) {
-        return tourRepository.findByBandId(bandId).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Tour> getToursByBand(Long bandId) {
+        return tourRepository.findByBandId(bandId);
     }
 
 
     @Transactional
-    public TourDTO createTour(TourDTO tourDTO) {
-        Tour tour = convertToEntity(tourDTO);
-
-        Tour savedTour = tourRepository.save(tour);
-        return convertToDTO(savedTour);
+    public Tour createTour(Tour tour) {
+        return tourRepository.save(tour);
     }
 
     @Transactional
-    public TourDTO updateTour(Long id, TourDTO tourDTO) {
-        Optional<Tour> existingSong = tourRepository.findById(id);
+    public Tour updateTour(Long id, Tour updatedTour) {
+        Tour tour = getTourById(id);
+        tour.setTourName(updatedTour.getTourName());
+        tour.setCityVisits(updatedTour.getCityVisits());
 
-        if (existingSong.isPresent()) {
-            Tour tour = existingSong.get();
-            tour.setTourName(tourDTO.getTourName());
-            tour.setBandId(tourDTO.getBandId());
+        if (updatedTour.getBandId() != null)
+            tour.setBandId(updatedTour.getBandId());
 
-            Tour updatedTour = tourRepository.save(tour);
-            return convertToDTO(updatedTour);
-        }
-        return null;
+        return tourRepository.save(tour);
     }
 
     @Transactional
-    public boolean deleteTour(Long id) {
-        if (tourRepository.existsById(id)) {
-            tourRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void deleteTour(Long id) {
+        getTourById(id);
+        tourRepository.deleteById(id);
     }
-
-
-
-
-
-    private TourDTO convertToDTO(Tour tour) {
-        TourDTO tourDTO = new TourDTO();
-        tourDTO.setId(tour.getId());
-        tourDTO.setBandId(tour.getBandId());
-        tourDTO.setTourName(tour.getTourName());
-
-        return tourDTO;
-    }
-
-    private Tour convertToEntity(TourDTO tourDTO) {
-        Tour tour = new Tour();
-        tour.setTourName(tourDTO.getTourName());
-        tour.setBandId(tourDTO.getBandId());
-        return tour;
-    }
-
 }
