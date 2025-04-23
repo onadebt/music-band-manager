@@ -1,11 +1,15 @@
 package cz.muni.fi.userservice.dto;
 
-import cz.muni.fi.userservice.model.Role;
+import cz.muni.fi.shared.enm.Role;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Setter
+@Getter
 @EqualsAndHashCode(callSuper = true)
 public class ManagerDto extends UserDto {
     private String companyName;
@@ -14,30 +18,6 @@ public class ManagerDto extends UserDto {
     public ManagerDto() {
         this.setRole(Role.MANAGER);
     }
-
-    public ManagerDto(String companyName, Set<Long> managedBandIds) {
-        super();
-        this.setRole(Role.MANAGER);
-        this.companyName = companyName;
-        this.managedBandIds = managedBandIds;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public Set<Long> getManagedBandIds() {
-        return managedBandIds;
-    }
-
-    public void setManagedBandIds(Set<Long> managedBandIds) {
-        this.managedBandIds = managedBandIds;
-    }
-
 
     @Override
     public void setRole(Role role) {

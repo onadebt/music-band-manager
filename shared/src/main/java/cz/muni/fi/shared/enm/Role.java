@@ -1,4 +1,4 @@
-package cz.muni.fi.userservice.model;
+package cz.muni.fi.shared.enm;
 
 
 public enum Role {
