@@ -1,18 +1,21 @@
 package cz.muni.fi.tourmanagementservice.model;
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.OneToMany;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 
-@Getter
-@Setter
+@Data
 @Entity
 public class Tour {
 
@@ -20,38 +23,26 @@ public class Tour {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bandId;
 
     private String tourName;
 
-    public Tour(Long id, Long bandId, String tourName) {
-        this.id = id;
-        this.bandId = bandId;
-        this.tourName = tourName;
-    }
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<CityVisit> cityVisits = new ArrayList<>();
 
     public Tour() {
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Tour tour = (Tour) o;
-        return Objects.equals(id, tour.id) && Objects.equals(bandId, tour.bandId) && Objects.equals(tourName, tour.tourName);
+    public void addCityVisit(CityVisit cityVisit) {
+        cityVisits.add(cityVisit);
+        cityVisit.setTour(this);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, bandId, tourName);
+    public void reomveCityVisit(CityVisit cityVisit) {
+        cityVisits.remove(cityVisit);
+        cityVisit.setTour(null);
     }
 
-    @Override
-    public String toString() {
-        return "Tour{" +
-                "id=" + id +
-                ", bandId=" + bandId +
-                ", tourName='" + tourName + '\'' +
-                '}';
-    }
 }

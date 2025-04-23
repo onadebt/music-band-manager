@@ -4,15 +4,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.Date;
-import java.util.Objects;
 
 
-@Getter
-@Setter
+@Data
 @Entity
 public class CityVisit {
 
@@ -26,35 +27,12 @@ public class CityVisit {
 
     private Date dateTo;
 
-    public CityVisit(Long id, String cityName, Date dateFrom, Date dateTo) {
-        this.id = id;
-        this.cityName = cityName;
-        this.dateFrom = dateFrom;
-        this.dateTo = dateTo;
-    }
+    @ManyToOne
+    @JoinColumn(name = "tour_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Tour tour;
 
     public CityVisit() {
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        CityVisit cityVisit = (CityVisit) o;
-        return Objects.equals(id, cityVisit.id) && Objects.equals(cityName, cityVisit.cityName) && Objects.equals(dateFrom, cityVisit.dateFrom) && Objects.equals(dateTo, cityVisit.dateTo);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, cityName, dateFrom, dateTo);
-    }
-
-    @Override
-    public String toString() {
-        return "CityVisit{" +
-                "id=" + id +
-                ", cityName='" + cityName + '\'' +
-                ", dateFrom=" + dateFrom +
-                ", dateTo=" + dateTo +
-                '}';
     }
 }
