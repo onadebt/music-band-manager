@@ -87,4 +87,13 @@ public class ArtistService implements IArtistService {
         artist.setBandIds(bandIds);
         artistRepository.save(artist);
     }
+
+    @Override
+    public void unlinkArtistFromBand(Long artistId, Long bandId) {
+        Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new UserNotFoundException(artistId));
+        Set<Long> bandIds = artist.getBandIds();
+        bandIds.remove(bandId);
+        artist.setBandIds(bandIds);
+        artistRepository.save(artist);
+    }
 }
