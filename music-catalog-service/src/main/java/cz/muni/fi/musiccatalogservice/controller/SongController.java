@@ -2,6 +2,14 @@ package cz.muni.fi.musiccatalogservice.controller;
 
 import cz.muni.fi.musiccatalogservice.dto.SongDTO;
 import cz.muni.fi.musiccatalogservice.facade.SongFacade;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/songs")
+@Tag(name = "Song", description = "The Song API")
 public class SongController {
 
     private final SongFacade songFacade;
@@ -20,40 +29,86 @@ public class SongController {
         this.songFacade = songFacade;
     }
 
+    @Operation(summary = "Get all songs", description = "Returns a list of all songs in the catalog")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved songs",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SongDTO.class)))
+    })
     @GetMapping
     public ResponseEntity<List<SongDTO>> getAllSongs() {
         return ResponseEntity.ok(songFacade.getAllSongs());
     }
 
+    @Operation(summary = "Get songs by album", description = "Returns songs for a specific album")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved songs",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SongDTO.class)))
+    })
     @GetMapping("/album/{albumId}")
-    public ResponseEntity<List<SongDTO>> getSongsByAlbum(@PathVariable Long albumId) {
+    public ResponseEntity<List<SongDTO>> getSongsByAlbum(
+            @Parameter(description = "Album ID", required = true) @PathVariable Long albumId) {
         return ResponseEntity.ok(songFacade.getSongsByAlbum(albumId));
     }
 
+    @Operation(summary = "Get songs by band", description = "Returns songs for a specific band")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved songs",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SongDTO.class)))
+    })
     @GetMapping("/band/{bandId}")
-    public ResponseEntity<List<SongDTO>> getSongsByBand(@PathVariable Long bandId) {
+    public ResponseEntity<List<SongDTO>> getSongsByBand(
+            @Parameter(description = "Band ID", required = true) @PathVariable Long bandId) {
         return ResponseEntity.ok(songFacade.getSongsByBand(bandId));
     }
 
+    @Operation(summary = "Get song by ID", description = "Returns a song by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved song",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SongDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Song not found")
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<SongDTO> getSongById(@PathVariable Long id) {
+    public ResponseEntity<SongDTO> getSongById(
+            @Parameter(description = "Song ID", required = true) @PathVariable Long id) {
         return ResponseEntity.ok(songFacade.getSongById(id));
     }
 
+    @Operation(summary = "Create a new song", description = "Creates a new song")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Song created successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SongDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input")
+    })
     @PostMapping
-    public ResponseEntity<SongDTO> createSong(@RequestBody SongDTO songDTO) {
+    public ResponseEntity<SongDTO> createSong(
+            @Parameter(description = "Song to create", required = true) @Valid @RequestBody SongDTO songDTO) {
         SongDTO createdSong = songFacade.createSong(songDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdSong);
     }
 
+    @Operation(summary = "Update a song", description = "Updates an existing song")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Song updated successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SongDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "404", description = "Song not found")
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<SongDTO> updateSong(@PathVariable Long id, @RequestBody SongDTO songDTO) {
+    public ResponseEntity<SongDTO> updateSong(
+            @Parameter(description = "Song ID", required = true) @PathVariable Long id,
+            @Parameter(description = "Updated song details", required = true) @Valid @RequestBody SongDTO songDTO) {
         SongDTO updatedSong = songFacade.updateSong(id, songDTO);
         return ResponseEntity.ok(updatedSong);
     }
 
+    @Operation(summary = "Delete a song", description = "Deletes a song by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Song deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Song not found")
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSong(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteSong(
+            @Parameter(description = "Song ID", required = true) @PathVariable Long id) {
         songFacade.deleteSong(id);
         return ResponseEntity.noContent().build();
     }
