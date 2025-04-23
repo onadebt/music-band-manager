@@ -4,10 +4,12 @@ package cz.muni.fi.tourmanagementservice.controller;
 import cz.muni.fi.tourmanagementservice.dto.TourDTO;
 import cz.muni.fi.tourmanagementservice.facades.TourFacade;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +53,8 @@ public class TourController {
             @ApiResponse(responseCode = "200", description = "Tour found"),
             @ApiResponse(responseCode = "404", description = "Tour not found", content = @Content(mediaType = "application/problem+json"))
     })
-    public ResponseEntity<List<TourDTO>> getToursByBand(@PathVariable Long bandId) {
+    public ResponseEntity<List<TourDTO>> getToursByBand(
+            @Parameter(description = "Band ID", required = true) @PathVariable Long bandId) {
         return ResponseEntity.ok(tourFacade.getToursByBand(bandId));
     }
 
@@ -61,7 +64,8 @@ public class TourController {
             @ApiResponse(responseCode = "200", description = "Tour found"),
             @ApiResponse(responseCode = "404", description = "Tour not found", content = @Content(mediaType = "application/problem+json"))
     })
-    public ResponseEntity<TourDTO> getTourById(@PathVariable Long id) {
+    public ResponseEntity<TourDTO> getTourById(
+            @Parameter(description = "Tour ID", required = true) @PathVariable Long id) {
         return ResponseEntity.ok(tourFacade.getTourById(id));
     }
 
@@ -72,7 +76,8 @@ public class TourController {
             @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json")),
     })
-    public ResponseEntity<TourDTO> createTour(@RequestBody TourDTO tourDTO) {
+    public ResponseEntity<TourDTO> createTour(
+            @Parameter(description = "Tour to create", required = true) @Valid @RequestBody TourDTO tourDTO) {
         TourDTO createdTour = tourFacade.createTour(tourDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTour);
     }
@@ -85,7 +90,9 @@ public class TourController {
             @ApiResponse(responseCode = "404", description = "Tour not found", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<TourDTO> updateTour(@PathVariable Long id, @RequestBody TourDTO tourDTO) {
+    public ResponseEntity<TourDTO> updateTour(
+            @Parameter(description = "Tour ID", required = true) @PathVariable Long id,
+            @Parameter(description = "Tour to create", required = true) @Valid @RequestBody TourDTO tourDTO) {
         TourDTO updatedTour = tourFacade.updateTour(id, tourDTO);
         return ResponseEntity.ok(updatedTour);
     }
@@ -96,7 +103,8 @@ public class TourController {
             @ApiResponse(responseCode = "204", description = "Tour deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Tour not found", content = @Content(mediaType = "application/problem+json"))
     })
-    public ResponseEntity<Void> deleteTour(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTour(
+            @Parameter(description = "Tour ID", required = true) @PathVariable Long id) {
         tourFacade.deleteTour(id);
         return ResponseEntity.noContent().build();
     }
