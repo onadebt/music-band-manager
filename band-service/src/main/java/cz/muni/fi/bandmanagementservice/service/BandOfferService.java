@@ -1,17 +1,21 @@
 package cz.muni.fi.bandmanagementservice.service;
 
-import cz.muni.fi.bandmanagementservice.model.Band;
-import cz.muni.fi.bandmanagementservice.model.BandOffer;
-import cz.muni.fi.bandmanagementservice.model.BandOfferStatus;
-import cz.muni.fi.bandmanagementservice.repository.BandOfferRepository;
-import cz.muni.fi.bandmanagementservice.repository.BandRepository;
+import cz.muni.fi.bandmanagementservice.artemis.ArtistOfferEventProducer;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
+import cz.muni.fi.bandmanagementservice.model.Band;
+import cz.muni.fi.bandmanagementservice.model.BandOffer;
+import cz.muni.fi.bandmanagementservice.repository.BandOfferRepository;
+import cz.muni.fi.bandmanagementservice.repository.BandRepository;
+import cz.muni.fi.events.bandoffer.BandOfferAcceptedEvent;
+import cz.muni.fi.shared.enm.BandOfferStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author Tomáš MAREK
@@ -20,11 +24,13 @@ import java.util.Optional;
 public class BandOfferService {
     private final BandOfferRepository bandOfferRepository;
     private final BandRepository bandRepository;
+    private final ArtistOfferEventProducer artistOfferEventProducer;
 
     @Autowired
-    public BandOfferService(BandOfferRepository bandOfferRepository, BandRepository bandRepository) {
+    public BandOfferService(BandOfferRepository bandOfferRepository, BandRepository bandRepository, ArtistOfferEventProducer artistOfferEventProducer) {
         this.bandOfferRepository = bandOfferRepository;
         this.bandRepository = bandRepository;
+        this.artistOfferEventProducer = artistOfferEventProducer;
     }
 
     public BandOffer getBandOffer(Long bandOfferId) {
@@ -41,7 +47,7 @@ public class BandOfferService {
             throw new InvalidOperationException("Band with id %s does not exist".formatted(bandId));
         }
         Band offeredBand = maybeOfferedBand.get();
-        if (!offeredBand.getManagerId().equals(offeringManagerId)){
+        if (!offeredBand.getManagerId().equals(offeringManagerId)) {
             throw new InvalidOperationException("Offer can be created only by manager of the band");
         }
         if (offeredBand.getMembers().contains(invitedMusicianId)) {
@@ -55,29 +61,40 @@ public class BandOfferService {
         return bandOfferRepository.save(newOffer);
     }
 
-    public BandOffer acceptOffer(Long bandOfferId){
+    @Transactional
+    public BandOffer acceptOffer(Long bandOfferId) {
         BandOffer bandOffer = getBandOffer(bandOfferId);
         bandOffer.acceptOffer();
         BandOffer accepted = bandOfferRepository.save(bandOffer);
 
         Optional<Band> newBand = bandRepository.findById(bandOffer.getBandId());
-        if (newBand.isEmpty()){
+        if (newBand.isEmpty()) {
             throw new IllegalStateException("Band with id %d not found".formatted(bandOffer.getBandId()));
         }
         newBand.get().addMember(bandOffer.getInvitedMusicianId());
         bandRepository.save(newBand.get());
+
+        //TODO: send event to message queue
+        BandOfferAcceptedEvent event = BandOfferAcceptedEvent.builder()
+                .id(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE)
+                .bandId(bandOffer.getBandId())
+                .invitedMusicianId(bandOffer.getInvitedMusicianId())
+                .offeringManagerId(bandOffer.getOfferingManagerId())
+                .build();
+
+        artistOfferEventProducer.sendOfferAcceptedEvent(event);
         return accepted;
     }
 
-    public BandOffer rejectOffer(Long bandOfferId){
+    public BandOffer rejectOffer(Long bandOfferId) {
         BandOffer bandOffer = getBandOffer(bandOfferId);
         bandOffer.rejectOffer();
         return bandOfferRepository.save(bandOffer);
     }
 
-    public void revokeOffer(Long bandOfferId){
+    public void revokeOffer(Long bandOfferId) {
         BandOffer bandOffer = getBandOffer(bandOfferId);
-        if (bandOffer.getStatus() != BandOfferStatus.PENDING){
+        if (bandOffer.getStatus() != BandOfferStatus.PENDING) {
             throw new InvalidOperationException("BandOffer was already accepted or rejected and cannot be revoked");
         }
         bandOfferRepository.delete(bandOffer);
@@ -96,7 +113,7 @@ public class BandOfferService {
     }
 
     private boolean pendingOfferExists(Long invitedMusicianId, Long bandId) {
-         Optional<BandOffer> found = bandOfferRepository.findByBandIdAndInvitedMusicianId(invitedMusicianId, bandId);
+        Optional<BandOffer> found = bandOfferRepository.findByBandIdAndInvitedMusicianId(invitedMusicianId, bandId);
         return found.filter(bandOffer -> bandOffer.getStatus() == BandOfferStatus.PENDING).isPresent();
     }
 }
