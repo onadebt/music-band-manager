@@ -43,4 +43,8 @@ public class BandFacade {
     public BandDto removeMember(Long bandId, Long memberId) {
         return BandMapper.mapToDto(bandService.removeMember(bandId, memberId));
     }
+
+    public BandDto addMember(Long bandId, Long memberId) {
+        return BandMapper.mapToDto(bandService.addMember(bandId, memberId));
+    }
 }

@@ -103,4 +103,21 @@ public class BandRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/{bandId}/addMember/{memberId}")
+    @Operation(summary = "Add member to the band")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Member added", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "Member could not be added"),
+            @ApiResponse(responseCode = "404", description = "Band doest not exist")
+    })
+    public ResponseEntity<BandDto> addMember(@PathVariable Long bandId, @PathVariable Long memberId) {
+        try {
+            return new ResponseEntity<>(bandFacade.addMember(bandId, memberId), HttpStatus.CREATED);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (InvalidOperationException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
