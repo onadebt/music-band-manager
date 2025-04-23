@@ -14,13 +14,13 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Music Catalog API")
+                        .title("Tour API")
                         .version("1.0")
-                        .description("Spring Boot REST API for Music Catalog")
+                        .description("Spring Boot REST API for Tours")
                         .termsOfService("http://swagger.io/terms/")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org"))
                         .contact(new Contact()
-                                .name("Music Catalog Team")
+                                .name("Tour Team")
                                 .url("https://github.com/music-catalog")
                                 .email("info@musiccatalog.com")));
     }
