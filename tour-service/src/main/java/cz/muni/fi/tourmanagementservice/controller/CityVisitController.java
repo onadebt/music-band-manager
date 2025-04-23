@@ -26,7 +26,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/cityVisits")
-@Tag(name = "CityVisit API", description = "CityVisit management API")
+@Tag(name = "CityVisit", description = "CityVisit management API")
 public class CityVisitController {
 
     private final CityVisitFacade cityVisitFacade;
