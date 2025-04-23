@@ -21,4 +21,6 @@ public interface IArtistService {
     Artist updateArtistByBandIds(Long artistId, Set<Long> bandIds);
 
     Artist updateArtist(Long id, Artist artist);
+
+    void linkArtistToBand(Long artistId, Long bandId);
 }
