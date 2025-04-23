@@ -1,6 +1,7 @@
 package cz.muni.fi.bandmanagementservice.model;
 
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
+import cz.muni.fi.shared.enm.BandOfferStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
