@@ -53,7 +53,7 @@ public class BandOfferService {
         if (offeredBand.getMembers().contains(invitedMusicianId)) {
             throw new InvalidOperationException("Musician is already member of the band");
         }
-        if (pendingOfferExists(offeringManagerId, bandId)) {
+        if (pendingOfferExists(invitedMusicianId, bandId)) {
             throw new InvalidOperationException("There is already a pending band offer for given musician and band");
         }
         // TODO verify manager and musician

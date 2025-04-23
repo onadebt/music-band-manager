@@ -73,7 +73,7 @@ class BandOfferServiceTest {
         assertEquals(2L, result.getInvitedMusicianId());
         assertEquals(3L, result.getOfferingManagerId());
         verify(bandRepository).findById(1L);
-//        verify(bandOfferRepository).findByBandIdAndInvitedMusicianId(2L, 1L);
+        verify(bandOfferRepository).findByBandIdAndInvitedMusicianId(2L, 1L);
         verify(bandOfferRepository).save(any(BandOffer.class));
     }
 
