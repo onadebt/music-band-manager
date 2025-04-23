@@ -4,7 +4,7 @@ import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandOffer;
-import cz.muni.fi.bandmanagementservice.model.BandOfferStatus;
+import cz.muni.fi.shared.enm.BandOfferStatus;
 import cz.muni.fi.bandmanagementservice.repository.BandOfferRepository;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import org.junit.jupiter.api.BeforeEach;

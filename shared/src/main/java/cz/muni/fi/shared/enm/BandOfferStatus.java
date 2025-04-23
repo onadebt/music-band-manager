@@ -1,4 +1,4 @@
-package cz.muni.fi.bandmanagementservice.model;
+package cz.muni.fi.shared.enm;
 
 /**
  * @author Tomáš MAREK
