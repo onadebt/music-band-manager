@@ -1,25 +1,22 @@
 package cz.muni.fi.userservice.artemis;
 
 import cz.muni.fi.events.bandoffer.BandOfferAcceptedEvent;
+import cz.muni.fi.events.bandoffer.BandOfferEvents;
 import cz.muni.fi.userservice.service.ArtistService;
+import lombok.AllArgsConstructor;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class ArtistOfferEventListener {
+@AllArgsConstructor
+public class BandOfferEventListener {
 
     private final ArtistService artistService;
 
-    public ArtistOfferEventListener(ArtistService artistService) {
-        this.artistService = artistService;
-    }
-
-    @JmsListener(destination = "offer-accepted")
     @Transactional
-    public void handleArtistOfferAccepted(BandOfferAcceptedEvent event) {
-        System.out.println("Received eventttttttttttttttttttttttttttttt");
+    @JmsListener(destination = BandOfferEvents.BAND_OFFER_ACCEPTED_EVENT)
+    public void handleBandOfferAccepted(BandOfferAcceptedEvent event) {
         artistService.linkArtistToBand(event.getInvitedMusicianId(), event.getBandId());
-        System.out.println("processed eventtttttttttttttttttttttttttttttt");
     }
 }
