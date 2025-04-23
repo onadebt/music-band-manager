@@ -1,6 +1,6 @@
 package cz.muni.fi.userservice.dto;
 
-import cz.muni.fi.userservice.model.Role;
+import cz.muni.fi.shared.enm.Role;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,14 +18,6 @@ public class ArtistDto extends UserDto {
 
     public ArtistDto() {
         this.setRole(Role.ARTIST);
-    }
-
-    public ArtistDto(String stageName, String bio, String skills, Set<Long> bandIds) {
-        this.setRole(Role.ARTIST);
-        this.stageName = stageName;
-        this.bio = bio;
-        this.skills = skills;
-        this.bandIds = bandIds;
     }
 
     @Override
