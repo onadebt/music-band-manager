@@ -9,10 +9,10 @@
 		<relativePath/>
 	</parent>
 
-	<artifactId>user-service</artifactId>
+	<artifactId>music-catalog-service</artifactId>
 	<version>1.0.0</version>
-	<name>user-service</name>
-	<description>user-service</description>
+	<name>music-catalog-service</name>
+	<description>music-catalog-service</description>
 	<packaging>jar</packaging>
 
 	<properties>
