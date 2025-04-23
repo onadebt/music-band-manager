@@ -1,52 +1,26 @@
 package cz.muni.fi.musiccatalogservice.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Data
 public class AlbumDTO {
     private Long id;
+
+    @NotBlank(message = "Album title cannot be blank")
     private String title;
+
+    @NotNull(message = "Release date cannot be null")
+    @PastOrPresent(message = "Release date must be in the past or present")
     private LocalDateTime releaseDate;
+
+    @NotNull(message = "Band ID cannot be null")
     private Long bandId;
+
     private List<SongDTO> songs;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public LocalDateTime getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(LocalDateTime releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public Long getBandId() {
-        return bandId;
-    }
-
-    public void setBandId(Long bandId) {
-        this.bandId = bandId;
-    }
-
-    public List<SongDTO> getSongs() {
-        return songs;
-    }
-
-    public void setSongs(List<SongDTO> songs) {
-        this.songs = songs;
-    }
 }
