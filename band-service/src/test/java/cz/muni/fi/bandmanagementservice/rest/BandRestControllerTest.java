@@ -83,4 +83,55 @@ public class BandRestControllerTest {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
+
+    @Test
+    void testGetBand_Success() {
+        BandDto band = new BandDto();
+        when(bandFacade.getBand(1L)).thenReturn(band);
+
+        ResponseEntity<BandDto> response = controller.getBand(1L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(band, response.getBody());
+    }
+
+    @Test
+    void testRemoveMember_Success() {
+        BandDto band = new BandDto();
+        when(bandFacade.removeMember(1L, 2L)).thenReturn(band);
+
+        ResponseEntity<BandDto> response = controller.removeMember(1L, 2L);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(band, response.getBody());
+    }
+
+    @Test
+    void testRemoveMember_NotFound() {
+        when(bandFacade.removeMember(1L, 2L)).thenThrow(new ResourceNotFoundException("Not found"));
+
+        ResponseEntity<BandDto> response = controller.removeMember(1L, 2L);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void testAddMember_Success() {
+        BandDto band = new BandDto();
+        when(bandFacade.addMember(1L, 2L)).thenReturn(band);
+
+        ResponseEntity<BandDto> response = controller.addMember(1L, 2L);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(band, response.getBody());
+    }
+
+    @Test
+    void testAddMember_NotFound() {
+        when(bandFacade.addMember(1L, 2L)).thenThrow(new ResourceNotFoundException("Not found"));
+
+        ResponseEntity<BandDto> response = controller.addMember(1L, 2L);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
 }

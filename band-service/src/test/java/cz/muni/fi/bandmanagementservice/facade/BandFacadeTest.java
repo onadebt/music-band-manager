@@ -80,6 +80,17 @@ public class BandFacadeTest {
     }
 
     @Test
+    public void testAddMember() {
+        Band band = new Band(1L, "Band Name", "Rock", 1L);
+        when(bandService.addMember(1L, 2L)).thenReturn(band);
+
+        BandDto bandDto = bandFacade.addMember(1L, 2L);
+
+        assertEquals("Band Name", bandDto.getName());
+        verify(bandService, times(1)).addMember(1L, 2L);
+    }
+
+    @Test
     public void testRemoveMember() {
         Band band = new Band(1L, "Band Name", "Rock", 1L);
         when(bandService.removeMember(1L, 2L)).thenReturn(band);

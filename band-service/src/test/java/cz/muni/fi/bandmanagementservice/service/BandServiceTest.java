@@ -1,5 +1,6 @@
 package cz.muni.fi.bandmanagementservice.service;
 
+import cz.muni.fi.bandmanagementservice.artemis.BandEventProducer;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
@@ -20,6 +21,9 @@ public class BandServiceTest {
 
     @Mock
     private BandRepository bandRepository;
+
+    @Mock
+    private BandEventProducer bandEventProducer;
 
     @InjectMocks
     private BandService bandService;
@@ -77,6 +81,20 @@ public class BandServiceTest {
     }
 
     @Test
+    public void testAddMember() {
+        Band band = new Band(1L, "Band Name", "Rock", 1L);
+        when(bandRepository.findById(1L)).thenReturn(Optional.of(band));
+        when(bandRepository.save(any(Band.class))).thenReturn(band);
+
+        Band updatedBand = bandService.addMember(1L, 2L);
+
+        assertEquals("Band Name", updatedBand.getName());
+        verify(bandRepository, times(1)).findById(1L);
+        verify(bandRepository, times(1)).save(any(Band.class));
+        verify(bandEventProducer, times(1)).sendBandAddMemberEvent(any());
+    }
+
+    @Test
     public void testRemoveMember() {
         Band band = new Band(1L, "Band Name", "Rock", 1L);
         band.addMember(2L);
@@ -88,5 +106,6 @@ public class BandServiceTest {
         assertEquals("Band Name", updatedBand.getName());
         verify(bandRepository, times(1)).findById(1L);
         verify(bandRepository, times(1)).save(any(Band.class));
+        verify(bandEventProducer, times(1)).sendBandRemoveMemberEvent(any());
     }
 }
