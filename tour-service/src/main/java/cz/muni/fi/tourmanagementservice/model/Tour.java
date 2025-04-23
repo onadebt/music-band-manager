@@ -40,7 +40,7 @@ public class Tour {
         cityVisit.setTour(this);
     }
 
-    public void reomveCityVisit(CityVisit cityVisit) {
+    public void removeCityVisit(CityVisit cityVisit) {
         cityVisits.remove(cityVisit);
         cityVisit.setTour(null);
     }
