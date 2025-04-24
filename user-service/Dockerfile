@@ -1,8 +1,18 @@
-FROM docker.io/eclipse-temurin:21-jdk-jammy
-
+# stage 1: build
+# -------------------------------
+FROM maven:3.9.4-eclipse-temurin-21 AS build
 WORKDIR /app
 
-COPY ./user-service/target/user-service-*.jar app.jar
+COPY . .
+
+RUN mvn clean package -pl user-service -am -DskipTests
+
+# stage 2: run
+# -------------------------------
+FROM eclipse-temurin:21-jdk-jammy
+WORKDIR /app
+
+COPY --from=build /app/user-service/target/user-service-*.jar app.jar
 
 EXPOSE 8091
 
