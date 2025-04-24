@@ -1,10 +1,12 @@
 package cz.muni.fi.bandmanagementservice.service;
 
+import cz.muni.fi.bandmanagementservice.artemis.BandEventProducer;
 import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
+import cz.muni.fi.events.band.BandRemoveMemberEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +19,12 @@ import java.util.Optional;
 @Service
 public class BandService {
     private final BandRepository bandRepository;
+     private final BandEventProducer bandEventProducer;
 
     @Autowired
-    public BandService(BandRepository bandRepository) {
+    public BandService(BandRepository bandRepository, BandEventProducer bandEventProducer) {
         this.bandRepository = bandRepository;
+        this.bandEventProducer = bandEventProducer;
     }
 
     public Band createBand(String name, String musicalStyle, Long managerId){
@@ -58,8 +62,33 @@ public class BandService {
             throw new InvalidOperationException("Member with id %d is not part of band %d".formatted(memberId, bandId));
         }
         band.removeMember(memberId);
-        return bandRepository.save(band);
+        var updatedBand = bandRepository.save(band);
+
+        bandEventProducer.sendBandRemoveMemberEvent(
+                BandRemoveMemberEvent.builder()
+                        .bandId(bandId)
+                        .memberId(memberId)
+                        .build()
+        );
+
+        return updatedBand;
     }
 
+    public Band addMember(Long bandId, Long memberId){
+        Band band = getBand(bandId);
+        if (band.getMembers().contains(memberId)){
+            throw new InvalidOperationException("Member with id %d is already part of band %d".formatted(memberId, bandId));
+        }
+        band.addMember(memberId);
+        var updatedBand = bandRepository.save(band);
 
+        bandEventProducer.sendBandAddMemberEvent(
+                cz.muni.fi.events.band.BandAddMemberEvent.builder()
+                        .bandId(bandId)
+                        .memberId(memberId)
+                        .build()
+        );
+
+        return updatedBand;
+    }
 }

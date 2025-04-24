@@ -12,9 +12,6 @@ import java.util.Date;
 public class CityVisitDTO {
     private Long id;
 
-    @NotNull(message = "Tour ID cannot be null")
-    private Long tourId;
-
     @NotBlank(message = "City name cannot be blank")
     private String cityName;
 
@@ -22,7 +19,7 @@ public class CityVisitDTO {
     @FutureOrPresent(message = "Date From must be in the present or future")
     private Date dateFrom;
 
-    @NotNull(message = "Date From cannot be null")
-    @FutureOrPresent(message = "Date From must be in the present or future")
+    @NotNull(message = "Date To cannot be null")
+    @FutureOrPresent(message = "Date To must be in the present or future")
     private Date dateTo;
 }

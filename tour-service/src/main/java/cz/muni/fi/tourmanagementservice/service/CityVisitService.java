@@ -29,10 +29,6 @@ public class CityVisitService {
                 .orElseThrow(() -> new ResourceNotFoundException("CityVisit not found with id: " + cityVisitId));
     }
 
-    public List<CityVisit> getCityVisitByTour(Long tourId) {
-        return cityVisitRepository.findByTourId(tourId);
-    }
-
 
     @Transactional
     public CityVisit createCityVisit(CityVisit cityVisit) {
@@ -43,9 +39,6 @@ public class CityVisitService {
     @Transactional
     public CityVisit updateCityVisit(Long id, CityVisit updatedCityVisit) {
         CityVisit cityVisit = getCityVisitById(id);
-
-        if (updatedCityVisit.getTour() != null)
-            cityVisit.setTour(updatedCityVisit.getTour());
 
         cityVisit.setCityName(updatedCityVisit.getCityName());
         cityVisit.setDateFrom(updatedCityVisit.getDateFrom());

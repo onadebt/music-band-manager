@@ -23,4 +23,6 @@ public interface IArtistService {
     Artist updateArtist(Long id, Artist artist);
 
     void linkArtistToBand(Long artistId, Long bandId);
+
+    void unlinkArtistFromBand(Long artistId, Long bandId);
 }

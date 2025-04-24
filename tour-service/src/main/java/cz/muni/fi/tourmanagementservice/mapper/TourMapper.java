@@ -10,13 +10,14 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface TourMapper {
 
-    @Mapping(target = "cityVisits", ignore = true)
+    @Mapping(target = "cityVisits")
     TourDTO toDTO(Tour tour);
 
-    @Mapping(target = "cityVisits", ignore = true)
+    @Mapping(target = "cityVisits")
     Tour toEntity(TourDTO tourDTO);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "cityVisits", ignore = true)
+    @Mapping(target = "cityVisits")
     void updateEntityFromDto(TourDTO dto, @MappingTarget Tour entity);
 }
+

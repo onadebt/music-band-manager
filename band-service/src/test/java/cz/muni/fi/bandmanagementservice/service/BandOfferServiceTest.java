@@ -1,6 +1,6 @@
 package cz.muni.fi.bandmanagementservice.service;
 
-import cz.muni.fi.bandmanagementservice.artemis.ArtistOfferEventProducer;
+import cz.muni.fi.bandmanagementservice.artemis.BandOfferEventProducer;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import cz.muni.fi.bandmanagementservice.model.Band;
@@ -29,7 +29,7 @@ class BandOfferServiceTest {
     private BandRepository bandRepository;
 
     @Mock
-    private ArtistOfferEventProducer artistOfferEventProducer;
+    private BandOfferEventProducer bandOfferEventProducer;
 
     @InjectMocks
     private BandOfferService bandOfferService;
@@ -73,7 +73,7 @@ class BandOfferServiceTest {
         assertEquals(2L, result.getInvitedMusicianId());
         assertEquals(3L, result.getOfferingManagerId());
         verify(bandRepository).findById(1L);
-//        verify(bandOfferRepository).findByBandIdAndInvitedMusicianId(2L, 1L);
+        verify(bandOfferRepository).findByBandIdAndInvitedMusicianId(2L, 1L);
         verify(bandOfferRepository).save(any(BandOffer.class));
     }
 
@@ -105,7 +105,7 @@ class BandOfferServiceTest {
         verify(bandRepository).findById(1L);
         verify(bandOfferRepository).save(bandOffer);
         verify(bandRepository).save(band);
-        verify(artistOfferEventProducer).sendOfferAcceptedEvent(any(BandOfferAcceptedEvent.class));
+        verify(bandOfferEventProducer).sendOfferAcceptedEvent(any(BandOfferAcceptedEvent.class));
     }
 
     @Test

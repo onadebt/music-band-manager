@@ -45,3 +45,6 @@ Both actors share a common **Login** system, while other use cases are specific 
 ## Class diagram
 This diagram illustrates the core data structures and relationships between key entities in the system. The classes map to the microservices described and support functionalities like band management, music cataloging, user roles, and tour scheduling.
 ![Class diagram](assets/ClassDiagram.png)
+
+## AI disclosure
+During the development of this project, AI tools were utilized.

@@ -1,6 +1,6 @@
 package cz.muni.fi.bandmanagementservice.service;
 
-import cz.muni.fi.bandmanagementservice.artemis.ArtistOfferEventProducer;
+import cz.muni.fi.bandmanagementservice.artemis.BandOfferEventProducer;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import cz.muni.fi.bandmanagementservice.model.Band;
@@ -24,13 +24,13 @@ import java.util.UUID;
 public class BandOfferService {
     private final BandOfferRepository bandOfferRepository;
     private final BandRepository bandRepository;
-    private final ArtistOfferEventProducer artistOfferEventProducer;
+    private final BandOfferEventProducer bandOfferEventProducer;
 
     @Autowired
-    public BandOfferService(BandOfferRepository bandOfferRepository, BandRepository bandRepository, ArtistOfferEventProducer artistOfferEventProducer) {
+    public BandOfferService(BandOfferRepository bandOfferRepository, BandRepository bandRepository, BandOfferEventProducer bandOfferEventProducer) {
         this.bandOfferRepository = bandOfferRepository;
         this.bandRepository = bandRepository;
-        this.artistOfferEventProducer = artistOfferEventProducer;
+        this.bandOfferEventProducer = bandOfferEventProducer;
     }
 
     public BandOffer getBandOffer(Long bandOfferId) {
@@ -53,7 +53,7 @@ public class BandOfferService {
         if (offeredBand.getMembers().contains(invitedMusicianId)) {
             throw new InvalidOperationException("Musician is already member of the band");
         }
-        if (pendingOfferExists(offeringManagerId, bandId)) {
+        if (pendingOfferExists(invitedMusicianId, bandId)) {
             throw new InvalidOperationException("There is already a pending band offer for given musician and band");
         }
         // TODO verify manager and musician
@@ -74,15 +74,16 @@ public class BandOfferService {
         newBand.get().addMember(bandOffer.getInvitedMusicianId());
         bandRepository.save(newBand.get());
 
-        //TODO: send event to message queue
-        BandOfferAcceptedEvent event = BandOfferAcceptedEvent.builder()
+
+        bandOfferEventProducer.sendOfferAcceptedEvent(
+                BandOfferAcceptedEvent.builder()
                 .id(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE)
                 .bandId(bandOffer.getBandId())
                 .invitedMusicianId(bandOffer.getInvitedMusicianId())
                 .offeringManagerId(bandOffer.getOfferingManagerId())
-                .build();
+                .build()
+        );
 
-        artistOfferEventProducer.sendOfferAcceptedEvent(event);
         return accepted;
     }
 

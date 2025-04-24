@@ -1,6 +1,7 @@
 package cz.muni.fi.tourmanagementservice.controller;
 
 
+import cz.muni.fi.tourmanagementservice.dto.CityVisitDTO;
 import cz.muni.fi.tourmanagementservice.dto.TourDTO;
 import cz.muni.fi.tourmanagementservice.facades.TourFacade;
 import io.swagger.v3.oas.annotations.Operation;
@@ -106,6 +107,34 @@ public class TourController {
     public ResponseEntity<Void> deleteTour(
             @Parameter(description = "Tour ID", required = true) @PathVariable Long id) {
         tourFacade.deleteTour(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{tourId}/city-visit")
+    @Operation(summary = "Add a city visit to a tour")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "City visit added successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/problem+json")),
+            @ApiResponse(responseCode = "404", description = "Tour not found", content = @Content(mediaType = "application/problem+json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<Void> addCityVisitToTour(
+            @Parameter(description = "Tour ID", required = true) @PathVariable Long tourId,
+            @Parameter(description = "City visit to add", required = true) @Valid @RequestBody CityVisitDTO cityVisitDTO) {
+        tourFacade.addCityVisitToTour(tourId, cityVisitDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @DeleteMapping("/{tourId}/city-visit/{cityVisitId}")
+    @Operation(summary = "Remove a city visit from a tour")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "City visit removed successfully"),
+            @ApiResponse(responseCode = "404", description = "Tour or city visit not found", content = @Content(mediaType = "application/problem+json"))
+    })
+    public ResponseEntity<Void> removeCityVisitFromTour(
+            @Parameter(description = "Tour ID", required = true) @PathVariable Long tourId,
+            @Parameter(description = "City visit ID", required = true) @PathVariable Long cityVisitId) {
+        tourFacade.removeCityVisitFromTour(tourId, cityVisitId);
         return ResponseEntity.noContent().build();
     }
 }
