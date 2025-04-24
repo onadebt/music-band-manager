@@ -50,12 +50,14 @@ public class TourFacade {
 
     public TourDTO createTour(TourDTO tourDTO) {
         Tour tour = tourMapper.toEntity(tourDTO);
+        //todo add band service (band) to this as well? like in CityVisit
         Tour savedTour = tourService.createTour(tour);
         return enrichTourWithCityVisits(savedTour);
     }
 
     public TourDTO updateTour(Long id, TourDTO tourDTO) {
         Tour updatedTour = tourService.updateTour(id, tourMapper.toEntity(tourDTO));
+        //todo dtto
         return enrichTourWithCityVisits(updatedTour);
     }
 
