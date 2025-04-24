@@ -45,10 +45,7 @@ public class TourService {
         Tour tour = getTourById(id);
         tour.setTourName(updatedTour.getTourName());
         tour.setCityVisits(updatedTour.getCityVisits());
-
-        if (updatedTour.getBandId() != null)
-            tour.setBandId(updatedTour.getBandId());
-
+        tour.setBandId(updatedTour.getBandId());
         return tourRepository.save(tour);
     }
 
