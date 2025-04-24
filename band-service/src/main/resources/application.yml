@@ -22,7 +22,7 @@ spring:
     mode: native
     user: admin
     password: admin
-    broker-url: tcp://localhost:61616
+    broker-url: ${ARTEMIS_BROKER_URL:tcp://localhost:61616}
 
 server:
   port: 8092
@@ -32,4 +32,3 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
-
