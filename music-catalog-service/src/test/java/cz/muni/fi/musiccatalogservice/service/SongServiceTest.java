@@ -1,61 +1,97 @@
 package cz.muni.fi.musiccatalogservice.service;
 
-import cz.muni.fi.musiccatalogservice.exception.ResourceNotFoundException;
+import cz.muni.fi.musiccatalogservice.TestDataFactory;
 import cz.muni.fi.musiccatalogservice.model.Song;
 import cz.muni.fi.musiccatalogservice.repository.SongRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 public class SongServiceTest {
 
     @Mock
-    private SongRepository songRepository;
+    SongRepository songRepository;
 
     @InjectMocks
-    private SongService songService;
-
-    private Song testSong;
-
-    @BeforeEach
-    void setUp() {
-        testSong = new Song();
-        testSong.setId(1L);
-        testSong.setName("Test Song");
-        testSong.setDuration(180);
-    }
+    SongService songService;
 
     @Test
-    void deleteSong_WhenSongExists_ShouldDeleteSuccessfully() {
+    void findAll_noSongsStored_returnsEmptyList() {
         // Arrange
-        when(songRepository.findById(1L)).thenReturn(Optional.of(testSong));
+        Mockito.when(songRepository.findAll()).thenReturn(List.of());
 
         // Act
-        songService.deleteSong(1L);
+        List<Song> found = songService.getAllSongs();
 
         // Assert
-        verify(songRepository, times(1)).deleteById(1L);
+        assertEquals(0, found.size());
     }
 
     @Test
-    void deleteSong_WhenSongDoesNotExist_ShouldThrowResourceNotFoundException() {
+    void findAll_twoSongsStored_returnsList() {
         // Arrange
-        when(songRepository.findById(1L)).thenReturn(Optional.empty());
+        Mockito.when(songRepository.findAll()).thenReturn(List.of(TestDataFactory.TEST_SONG_1, TestDataFactory.TEST_SONG_2));
 
-        // Act & Assert
-        assertThrows(ResourceNotFoundException.class, () -> {
-            songService.deleteSong(1L);
-        });
+        // Act
+        List<Song> found = songService.getAllSongs();
 
-        verify(songRepository, never()).deleteById(anyLong());
+        // Assert
+        assertEquals(2, found.size());
+        assertTrue(found.contains(TestDataFactory.TEST_SONG_1));
+        assertTrue(found.contains(TestDataFactory.TEST_SONG_2));
     }
+
+    @Test
+    void deleteById_songPresent_noException() {
+        // Arrange
+        Mockito.when(songRepository.findById(TestDataFactory.TEST_SONG_1.getId()))
+                .thenReturn(Optional.of(TestDataFactory.TEST_SONG_1));
+
+        // Act
+        songService.deleteSong(TestDataFactory.TEST_SONG_1.getId());
+
+        // Assert
+        Mockito.verify(songRepository, Mockito.times(1)).findById(TestDataFactory.TEST_SONG_1.getId());
+        Mockito.verify(songRepository, Mockito.times(1)).deleteById(TestDataFactory.TEST_SONG_1.getId());
+    }
+
+    @Test
+    void findByAlbumIds_noSongInAlbums_returnsEmptyList() {
+        // Arrange
+        Long emptySongId = 5L;
+        Mockito.when(songRepository.findByAlbumId(emptySongId)).thenReturn(List.of());
+
+        // Act
+        List<Song> found = songService.getSongsByAlbum(emptySongId);
+
+        // Assert
+        assertEquals(0, found.size());
+    }
+
+
+    @Test
+    void findByAlbumIds_songsInAlbums_returnsList() {
+        // Arrange
+        Long albumId = 2L;
+        Mockito.when(songRepository.findByAlbumId(albumId)).thenReturn(List.of(TestDataFactory.TEST_SONG_1, TestDataFactory.TEST_SONG_2));
+
+        // Act
+        List<Song> found = songService.getSongsByAlbum(albumId);
+
+        // Assert
+        assertEquals(2, found.size());
+        assertTrue(found.contains(TestDataFactory.TEST_SONG_1));
+        assertTrue(found.contains(TestDataFactory.TEST_SONG_2));
+    }
+
 }
