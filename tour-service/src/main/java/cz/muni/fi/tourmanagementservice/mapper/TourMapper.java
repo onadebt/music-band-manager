@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = TourMapper.class)
 public interface TourMapper {
 
     @Mapping(target = "cityVisits", ignore = true)
