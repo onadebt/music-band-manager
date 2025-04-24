@@ -4,13 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 
 @Data
@@ -23,16 +19,17 @@ public class CityVisit {
 
     private String cityName;
 
-    private Date dateFrom;
+    private LocalDate dateFrom;
 
-    private Date dateTo;
+    private LocalDate dateTo;
 
-    @ManyToOne
-    @JoinColumn(name = "tour_id")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private Tour tour;
-
-    public CityVisit() {
+    @Override
+    public String toString() {
+        return "CityVisit{" +
+                "id=" + id +
+                ", cityName='" + cityName + '\'' +
+                ", dateFrom=" + dateFrom +
+                ", dateTo=" + dateTo +
+                '}';
     }
 }

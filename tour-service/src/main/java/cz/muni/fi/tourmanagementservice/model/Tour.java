@@ -27,7 +27,7 @@ public class Tour {
 
     private String tourName;
 
-    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<CityVisit> cityVisits = new ArrayList<>();
@@ -37,12 +37,20 @@ public class Tour {
 
     public void addCityVisit(CityVisit cityVisit) {
         cityVisits.add(cityVisit);
-        cityVisit.setTour(this);
     }
 
     public void removeCityVisit(CityVisit cityVisit) {
         cityVisits.remove(cityVisit);
-        cityVisit.setTour(null);
+    }
+
+    @Override
+    public String toString() {
+        return "Tour{" +
+                "id=" + id +
+                ", bandId=" + bandId +
+                ", tourName='" + tourName + '\'' +
+                ", cityVisits=" + cityVisits +
+                '}';
     }
 
 }

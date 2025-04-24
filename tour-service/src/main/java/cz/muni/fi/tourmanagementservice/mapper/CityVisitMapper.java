@@ -11,18 +11,10 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface CityVisitMapper {
 
-    @Mapping(source = "tour", target = "tourId", qualifiedByName = "tourToTourId")
     CityVisitDTO toDTO(CityVisit cityVisit);
 
-    @Mapping(target = "tour", ignore = true)
     CityVisit toEntity(CityVisitDTO cityVisitDTO);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "tour", ignore = true)
     void updateEntityFromDto(CityVisitDTO dto, @MappingTarget CityVisit entity);
-
-    @Named("tourToTourId")
-    default Long tourToTourId(Tour tour) {
-        return tour != null ? tour.getId() : null;
-    }
 }

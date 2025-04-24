@@ -46,17 +46,6 @@ public class CityVisitController {
         return ResponseEntity.ok(cityVisitFacade.getAllCityVisits());
     }
 
-    @GetMapping("/tour/{tourId}")
-    @Operation(summary = "Retrieve all city visits by tour")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "City visit found"),
-            @ApiResponse(responseCode = "404", description = "City visit not found", content = @Content(mediaType = "application/problem+json"))
-    })
-    public ResponseEntity<List<CityVisitDTO>> getCityVisitsByTour(
-            @Parameter(description = "Tour ID", required = true) @PathVariable Long tourId) {
-        return ResponseEntity.ok(cityVisitFacade.getCityVisitsByTour(tourId));
-    }
-
     @GetMapping("/{id}")
     @Operation(summary = "Retrieve all city visits by id")
     @ApiResponses(value = {

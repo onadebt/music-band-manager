@@ -10,34 +10,25 @@ import cz.muni.fi.tourmanagementservice.service.CityVisitService;
 import cz.muni.fi.tourmanagementservice.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 public class CityVisitFacade {
 
     private final CityVisitService cityVisitService;
     private final CityVisitMapper cityVisitMapper;
-    private final TourService tourService;
-    private final TourMapper tourMapper;
 
     @Autowired
-    public CityVisitFacade(CityVisitService cityVisitService, CityVisitMapper cityVisitMapper, TourService tourService, TourMapper tourMapper) {
+    public CityVisitFacade(CityVisitService cityVisitService, CityVisitMapper cityVisitMapper) {
         this.cityVisitService = cityVisitService;
         this.cityVisitMapper = cityVisitMapper;
-        this.tourService = tourService;
-        this.tourMapper = tourMapper;
     }
 
     public List<CityVisitDTO> getAllCityVisits() {
         return cityVisitService.getAllCityVisits().stream()
-                .map(cityVisitMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<CityVisitDTO> getCityVisitsByTour(Long tourId) {
-        return cityVisitService.getCityVisitByTour(tourId).stream()
                 .map(cityVisitMapper::toDTO)
                 .collect(Collectors.toList());
     }
@@ -50,11 +41,6 @@ public class CityVisitFacade {
     public CityVisitDTO createCityVisit(CityVisitDTO cityVisitDTO) {
         CityVisit cityVisit = cityVisitMapper.toEntity(cityVisitDTO);
 
-        if (cityVisitDTO.getTourId() != null) {
-            Tour tour = tourService.getTourById(cityVisitDTO.getTourId());
-            cityVisit.setTour(tour);
-        }
-
         CityVisit savedCityVisit = cityVisitService.createCityVisit(cityVisit);
         return cityVisitMapper.toDTO(savedCityVisit);
     }
@@ -63,14 +49,6 @@ public class CityVisitFacade {
     public CityVisitDTO updateCityVisit(Long id, CityVisitDTO cityVisitDTO) {
         CityVisit cityVisit = cityVisitService.getCityVisitById(id);
         cityVisitMapper.updateEntityFromDto(cityVisitDTO, cityVisit);
-
-        if (cityVisitDTO.getTourId() != null) {
-            Tour tour = tourService.getTourById(cityVisitDTO.getTourId());
-            cityVisit.setTour(tour);
-        }
-        else {
-            cityVisit.setTour(null);
-        }
 
         CityVisit updatedCityVisit = cityVisitService.createCityVisit(cityVisit);
         return cityVisitMapper.toDTO(updatedCityVisit);
