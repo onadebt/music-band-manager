@@ -1,10 +1,9 @@
-# music-band-manager
+# 🎸 music-band-manager
 
-
-## Description
+## 📖 Description
 The web application allows one music band to manage their activities.
 
-## Microservices description
+## 🧩 Microservices Description
 ### User Management Service
 - Handles authentication and authorization
 - Stores user profiles and their role in the system
@@ -25,7 +24,32 @@ The web application allows one music band to manage their activities.
 - Allows band managers to create, update, and cancel tours
 - Stores information about tour dates, locations, and participating bands
 
-## Use case diagram
+
+## 🚀 Build & Run
+
+### Requirements
+- Java 21+
+- Maven
+- Docker & Docker Compose
+
+### Running the application
+
+#### Option 1: Docker Compose (Recommended for Development)
+```bash
+docker compose up --build
+```
+This command builds and starts all microservices and dependencies (e.g., databases, message brokers) as defined in the `docker-compose.yml` file.
+
+#### Option 2: Manually with Maven
+In each microservice directory (`user-service`, `band-service`, `music-catalog-service`, `tour-service`), run:
+
+```bash
+mvn clean install
+mvn spring-boot:run
+```
+
+
+## 📌 Use Case Diagram
 ![Use case diagram](assets/UsecaseDiagram.png)
 
 ### Diagram Overview
@@ -42,9 +66,23 @@ Key functionality includes:
 
 Both actors share a common **Login** system, while other use cases are specific to their roles.
 
-## Class diagram
+
+## 🧬 Class Diagram
 This diagram illustrates the core data structures and relationships between key entities in the system. The classes map to the microservices described and support functionalities like band management, music cataloging, user roles, and tour scheduling.
 ![Class diagram](assets/ClassDiagram.png)
 
-## AI disclosure
+
+
+
+## 📚 API Documentation
+
+Each service exposes its API documentation using **Springdoc OpenAPI** (Swagger UI):
+
+- **User Service**: [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html)
+- **Band Service**: [http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html)
+- **Music Catalog Service**: [http://localhost:8083/swagger-ui.html](http://localhost:8083/swagger-ui.html)
+- **Tour Service**: [http://localhost:8084/swagger-ui.html](http://localhost:8084/swagger-ui.html)
+
+
+## AI Disclosure
 During the development of this project, AI tools were utilized.
