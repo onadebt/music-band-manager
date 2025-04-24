@@ -10,6 +10,8 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+target/
+data/
 
 ### VS Code ###
 .vscode/
