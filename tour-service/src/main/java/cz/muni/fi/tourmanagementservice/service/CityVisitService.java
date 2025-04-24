@@ -43,10 +43,7 @@ public class CityVisitService {
     @Transactional
     public CityVisit updateCityVisit(Long id, CityVisit updatedCityVisit) {
         CityVisit cityVisit = getCityVisitById(id);
-
-        if (updatedCityVisit.getTour() != null)
-            cityVisit.setTour(updatedCityVisit.getTour());
-
+        cityVisit.setTour(updatedCityVisit.getTour());
         cityVisit.setCityName(updatedCityVisit.getCityName());
         cityVisit.setDateFrom(updatedCityVisit.getDateFrom());
         cityVisit.setDateTo(updatedCityVisit.getDateTo());
