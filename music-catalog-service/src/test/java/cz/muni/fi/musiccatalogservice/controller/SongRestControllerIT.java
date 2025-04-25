@@ -166,34 +166,8 @@ public class SongRestControllerIT {
                 .andExpect(status().isNotFound());
 
     }
-    /*
-    @Test
-    public void testAddAlbumToSong() throws Exception {
-        Album newAlbum = new Album();
-        newAlbum.setTitle("New Album");
-        newAlbum.setReleaseDate(LocalDateTime.now().plusDays(60));
-        AlbumDTO albumDTO = new AlbumDTO();
-        albumDTO.setTitle(newAlbum.getTitle());
-        albumDTO.setReleaseDate(newAlbum.getReleaseDate());
 
-        mockMvc.perform(post("/api/songs/{id}/album", testSong.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(albumDTO)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.album.title", is("New Album")));
-    }
 
-    @Test
-    public void testRemoveAlbumFromSong() throws Exception {
-        mockMvc.perform(delete("/api/songs/{id}/album", testSong.getId()))
-                .andExpect(status().isInternalServerError());
-
-        mockMvc.perform(get("/api/songs/{id}", testSong.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.album").doesNotExist());
-
-    }
-*/
     @Test
     public void testCreateSongWithInvalidData() throws Exception {
         SongDTO songDTO = new SongDTO();
