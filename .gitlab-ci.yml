@@ -6,7 +6,7 @@ default:
 
 stages:
   - build
-  - unit-test
+#  - unit-test
   - integration-test
 
 build:
@@ -20,29 +20,29 @@ build:
       - target/*.jar
     expire_in: 1 month
 
-unit-test:
-  stage: unit-test
-
-  script:
-    - echo "Running unit tests..."
-    - mvn test --no-transfer-progress
-    - cat target/surefire-reports/*.txt
-  dependencies:
-    - build
-  artifacts:
-    when: always
-    reports:
-      junit: target/surefire-reports/*.xml
-    paths:
-      - target/surefire-reports/
-    expire_in: 1 month
+#unit-test:
+#  stage: unit-test
+#
+#  script:
+#    - echo "Running unit tests..."
+#    - mvn test --no-transfer-progress
+#    - cat target/surefire-reports/*.txt
+#  dependencies:
+#    - build
+#  artifacts:
+#    when: always
+#    reports:
+#      junit: target/surefire-reports/*.xml
+#    paths:
+#      - target/surefire-reports/
+#    expire_in: 1 month
 
 integration-test:
   stage: integration-test
   script:
     - echo "Running integration tests..."
     - mvn verify --no-transfer-progress
-    - cat target/failsafe-reports/*.txt
+#     cat target/failsafe-reports/*.txt
   dependencies:
     - build
   artifacts:

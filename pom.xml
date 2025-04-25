@@ -37,6 +37,14 @@
                     <reportsDirectory>${project.basedir}/../target/surefire-reports</reportsDirectory>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <reportsDirectory>${project.basedir}/../target/failsafe-reports</reportsDirectory>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
