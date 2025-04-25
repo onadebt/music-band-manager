@@ -17,6 +17,7 @@
 		<java.version>21</java.version>
 		<lombok.version>1.18.36</lombok.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
+		<version.failsafe>3.2.5</version.failsafe>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -113,6 +114,19 @@
 						-Xshare:off
 					</argLine>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>${version.failsafe}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
