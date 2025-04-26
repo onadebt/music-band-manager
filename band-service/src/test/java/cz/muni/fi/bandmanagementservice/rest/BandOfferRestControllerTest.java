@@ -30,13 +30,44 @@ public class BandOfferRestControllerTest {
     BandOfferRestController controller;
 
     @Test
+    void testGetBandOffer_Success() {
+        BandOfferDto offer = new BandOfferDto();
+        when(bandOfferFacade.getBandOffer(1L)).thenReturn(offer);
+
+        ResponseEntity<BandOfferDto> response = controller.getBandOffer(1L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(offer, response.getBody());
+    }
+
+    @Test
+    void testGetBandOffer_NotFound() {
+        when(bandOfferFacade.getBandOffer(1L)).thenThrow(new ResourceNotFoundException("Not found"));
+
+        ResponseEntity<BandOfferDto> response = controller.getBandOffer(1L);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void testCreateBandOffer_Success() {
+        BandOfferDto offer = new BandOfferDto();
+        when(bandOfferFacade.postBandOffer(1L, 2L, 3L)).thenReturn(offer);
+
+        ResponseEntity<BandOfferDto> response = controller.createBandOffer(1L, 2L, 3L);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(offer, response.getBody());
+    }
+
+    @Test
     void testAcceptBandOffer_Success() {
         BandOfferDto offer = new BandOfferDto();
         when(bandOfferFacade.acceptBandOffer(1L)).thenReturn(offer);
 
         ResponseEntity<BandOfferDto> response = controller.acceptBandOffer(1L);
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(offer, response.getBody());
     }
 

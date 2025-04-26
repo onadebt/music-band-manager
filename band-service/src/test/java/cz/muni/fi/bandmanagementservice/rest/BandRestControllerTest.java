@@ -70,7 +70,7 @@ public class BandRestControllerTest {
 
         ResponseEntity<BandDto> response = controller.updateBand(updateRequest);
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(updatedBand, response.getBody());
     }
 
@@ -102,7 +102,7 @@ public class BandRestControllerTest {
 
         ResponseEntity<BandDto> response = controller.removeMember(1L, 2L);
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertEquals(band, response.getBody());
     }
 
@@ -122,7 +122,7 @@ public class BandRestControllerTest {
 
         ResponseEntity<BandDto> response = controller.addMember(1L, 2L);
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(band, response.getBody());
     }
 
