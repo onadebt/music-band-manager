@@ -1,6 +1,7 @@
 package cz.muni.fi.bandmanagementservice.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author Tomáš MAREK
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(title = "Request for change of band information", description = "Object containing newly updated band info, except members which are updated through dedicated api")
 public class BandInfoUpdateRequest {
     @Schema(description = "band id")
+    @NotNull
     private Long id;
 
     @Schema(description = "name of the band", example = "Rammstein")
