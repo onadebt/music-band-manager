@@ -35,7 +35,7 @@ public class BandOfferRestController {
         this.bandOfferFacade = bandOfferFacade;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     @Operation(summary = "Published new offer to join band")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Band Offer created", content = @Content(mediaType = "application/json")),
@@ -68,13 +68,13 @@ public class BandOfferRestController {
     @PostMapping("/{offerId}/accept")
     @Operation(summary = "Accepts offer")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Band offer accepted", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "200", description = "Band offer accepted", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Band offer could not be accepted"),
             @ApiResponse(responseCode = "404", description = "Band offer not found")
     })
     public ResponseEntity<BandOfferDto> acceptBandOffer(@PathVariable Long offerId) {
         try {
-            return new ResponseEntity<>(bandOfferFacade.acceptBandOffer(offerId), HttpStatus.CREATED);
+            return new ResponseEntity<>(bandOfferFacade.acceptBandOffer(offerId), HttpStatus.OK);
         } catch (InvalidOperationException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (ResourceNotFoundException e) {
@@ -117,7 +117,7 @@ public class BandOfferRestController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping
     @Operation(summary = "Returns all stored offer")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json"))
