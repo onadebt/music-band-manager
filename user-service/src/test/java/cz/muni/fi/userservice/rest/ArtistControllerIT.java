@@ -43,11 +43,6 @@ class ArtistControllerIT {
     @Autowired
     ArtistRepository artistRepository;
 
-    @Autowired
-    ArtistMapper artistMapper;
-
-    @MockitoBean
-    BandOfferEventListener bandOfferEventListener;
 
     @Test
     void register_persistsEntity() throws Exception {
@@ -64,8 +59,6 @@ class ArtistControllerIT {
 
     @Test
     void register_nullDto_returnsBadRequest() throws Exception {
-        // Arrange
-
         // Act
         mockMvc.perform(post("/api/artists")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -81,9 +74,7 @@ class ArtistControllerIT {
 //    @Test
 //    void update_sourceExists_replacesEntity() throws Exception {
 //        // Arrange
-//        Artist artist = TestDataFactory.TEST_ARTIST_2;
-//        artist.setId(null);
-//        artist = artistRepository.save(artist);
+//        Artist artist = saveArtist(TestDataFactory.TEST_ARTIST_1);
 //
 //        ArtistUpdateDto updateDto = toArtistUpdateDto(artist);
 //        updateDto.setStageName("New Name");
@@ -128,27 +119,20 @@ class ArtistControllerIT {
     @Test
     void getAllArtists_twoArtists_returnsList() throws Exception{
         // Arrange
-        Artist artist1 = TestDataFactory.TEST_ARTIST_1;
-        Artist artist2 = TestDataFactory.TEST_ARTIST_2;
-        artist1.setId(null);
-        artist2.setId(null);
-
-        artistRepository.save(artist1);
-        artistRepository.save(artist2);
+        Artist artist1 = saveArtist(TestDataFactory.TEST_ARTIST_1);
+        Artist artist2 = saveArtist(TestDataFactory.TEST_ARTIST_2);
 
         // Act
         mockMvc.perform(get("/api/artists"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].lastName").value("Lindemann"))
-                .andExpect(jsonPath("$[1].lastName").value("Brodén"));
+                .andExpect(jsonPath("$[0].lastName").value(artist1.getLastName()))
+                .andExpect(jsonPath("$[1].lastName").value(artist2.getLastName()));
     }
 
     @Test
     void getArtistById_validId_returnsEntityAndOk() throws Exception {
         // Arrange
-        Artist artist = TestDataFactory.TEST_ARTIST_1;
-        artist.setId(null);
-        artist = artistRepository.save(artist);
+        Artist artist = saveArtist(TestDataFactory.TEST_ARTIST_1);
 
         // Act
         mockMvc.perform(get("/api/artists/{id}", artist.getId()))
@@ -168,9 +152,7 @@ class ArtistControllerIT {
     @Test
     void deleteArtist_entityExists_isRemoved() throws Exception {
         // Arrange
-        Artist artist = TestDataFactory.TEST_ARTIST_1;
-        artist.setId(null);
-        artist = artistRepository.save(artist);
+        Artist artist = saveArtist(TestDataFactory.TEST_ARTIST_1);
 
         // Act
         mockMvc.perform(delete("/api/artists/{id}", artist.getId()))
