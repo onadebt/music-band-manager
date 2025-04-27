@@ -180,6 +180,7 @@ public class AlbumFacadeTest {
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> albumFacade.deleteAlbum(invalidId));
         verify(albumService, times(1)).getAlbumById(invalidId);
+        verify(albumService, times(0)).deleteAlbum(invalidId);
     }
 
     @Test

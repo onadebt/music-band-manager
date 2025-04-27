@@ -174,6 +174,7 @@ public class SongFacadeTest {
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> songFacade.deleteSong(invalidId));
         verify(songService, times(1)).getSongById(invalidId);
+        verify(songService, times(0)).deleteSong(invalidId);
     }
 
     @Test
