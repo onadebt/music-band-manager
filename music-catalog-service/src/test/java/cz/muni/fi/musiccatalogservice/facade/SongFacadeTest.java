@@ -4,6 +4,7 @@ import cz.muni.fi.musiccatalogservice.TestDataFactory;
 import cz.muni.fi.musiccatalogservice.dto.SongDTO;
 import cz.muni.fi.musiccatalogservice.mapper.SongMapper;
 import cz.muni.fi.musiccatalogservice.service.SongService;
+import cz.muni.fi.musiccatalogservice.service.AlbumService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,8 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -28,15 +29,18 @@ public class SongFacadeTest {
     private SongService songService;
 
     @Mock
+    private AlbumService albumService;
+
+    @Mock
     private SongMapper songMapper;
-/*
+
     @Test
     void createSong_nullSongDto_throwsIllegalArgumentException() {
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> songFacade.createSong(null));
         verify(songService, Mockito.times(0)).createSong(any());
     }
-*/
+
     @Test
     void createSong_validSongDto_returnsSavedSong() {
         // Arrange
@@ -51,7 +55,7 @@ public class SongFacadeTest {
         verify(songService, times(1)).createSong(TestDataFactory.TEST_SONG_1);
         assertEquals(TestDataFactory.TEST_SONG_1_DTO, created);
     }
-/*
+
     @Test
     void findById_inputNull_throwsIllegalArgumentException() {
         // Act / Assert
@@ -63,17 +67,20 @@ public class SongFacadeTest {
     void findById_invalidId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidId = -1L;
-        Mockito.when(songService.getSongById(invalidId)).thenReturn(null);
+        Mockito.when(songService.getSongById(invalidId))
+                .thenThrow(new IllegalArgumentException("Invalid song ID: " + invalidId));
 
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> songFacade.getSongById(invalidId));
+        verify(songService, times(1)).getSongById(invalidId);
     }
-*/
+
     @Test
     void findById_validId_returnsFoundSong() {
         // Arrange
         Mockito.when(songService.getSongById(TestDataFactory.TEST_SONG_1.getId())).thenReturn(TestDataFactory.TEST_SONG_1);
         Mockito.when(songMapper.toDTO(TestDataFactory.TEST_SONG_1)).thenReturn(TestDataFactory.TEST_SONG_1_DTO);
+
         // Act
         SongDTO found = songFacade.getSongById(TestDataFactory.TEST_SONG_1.getId());
 
@@ -81,7 +88,7 @@ public class SongFacadeTest {
         assertEquals(TestDataFactory.TEST_SONG_1_DTO, found);
         verify(songService, times(1)).getSongById(TestDataFactory.TEST_SONG_1.getId());
     }
-/*
+
     @Test
     void findByBand_nullBandId_throwsIllegalArgumentException() {
         // Act / Assert
@@ -93,12 +100,14 @@ public class SongFacadeTest {
     void findByUsername_invalidBandId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidBandId = -1L;
-        Mockito.when(songService.getSongsByBand(invalidBandId)).thenReturn(null);
+        Mockito.when(songService.getSongsByBand(invalidBandId))
+                .thenThrow(new IllegalArgumentException("Invalid band ID: " + invalidBandId));
 
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> songFacade.getSongsByBand(invalidBandId));
+        verify(songService, times(1)).getSongsByBand(invalidBandId);
     }
-*/
+
     @Test
     void findAll_noSongStored_returnsEmptyList() {
         // Arrange
@@ -128,14 +137,14 @@ public class SongFacadeTest {
         assertTrue(found.contains(TestDataFactory.TEST_SONG_1_DTO));
         assertTrue(found.contains(TestDataFactory.TEST_SONG_2_DTO));
     }
-/*
+
     @Test
     void getSongsByBand_nullArgument_throwsIllegalArgumentException() {
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> songFacade.getSongsByBand(null));
         verify(songService, times(0)).getSongsByBand(any());
     }
-*/
+
     @Test
     void getSongsByBand_twoSongsFound_returnsList() {
         // Arrange
@@ -152,7 +161,7 @@ public class SongFacadeTest {
         assertTrue(found.contains(TestDataFactory.TEST_SONG_1_DTO));
         assertTrue(found.contains(TestDataFactory.TEST_SONG_2_DTO));
     }
-/*
+
     @Test
     void deleteSong_nullId_throwsIllegalArgumentException() {
         // Act / Assert
@@ -164,37 +173,43 @@ public class SongFacadeTest {
     void deleteSong_invalidId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidId = -1L;
-        Mockito.when(songService.getSongById(invalidId)).thenReturn(null);
+        Mockito.doThrow(new IllegalArgumentException("Invalid song ID: " + invalidId))
+                .when(songService).deleteSong(invalidId);
 
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> songFacade.deleteSong(invalidId));
-        verify(songService, times(1)).getSongById(invalidId);
+        verify(songService, times(1)).deleteSong(invalidId);
     }
-*/
+
     @Test
     void deleteSong_validId_callsSongServiceDelete() {
+        // Arrange
+        Long validId = TestDataFactory.TEST_SONG_1.getId();
+
         // Act
-        songService.getSongById(TestDataFactory.TEST_SONG_1.getId());
+        songFacade.deleteSong(validId);
 
         // Assert
-        verify(songService, times(1)).getSongById(TestDataFactory.TEST_SONG_1.getId());
+        verify(songService, times(1)).deleteSong(validId);
     }
-/*
+
     @Test
     void updateSong_nullBandIds_throwsIllegalArgumentException() {
+        // Arrange
+        Long validId = 1L;
+
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> songFacade.updateSong(1L, null));
+        assertThrows(IllegalArgumentException.class, () -> songFacade.updateSong(validId, null));
         verify(songService, times(0)).updateSong(any(), any());
     }
 
     @Test
     void updateSong_nullArtisId_throwsIllegalArgumentException() {
+        // Arrange
+        SongDTO validSong = TestDataFactory.TEST_SONG_1_DTO;
+
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> songFacade.updateSong(null, any()));
+        assertThrows(IllegalArgumentException.class, () -> songFacade.updateSong(null, validSong));
         verify(songService, times(0)).updateSong(any(), any());
     }
-*/
-
 }
-
-

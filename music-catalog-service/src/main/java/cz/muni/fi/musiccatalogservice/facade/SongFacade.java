@@ -34,23 +34,40 @@ public class SongFacade {
     }
 
     public List<SongDTO> getSongsByAlbum(Long albumId) {
+        if (albumId == null) {
+            throw new IllegalArgumentException("Album ID cannot be null");
+        }
+
         return songService.getSongsByAlbum(albumId).stream()
                 .map(songMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     public List<SongDTO> getSongsByBand(Long bandId) {
-        return songService.getSongsByBand(bandId).stream()
+        if (bandId == null) {
+            throw new IllegalArgumentException("Band ID cannot be null");
+        }
+
+        List<Song> songs = songService.getSongsByBand(bandId);
+        return songs.stream()
                 .map(songMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     public SongDTO getSongById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Song ID cannot be null");
+        }
+
         Song song = songService.getSongById(id);
         return songMapper.toDTO(song);
     }
 
     public SongDTO createSong(SongDTO songDTO) {
+        if (songDTO == null) {
+            throw new IllegalArgumentException("Song data cannot be null");
+        }
+
         Song song = songMapper.toEntity(songDTO);
 
         if (songDTO.getAlbumId() != null) {
@@ -63,6 +80,14 @@ public class SongFacade {
     }
 
     public SongDTO updateSong(Long id, SongDTO songDTO) {
+        if (id == null) {
+            throw new IllegalArgumentException("Song ID cannot be null");
+        }
+
+        if (songDTO == null) {
+            throw new IllegalArgumentException("Song data cannot be null");
+        }
+
         Song song = songService.getSongById(id);
         songMapper.updateEntityFromDto(songDTO, song);
 
@@ -78,6 +103,10 @@ public class SongFacade {
     }
 
     public void deleteSong(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Song ID cannot be null");
+        }
+
         songService.deleteSong(id);
     }
 }

@@ -24,25 +24,61 @@ public class SongService {
     }
 
     public List<Song> getSongsByAlbum(Long albumId) {
+        if (albumId == null) {
+            throw new IllegalArgumentException("Album ID cannot be null");
+        }
+
+        if (albumId < 0) {
+            throw new IllegalArgumentException("Invalid album ID: " + albumId);
+        }
+
         return songRepository.findByAlbumId(albumId);
     }
 
     public List<Song> getSongsByBand(Long bandId) {
+        if (bandId == null) {
+            throw new IllegalArgumentException("Band ID cannot be null");
+        }
+
+        if (bandId < 0) {
+            throw new IllegalArgumentException("Invalid band ID: " + bandId);
+        }
+
         return songRepository.findByBandId(bandId);
     }
 
     public Song getSongById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Song ID cannot be null");
+        }
+
+        if (id < 0) {
+            throw new IllegalArgumentException("Invalid song ID: " + id);
+        }
+
         return songRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Song not found with id: " + id));
     }
 
     @Transactional
     public Song createSong(Song song) {
+        if (song == null) {
+            throw new IllegalArgumentException("Song cannot be null");
+        }
+
         return songRepository.save(song);
     }
 
     @Transactional
     public Song updateSong(Long id, Song songDetails) {
+        if (id == null) {
+            throw new IllegalArgumentException("Song ID cannot be null");
+        }
+
+        if (songDetails == null) {
+            throw new IllegalArgumentException("Song details cannot be null");
+        }
+
         Song song = getSongById(id);
         song.setName(songDetails.getName());
         song.setDuration(songDetails.getDuration());
@@ -55,6 +91,15 @@ public class SongService {
 
     @Transactional
     public void deleteSong(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Song ID cannot be null");
+        }
+
+        if (id < 0) {
+            throw new IllegalArgumentException("Invalid song ID: " + id);
+        }
+
+        // Check if song exists
         getSongById(id);
         songRepository.deleteById(id);
     }

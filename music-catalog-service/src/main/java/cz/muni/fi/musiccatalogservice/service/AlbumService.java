@@ -24,21 +24,49 @@ public class AlbumService {
     }
 
     public List<Album> getAlbumsByBand(Long bandId) {
+        if (bandId == null) {
+            throw new IllegalArgumentException("Band ID cannot be null");
+        }
+
+        if (bandId < 0) {
+            throw new IllegalArgumentException("Invalid band ID: " + bandId);
+        }
+
         return albumRepository.findByBandId(bandId);
     }
 
     public Album getAlbumById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Album ID cannot be null");
+        }
+
+        if (id < 0) {
+            throw new IllegalArgumentException("Invalid album ID: " + id);
+        }
+
         return albumRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Album not found with id: " + id));
     }
 
     @Transactional
     public Album createAlbum(Album album) {
+        if (album == null) {
+            throw new IllegalArgumentException("Album cannot be null");
+        }
+
         return albumRepository.save(album);
     }
 
     @Transactional
     public Album updateAlbum(Long id, Album albumDetails) {
+        if (id == null) {
+            throw new IllegalArgumentException("Album ID cannot be null");
+        }
+
+        if (albumDetails == null) {
+            throw new IllegalArgumentException("Album details cannot be null");
+        }
+
         Album album = getAlbumById(id);
         album.setTitle(albumDetails.getTitle());
         album.setReleaseDate(albumDetails.getReleaseDate());
@@ -48,6 +76,15 @@ public class AlbumService {
 
     @Transactional
     public void deleteAlbum(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Album ID cannot be null");
+        }
+
+        if (id < 0) {
+            throw new IllegalArgumentException("Invalid album ID: " + id);
+        }
+
+        // Check if album exists
         getAlbumById(id);
         albumRepository.deleteById(id);
     }
