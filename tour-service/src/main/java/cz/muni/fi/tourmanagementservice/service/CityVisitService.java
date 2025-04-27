@@ -25,6 +25,12 @@ public class CityVisitService {
     }
 
     public CityVisit getCityVisitById(Long cityVisitId) {
+        if (cityVisitId == null)
+            throw new IllegalArgumentException("CityVisit ID cannot be null");
+
+        if (cityVisitId < 0)
+            throw new IllegalArgumentException("Invalid CityVisit ID: " + cityVisitId);
+
         return cityVisitRepository.findById(cityVisitId)
                 .orElseThrow(() -> new ResourceNotFoundException("CityVisit not found with id: " + cityVisitId));
     }
@@ -32,12 +38,21 @@ public class CityVisitService {
 
     @Transactional
     public CityVisit createCityVisit(CityVisit cityVisit) {
+        if (cityVisit == null)
+            throw new IllegalArgumentException("Album cannot be null");
+
         return cityVisitRepository.save(cityVisit);
     }
 
 
     @Transactional
     public CityVisit updateCityVisit(Long id, CityVisit updatedCityVisit) {
+        if (id == null || id < 0)
+            throw new IllegalArgumentException("CityVisit ID cannot be null or < 0");
+
+        if (updatedCityVisit == null)
+            throw new IllegalArgumentException("UpdatedCityVisit cannot be null");
+
         CityVisit cityVisit = getCityVisitById(id);
 
         cityVisit.setCityName(updatedCityVisit.getCityName());
@@ -48,6 +63,12 @@ public class CityVisitService {
 
     @Transactional
     public void deleteCityVisit(Long id) {
+        if (id == null)
+            throw new IllegalArgumentException("CityVisit ID cannot be null");
+
+        if (id < 0)
+            throw new IllegalArgumentException("Invalid CityVisit ID: " + id);
+
         getCityVisitById(id);
         cityVisitRepository.deleteById(id);
     }

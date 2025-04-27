@@ -29,23 +29,44 @@ public class TourService {
 
 
     public Tour getTourById(Long tourId) {
+        if (tourId == null)
+            throw new IllegalArgumentException("Tour ID cannot be null");
+
+        if (tourId < 0)
+            throw new IllegalArgumentException("Invalid tour ID: " + tourId);
+
         return tourRepository.findById(tourId)
                 .orElseThrow(() -> new ResourceNotFoundException("Tour not found with id: " + tourId));
     }
 
 
     public List<Tour> getToursByBand(Long bandId) {
+        if (bandId == null)
+            throw new IllegalArgumentException("Band ID cannot be null");
+
+        if (bandId < 0)
+            throw new IllegalArgumentException("Invalid band ID: " + bandId);
+
         return tourRepository.findByBandId(bandId);
     }
 
 
     @Transactional
     public Tour createTour(Tour tour) {
+        if (tour == null)
+            throw new IllegalArgumentException("Album cannot be null");
+
         return tourRepository.save(tour);
     }
 
     @Transactional
     public Tour updateTour(Long id, Tour updatedTour) {
+        if (id == null || id < 0)
+            throw new IllegalArgumentException("Tour ID cannot be null or < 0");
+
+        if (updatedTour == null)
+            throw new IllegalArgumentException("UpdatedTour cannot be null");
+
         Tour tour = getTourById(id);
         tour.setTourName(updatedTour.getTourName());
         tour.setCityVisits(updatedTour.getCityVisits());
@@ -54,12 +75,24 @@ public class TourService {
     }
 
     @Transactional
-    public void deleteTour(Long id) {
-        getTourById(id);
-        tourRepository.deleteById(id);
+    public void deleteTour(Long tourId) {
+        if (tourId == null)
+            throw new IllegalArgumentException("Tour ID cannot be null");
+
+        if (tourId < 0)
+            throw new IllegalArgumentException("Invalid tour ID: " + tourId);
+
+        getTourById(tourId);
+        tourRepository.deleteById(tourId);
     }
 
     public void addCityVisitToTour(Long tourId, CityVisit cityVisit) {
+        if (tourId == null || tourId < 0)
+            throw new IllegalArgumentException("Tour ID cannot be null or < 0");
+
+        if (cityVisit == null)
+            throw new IllegalArgumentException("UpdatedTour cannot be null");
+
         Tour tour = getTourById(tourId);
         CityVisit savedCityVisit = cityVisitRepository.save(cityVisit);
         tour.addCityVisit(savedCityVisit);
@@ -67,6 +100,12 @@ public class TourService {
     }
 
     public void removeCityVisitFromTour(Long tourId, Long cityVisitId) {
+        if (tourId == null || tourId < 0)
+            throw new IllegalArgumentException("Tour ID cannot be null or < 0");
+
+        if (cityVisitId == null || cityVisitId < 0)
+            throw new IllegalArgumentException("CityVisit ID cannot be null or < 0");
+
         Tour tour = getTourById(tourId);
         CityVisit cityVisit = cityVisitRepository.findById(cityVisitId)
                 .orElseThrow(() -> new ResourceNotFoundException("City visit not found with id: " + cityVisitId));

@@ -174,19 +174,19 @@ public class TourControllerIT {
                 .andExpect(jsonPath("$.cityVisits", hasSize(0)));
     }
 
-//    @Test
-//    public void testCreateTourWithInvalidData() throws Exception {
-//        TourDTO tourDTO = new TourDTO();
-//        tourDTO.setTourName("");
-//        tourDTO.setBandId(null);
-//
-//        String tourJson = objectMapper.writeValueAsString(tourDTO);
-//
-//        mockMvc.perform(post("/api/tours")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(tourJson))
-//                .andExpect(status().isBadRequest());
-//    }
+    @Test
+    public void testCreateTourWithInvalidData() throws Exception {
+        TourDTO tourDTO = new TourDTO();
+        tourDTO.setTourName("a");
+        tourDTO.setBandId(null);
+
+        String tourJson = objectMapper.writeValueAsString(tourDTO);
+
+        mockMvc.perform(post("/api/tours")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(tourJson))
+                .andExpect(status().isBadRequest());
+    }
 
     @Test
     public void testGetNonExistingTour() throws Exception {
