@@ -6,6 +6,8 @@ import cz.muni.fi.userservice.model.Manager;
 import cz.muni.fi.userservice.repository.ManagerRepository;
 import cz.muni.fi.userservice.service.interfaces.IManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +15,14 @@ import java.util.Set;
 
 @Service
 public class ManagerService implements IManagerService {
+
+    private final ManagerRepository managerRepository;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Autowired
-    private ManagerRepository managerRepository;
+    public ManagerService(ManagerRepository managerRepository) {
+        this.managerRepository = managerRepository;
+    }
 
     @Override
     public Manager save(Manager manager) {
@@ -22,6 +30,9 @@ public class ManagerService implements IManagerService {
         if (existingManager.isPresent()) {
             throw new UserAlreadyExistsException(existingManager.get());
         }
+
+        String hashedPassword = passwordEncoder.encode(manager.getPassword());
+        manager.setPassword(hashedPassword);
         return managerRepository.save(manager);
     }
 
@@ -61,7 +72,7 @@ public class ManagerService implements IManagerService {
         Manager existingManager = managerRepository.findById(manager.getId()).orElseThrow(() -> new UserNotFoundException(manager.getId()));
         existingManager.setUsername(manager.getUsername());
         existingManager.setEmail(manager.getEmail());
-        existingManager.setPassword(manager.getPassword());
+        existingManager.setPassword(passwordEncoder.encode(manager.getPassword()));
         existingManager.setManagedBandIds(manager.getManagedBandIds());
         existingManager.setFirstName(manager.getFirstName());
         existingManager.setLastName(manager.getLastName());

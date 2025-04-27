@@ -5,6 +5,8 @@ import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.repository.ArtistRepository;
 import cz.muni.fi.userservice.service.interfaces.IArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +15,13 @@ import java.util.Set;
 @Service
 public class ArtistService implements IArtistService {
 
+    private final ArtistRepository artistRepository;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Autowired
-    private ArtistRepository artistRepository;
+    public ArtistService(ArtistRepository artistRepository) {
+        this.artistRepository = artistRepository;
+    }
 
     @Override
     public Artist save(Artist artist) {
@@ -23,6 +30,8 @@ public class ArtistService implements IArtistService {
             throw new UserNotFoundException(artist.getUsername());
         }
 
+        String hashedPassword = passwordEncoder.encode(artist.getPassword());
+        artist.setPassword(hashedPassword);
         artistRepository.save(artist);
         return artist;
     }
@@ -69,7 +78,7 @@ public class ArtistService implements IArtistService {
         Artist existingArtist = artistRepository.findById(artist.getId()).orElseThrow(() -> new UserNotFoundException(artist.getId()));
         existingArtist.setUsername(artist.getUsername());
         existingArtist.setEmail(artist.getEmail());
-        existingArtist.setPassword(artist.getPassword());
+        existingArtist.setPassword(passwordEncoder.encode(artist.getPassword()));
         existingArtist.setFirstName(artist.getFirstName());
         existingArtist.setLastName(artist.getLastName());
         existingArtist.setStageName(artist.getStageName());
