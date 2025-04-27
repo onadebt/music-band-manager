@@ -46,15 +46,18 @@ class ArtistControllerIT {
 
     @Test
     void register_persistsEntity() throws Exception {
+        // Arrange
+        ArtistDto artistDto = TestDataFactory.TEST_ARTIST_1_DTO;
+        artistDto.setId(null);
         // Act
         mockMvc.perform(post("/api/artists")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(TestDataFactory.TEST_ARTIST_1_DTO_NO_ID)))
+                .content(new ObjectMapper().writeValueAsString(artistDto)))
                 .andExpect(status().isOk());
 
         // Assert
         assertThat(artistRepository.count()).isEqualTo(1);
-        assertThat(artistRepository.findByUsername(TestDataFactory.TEST_ARTIST_1_DTO.getUsername())).isPresent();
+        assertThat(artistRepository.findByUsername(artistDto.getUsername())).isPresent();
     }
 
     @Test
