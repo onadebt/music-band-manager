@@ -20,6 +20,7 @@ import java.util.UUID;
 /**
  * @author Tomáš MAREK
  */
+@Transactional
 @Service
 public class BandOfferService {
     private final BandOfferRepository bandOfferRepository;
@@ -33,6 +34,7 @@ public class BandOfferService {
         this.bandOfferEventProducer = bandOfferEventProducer;
     }
 
+    @Transactional(readOnly = true)
     public BandOffer getBandOffer(Long bandOfferId) {
         Optional<BandOffer> maybeBandOffer = bandOfferRepository.findById(bandOfferId);
         if (maybeBandOffer.isEmpty()) {
@@ -61,7 +63,6 @@ public class BandOfferService {
         return bandOfferRepository.save(newOffer);
     }
 
-    @Transactional
     public BandOffer acceptOffer(Long bandOfferId) {
         BandOffer bandOffer = getBandOffer(bandOfferId);
         bandOffer.acceptOffer();
@@ -101,14 +102,17 @@ public class BandOfferService {
         bandOfferRepository.delete(bandOffer);
     }
 
+    @Transactional(readOnly = true)
     public List<BandOffer> getAllBandOffers() {
         return bandOfferRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<BandOffer> getBandOffersByBandId(Long bandId) {
         return bandOfferRepository.findByBandId(bandId);
     }
 
+    @Transactional(readOnly = true)
     public List<BandOffer> getBandOfferByInvitedMusicianId(Long invitedMusicianId) {
         return bandOfferRepository.findByInvitedMusicianId(invitedMusicianId);
     }
