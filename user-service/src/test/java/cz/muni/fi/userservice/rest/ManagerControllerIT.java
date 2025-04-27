@@ -3,9 +3,7 @@ package cz.muni.fi.userservice.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.muni.fi.userservice.TestDataFactory;
 import cz.muni.fi.userservice.dto.ManagerDto;
-import cz.muni.fi.userservice.dto.ArtistUpdateDto;
 import cz.muni.fi.userservice.dto.ManagerUpdateDto;
-import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.model.Manager;
 import cz.muni.fi.userservice.repository.ManagerRepository;
 import org.junit.jupiter.api.Test;
@@ -21,11 +19,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,6 +39,8 @@ class ManagerControllerIT {
 
     @Test
     void register_persistsEntity() throws Exception {
+        managerRepository.deleteAll();
+
         // Arrange
         ManagerDto managerDto = TestDataFactory.TEST_MANAGER_1_DTO;
         managerDto.setId(null);
@@ -61,6 +57,8 @@ class ManagerControllerIT {
 
     @Test
     void register_nullDto_returnsBadRequest() throws Exception {
+        managerRepository.deleteAll();
+
         // Act
         mockMvc.perform(post("/api/managers")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -73,28 +71,10 @@ class ManagerControllerIT {
     }
 
 
-//    @Test
-//    void updateManager_sourceExists_replacesEntity() throws Exception {
-//        // Arrange
-//        Manager manager = saveManager(TestDataFactory.TEST_MANAGER_1);
-//
-//        ManagerUpdateDto updateDto = toManagerUpdateDto(manager);
-//        updateDto.setLastName("New Name");
-//        // Act
-//        //TODO throws UserAlreadyExistsException
-//        mockMvc.perform(put("/api/managers/{id}", manager.getId())
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(new ObjectMapper().writeValueAsString(updateDto)))
-//                .andExpect(status().isOk());
-//        // Assert
-//        assertThat(managerRepository.count()).isEqualTo(1);
-//        Optional<Manager> updated = managerRepository.findById(manager.getId());
-//        assertThat(updated).isPresent();
-//        assertThat(updated.get().getCompanyName()).isEqualTo("New Name");
-//    }
-
     @Test
     void updateManager_sourceDoesNotExists_returnNotFound() throws Exception {
+        managerRepository.deleteAll();
+
         // Arrange
         ManagerUpdateDto updateDto = new ManagerUpdateDto();
         Long emptyId = -123L;
@@ -110,7 +90,9 @@ class ManagerControllerIT {
     }
 
     @Test
-    void getAllManagers_noArtists_returnsEmptyList() throws Exception{
+    void getAllManagers_noArtists_returnsEmptyList() throws Exception {
+        managerRepository.deleteAll();
+
         // Act
         mockMvc.perform(get("/api/managers"))
                 .andExpect(status().isOk())
@@ -118,7 +100,9 @@ class ManagerControllerIT {
     }
 
     @Test
-    void getAllManagers_twoArtists_returnsList() throws Exception{
+    void getAllManagers_twoArtists_returnsList() throws Exception {
+        managerRepository.deleteAll();
+
         // Arrange
         Manager manager1 = saveManager(TestDataFactory.TEST_MANAGER_1);
         Manager manager2 = saveManager(TestDataFactory.TEST_MANAGER_2);
@@ -152,6 +136,8 @@ class ManagerControllerIT {
 
     @Test
     void deleteById_entityExists_isRemoved() throws Exception {
+        managerRepository.deleteAll();
+
         // Arrange
         Manager manager = saveManager(TestDataFactory.TEST_MANAGER_1);
 
@@ -192,7 +178,7 @@ class ManagerControllerIT {
     }
 
     @Test
-    void updateBands_invalidBandId_returnsNotFound() throws Exception{
+    void updateBands_invalidBandId_returnsNotFound() throws Exception {
         // Arrange
         Long emptyId = -123L;
         Set<Long> newBands = Set.of(4L, 5L, 6L, 7L);
@@ -203,49 +189,6 @@ class ManagerControllerIT {
                         .content(new ObjectMapper().writeValueAsString(newBands)))
                 .andExpect(status().isNotFound());
     }
-
-
-//    @Test
-//    void getManagersByBandIds_fitsAllArtist_returnOkAndAllArtists() throws Exception {
-//        // Arrange
-//        Manager manager1 = saveManager(TestDataFactory.TEST_MANAGER_1);
-//        Manager manager2 = saveManager(TestDataFactory.TEST_MANAGER_2);
-//        Set<Long> bands = Set.of(2L);
-//        // Act
-//        mockMvc.perform(get("/api/managers/bands")
-//                        .param("bandIds", String.valueOf(bands)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$[0].username").value(manager1.getUsername()))
-//                .andExpect(jsonPath("$[1].username").value(manager2.getUsername()));
-//    }
-
-//    @Test
-//    void getManagersByBandIds_fitsOneArtis_returnOkAndArtist() throws Exception{
-//        // Arrange
-//        Manager manager1 = saveManager(TestDataFactory.TEST_MANAGER_1);
-//        saveManager(TestDataFactory.TEST_MANAGER_2);
-//        Set<Long> bands = Set.of(1L);
-//
-//        // Act
-//        mockMvc.perform(get("/api/managers/bands")
-//                        .param("bandIds", String.valueOf(bands)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$[0].username").value(manager1.getUsername()));
-//
-//    }
-//
-//    @Test
-//    void getManagersByBandIds_fitsNoArtist_returnEmptyList() throws Exception {
-//        // Arrange
-//        saveManager(TestDataFactory.TEST_MANAGER_1);
-//        saveManager(TestDataFactory.TEST_MANAGER_2);
-//        Set<Long> bands = Set.of(123L);
-//        // Act
-//        mockMvc.perform(get("/api/managers/bands")
-//                        .param("bandIds", String.valueOf(bands)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$").isEmpty());
-//    }
 
     private Manager saveManager(Manager manager) {
         manager.setId(null);
@@ -258,7 +201,7 @@ class ManagerControllerIT {
         ManagerUpdateDto managerUpdateDto = new ManagerUpdateDto();
         managerUpdateDto.setManagedBandIds(manager.getManagedBandIds());
         managerUpdateDto.setCompanyName(manager.getCompanyName());
-        
+
         managerUpdateDto.setUsername(manager.getUsername());
         managerUpdateDto.setEmail(manager.getEmail());
         managerUpdateDto.setFirstName(manager.getFirstName());
@@ -269,3 +212,4 @@ class ManagerControllerIT {
         return managerUpdateDto;
     }
 }
+
