@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class AlbumFacade {
 
     private final AlbumService albumService;
+    private final SongService songService;
     private final AlbumMapper albumMapper;
     private final SongFacade songFacade;
 
@@ -23,6 +24,7 @@ public class AlbumFacade {
     public AlbumFacade(AlbumService albumService, SongService songService,
                        AlbumMapper albumMapper, SongFacade songFacade) {
         this.albumService = albumService;
+        this.songService = songService;
         this.albumMapper = albumMapper;
         this.songFacade = songFacade;
     }
@@ -40,10 +42,6 @@ public class AlbumFacade {
         }
 
         List<Album> albums = albumService.getAlbumsByBand(bandId);
-        if (albums == null) {
-            throw new IllegalArgumentException("Invalid band ID: " + bandId);
-        }
-
         return albums.stream()
                 .map(this::enrichAlbumWithSongs)
                 .collect(Collectors.toList());
@@ -55,10 +53,6 @@ public class AlbumFacade {
         }
 
         Album album = albumService.getAlbumById(id);
-        if (album == null) {
-            throw new IllegalArgumentException("Album not found with ID: " + id);
-        }
-
         return enrichAlbumWithSongs(album);
     }
 
@@ -88,11 +82,6 @@ public class AlbumFacade {
     public void deleteAlbum(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Album ID cannot be null");
-        }
-
-        Album album = albumService.getAlbumById(id);
-        if (album == null) {
-            throw new IllegalArgumentException("Album not found with ID: " + id);
         }
 
         albumService.deleteAlbum(id);

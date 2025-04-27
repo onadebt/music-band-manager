@@ -67,10 +67,12 @@ public class SongFacadeTest {
     void findById_invalidId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidId = -1L;
-        Mockito.when(songService.getSongById(invalidId)).thenReturn(null);
+        Mockito.when(songService.getSongById(invalidId))
+                .thenThrow(new IllegalArgumentException("Invalid song ID: " + invalidId));
 
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> songFacade.getSongById(invalidId));
+        verify(songService, times(1)).getSongById(invalidId);
     }
 
     @Test
@@ -98,10 +100,12 @@ public class SongFacadeTest {
     void findByUsername_invalidBandId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidBandId = -1L;
-        Mockito.when(songService.getSongsByBand(invalidBandId)).thenReturn(null);
+        Mockito.when(songService.getSongsByBand(invalidBandId))
+                .thenThrow(new IllegalArgumentException("Invalid band ID: " + invalidBandId));
 
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> songFacade.getSongsByBand(invalidBandId));
+        verify(songService, times(1)).getSongsByBand(invalidBandId);
     }
 
     @Test
@@ -169,25 +173,23 @@ public class SongFacadeTest {
     void deleteSong_invalidId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidId = -1L;
-        Mockito.when(songService.getSongById(invalidId)).thenReturn(null);
+        Mockito.doThrow(new IllegalArgumentException("Invalid song ID: " + invalidId))
+                .when(songService).deleteSong(invalidId);
 
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> songFacade.deleteSong(invalidId));
-        verify(songService, times(1)).getSongById(invalidId);
-        verify(songService, times(0)).deleteSong(invalidId);
+        verify(songService, times(1)).deleteSong(invalidId);
     }
 
     @Test
     void deleteSong_validId_callsSongServiceDelete() {
         // Arrange
         Long validId = TestDataFactory.TEST_SONG_1.getId();
-        Mockito.when(songService.getSongById(validId)).thenReturn(TestDataFactory.TEST_SONG_1);
 
         // Act
         songFacade.deleteSong(validId);
 
         // Assert
-        verify(songService, times(1)).getSongById(validId);
         verify(songService, times(1)).deleteSong(validId);
     }
 

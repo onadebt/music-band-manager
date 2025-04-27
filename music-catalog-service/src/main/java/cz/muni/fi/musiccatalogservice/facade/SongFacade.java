@@ -49,10 +49,6 @@ public class SongFacade {
         }
 
         List<Song> songs = songService.getSongsByBand(bandId);
-        if (songs == null) {
-            throw new IllegalArgumentException("Invalid band ID: " + bandId);
-        }
-
         return songs.stream()
                 .map(songMapper::toDTO)
                 .collect(Collectors.toList());
@@ -64,10 +60,6 @@ public class SongFacade {
         }
 
         Song song = songService.getSongById(id);
-        if (song == null) {
-            throw new IllegalArgumentException("Song not found with ID: " + id);
-        }
-
         return songMapper.toDTO(song);
     }
 
@@ -113,11 +105,6 @@ public class SongFacade {
     public void deleteSong(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Song ID cannot be null");
-        }
-
-        Song song = songService.getSongById(id);
-        if (song == null) {
-            throw new IllegalArgumentException("Song not found with ID: " + id);
         }
 
         songService.deleteSong(id);

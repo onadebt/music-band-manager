@@ -68,10 +68,12 @@ public class AlbumFacadeTest {
     void findById_invalidId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidId = -1L;
-        Mockito.when(albumService.getAlbumById(invalidId)).thenReturn(null);
+        Mockito.when(albumService.getAlbumById(invalidId))
+                .thenThrow(new IllegalArgumentException("Invalid album ID: " + invalidId));
 
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> albumFacade.getAlbumById(invalidId));
+        verify(albumService, times(1)).getAlbumById(invalidId);
     }
 
     @Test
@@ -100,10 +102,12 @@ public class AlbumFacadeTest {
     void findByUsername_invalidBandId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidBandId = -1L;
-        Mockito.when(albumService.getAlbumsByBand(invalidBandId)).thenReturn(null);
+        Mockito.when(albumService.getAlbumsByBand(invalidBandId))
+                .thenThrow(new IllegalArgumentException("Invalid band ID: " + invalidBandId));
 
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> albumFacade.getAlbumsByBand(invalidBandId));
+        verify(albumService, times(1)).getAlbumsByBand(invalidBandId);
     }
 
     @Test
@@ -175,25 +179,23 @@ public class AlbumFacadeTest {
     void deleteAlbum_invalidId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidId = -1L;
-        Mockito.when(albumService.getAlbumById(invalidId)).thenReturn(null);
+        Mockito.doThrow(new IllegalArgumentException("Invalid album ID: " + invalidId))
+                .when(albumService).deleteAlbum(invalidId);
 
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> albumFacade.deleteAlbum(invalidId));
-        verify(albumService, times(1)).getAlbumById(invalidId);
-        verify(albumService, times(0)).deleteAlbum(invalidId);
+        verify(albumService, times(1)).deleteAlbum(invalidId);
     }
 
     @Test
     void deleteAlbum_validId_callsAlbumServiceDelete() {
         // Arrange
         Long validId = TestDataFactory.TEST_ALBUM_1.getId();
-        Mockito.when(albumService.getAlbumById(validId)).thenReturn(TestDataFactory.TEST_ALBUM_1);
 
         // Act
         albumFacade.deleteAlbum(validId);
 
         // Assert
-        verify(albumService, times(1)).getAlbumById(validId);
         verify(albumService, times(1)).deleteAlbum(validId);
     }
 
