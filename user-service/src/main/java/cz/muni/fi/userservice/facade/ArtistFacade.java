@@ -15,11 +15,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class ArtistFacade implements IArtistFacade {
-    @Autowired
-    private IArtistService artistService;
+
+    private final IArtistService artistService;
+    private final ArtistMapper artistMapper;
 
     @Autowired
-    private ArtistMapper artistMapper;
+    public ArtistFacade(IArtistService artistService, ArtistMapper artistMapper) {
+        this.artistService = artistService;
+        this.artistMapper = artistMapper;
+    }
 
     public ArtistDto register(ArtistDto artistDTO) {
         if (artistDTO == null) {

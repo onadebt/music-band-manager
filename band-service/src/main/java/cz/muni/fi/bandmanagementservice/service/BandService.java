@@ -9,6 +9,7 @@ import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import cz.muni.fi.events.band.BandRemoveMemberEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import java.util.Optional;
 /**
  * @author Tomáš MAREK
  */
+@Transactional
 @Service
 public class BandService {
     private final BandRepository bandRepository;
@@ -32,6 +34,7 @@ public class BandService {
         return bandRepository.save(newBand);
     }
 
+    @Transactional(readOnly = true)
     public Band getBand(Long id){
         Optional<Band> maybeBand = bandRepository.findById(id);
         if (maybeBand.isEmpty()){
@@ -39,7 +42,7 @@ public class BandService {
         }
         return maybeBand.get();
     }
-
+    @Transactional(readOnly = true)
     public List<Band> getAllBands(){
         return bandRepository.findAll().stream().toList();
     }

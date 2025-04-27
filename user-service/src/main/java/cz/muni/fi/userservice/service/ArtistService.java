@@ -5,44 +5,58 @@ import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.repository.ArtistRepository;
 import cz.muni.fi.userservice.service.interfaces.IArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
 
+@Transactional
 @Service
 public class ArtistService implements IArtistService {
 
-    @Autowired
-    private ArtistRepository artistRepository;
+    private final ArtistRepository artistRepository;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @Override
+    @Autowired
+    public ArtistService(ArtistRepository artistRepository) {
+        this.artistRepository = artistRepository;
+    }
+
     public Artist save(Artist artist) {
         var existingArtist = artistRepository.findByUsername(artist.getUsername());
         if (existingArtist.isPresent()) {
             throw new UserNotFoundException(artist.getUsername());
         }
 
+        String hashedPassword = passwordEncoder.encode(artist.getPassword());
+        artist.setPassword(hashedPassword);
         artistRepository.save(artist);
         return artist;
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public Artist findById(Long id) {
         return artistRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public Artist findByUsername(String username) {
         return artistRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public List<Artist> findAll() {
         return artistRepository.findAll();
     }
 
-    @Override
+    @Transactional(readOnly = true)
+    public List<Artist> findByBandIds(Set<Long> bandIds) {
+        return artistRepository.findByBandIds(bandIds);
+    }
+
     public void deleteById(Long id) {
         var maybeArtist = artistRepository.findById(id);
         if (maybeArtist.isEmpty()) {
@@ -52,24 +66,17 @@ public class ArtistService implements IArtistService {
         artistRepository.deleteById(maybeArtist.get().getId());
     }
 
-    @Override
-    public List<Artist> findByBandIds(Set<Long> bandIds) {
-        return artistRepository.findByBandIds(bandIds);
-    }
-
-    @Override
     public Artist updateArtistByBandIds(Long artistId, Set<Long> bandIds) {
         Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new UserNotFoundException(artistId));
         artist.setBandIds(bandIds);
         return artistRepository.save(artist);
     }
 
-    @Override
     public Artist updateArtist(Long id, Artist artist) {
         Artist existingArtist = artistRepository.findById(artist.getId()).orElseThrow(() -> new UserNotFoundException(artist.getId()));
         existingArtist.setUsername(artist.getUsername());
         existingArtist.setEmail(artist.getEmail());
-        existingArtist.setPassword(artist.getPassword());
+        existingArtist.setPassword(passwordEncoder.encode(artist.getPassword()));
         existingArtist.setFirstName(artist.getFirstName());
         existingArtist.setLastName(artist.getLastName());
         existingArtist.setStageName(artist.getStageName());
@@ -79,7 +86,6 @@ public class ArtistService implements IArtistService {
         return artistRepository.save(existingArtist);
     }
 
-    @Override
     public void linkArtistToBand(Long artistId, Long bandId) {
         Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new UserNotFoundException(artistId));
         Set<Long> bandIds = artist.getBandIds();
@@ -88,7 +94,6 @@ public class ArtistService implements IArtistService {
         artistRepository.save(artist);
     }
 
-    @Override
     public void unlinkArtistFromBand(Long artistId, Long bandId) {
         Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new UserNotFoundException(artistId));
         Set<Long> bandIds = artist.getBandIds();

@@ -36,6 +36,7 @@ public abstract class User {
     @Column
     private String lastName;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Column
+    @Enumerated(EnumType.STRING)
     private Role role;
 }
