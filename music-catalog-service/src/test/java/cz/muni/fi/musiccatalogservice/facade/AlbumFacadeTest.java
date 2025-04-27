@@ -4,6 +4,7 @@ import cz.muni.fi.musiccatalogservice.TestDataFactory;
 import cz.muni.fi.musiccatalogservice.dto.AlbumDTO;
 import cz.muni.fi.musiccatalogservice.mapper.AlbumMapper;
 import cz.muni.fi.musiccatalogservice.service.AlbumService;
+import cz.muni.fi.musiccatalogservice.service.SongService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,8 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -33,20 +34,20 @@ public class AlbumFacadeTest {
     @Mock
     private SongFacade songFacade;
 
-    /*
     @Test
     void createAlbum_nullAlbumDto_throwsIllegalArgumentException() {
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> albumFacade.createAlbum(null));
         verify(albumService, Mockito.times(0)).createAlbum(any());
     }
-    */
+
     @Test
     void createAlbum_validAlbumDto_returnsSavedAlbum() {
         // Arrange
         Mockito.when(albumService.createAlbum(TestDataFactory.TEST_ALBUM_1)).thenReturn(TestDataFactory.TEST_ALBUM_1);
         Mockito.when(albumMapper.toEntity(TestDataFactory.TEST_ALBUM_1_DTO)).thenReturn(TestDataFactory.TEST_ALBUM_1);
         Mockito.when(albumMapper.toDTO(TestDataFactory.TEST_ALBUM_1)).thenReturn(TestDataFactory.TEST_ALBUM_1_DTO);
+        Mockito.when(songFacade.getSongsByAlbum(TestDataFactory.TEST_ALBUM_1.getId())).thenReturn(List.of());
 
         // Act
         AlbumDTO created = albumFacade.createAlbum(TestDataFactory.TEST_ALBUM_1_DTO);
@@ -55,14 +56,14 @@ public class AlbumFacadeTest {
         verify(albumService, times(1)).createAlbum(TestDataFactory.TEST_ALBUM_1);
         assertEquals(TestDataFactory.TEST_ALBUM_1_DTO, created);
     }
-/*
+
     @Test
     void findById_inputNull_throwsIllegalArgumentException() {
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> albumFacade.getAlbumById(null));
         verify(albumService, Mockito.times(0)).getAlbumById(any());
     }
-    
+
     @Test
     void findById_invalidId_throwsIllegalArgumentException() {
         // Arrange
@@ -72,12 +73,14 @@ public class AlbumFacadeTest {
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> albumFacade.getAlbumById(invalidId));
     }
-*/
+
     @Test
     void findById_validId_returnsFoundAlbum() {
         // Arrange
         Mockito.when(albumService.getAlbumById(TestDataFactory.TEST_ALBUM_1.getId())).thenReturn(TestDataFactory.TEST_ALBUM_1);
         Mockito.when(albumMapper.toDTO(TestDataFactory.TEST_ALBUM_1)).thenReturn(TestDataFactory.TEST_ALBUM_1_DTO);
+        Mockito.when(songFacade.getSongsByAlbum(TestDataFactory.TEST_ALBUM_1.getId())).thenReturn(List.of());
+
         // Act
         AlbumDTO found = albumFacade.getAlbumById(TestDataFactory.TEST_ALBUM_1.getId());
 
@@ -85,7 +88,7 @@ public class AlbumFacadeTest {
         assertEquals(TestDataFactory.TEST_ALBUM_1_DTO, found);
         verify(albumService, times(1)).getAlbumById(TestDataFactory.TEST_ALBUM_1.getId());
     }
-/*
+
     @Test
     void findByBand_nullBandId_throwsIllegalArgumentException() {
         // Act / Assert
@@ -102,7 +105,7 @@ public class AlbumFacadeTest {
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> albumFacade.getAlbumsByBand(invalidBandId));
     }
-*/
+
     @Test
     void findAll_noAlbumStored_returnsEmptyList() {
         // Arrange
@@ -122,6 +125,8 @@ public class AlbumFacadeTest {
         Mockito.when(albumService.getAllAlbums()).thenReturn(List.of(TestDataFactory.TEST_ALBUM_1, TestDataFactory.TEST_ALBUM_2));
         Mockito.when(albumMapper.toDTO(TestDataFactory.TEST_ALBUM_1)).thenReturn(TestDataFactory.TEST_ALBUM_1_DTO);
         Mockito.when(albumMapper.toDTO(TestDataFactory.TEST_ALBUM_2)).thenReturn(TestDataFactory.TEST_ALBUM_2_DTO);
+        Mockito.when(songFacade.getSongsByAlbum(TestDataFactory.TEST_ALBUM_1.getId())).thenReturn(List.of());
+        Mockito.when(songFacade.getSongsByAlbum(TestDataFactory.TEST_ALBUM_2.getId())).thenReturn(List.of());
 
         // Act
         List<AlbumDTO> found = albumFacade.getAllAlbums();
@@ -132,14 +137,14 @@ public class AlbumFacadeTest {
         assertTrue(found.contains(TestDataFactory.TEST_ALBUM_1_DTO));
         assertTrue(found.contains(TestDataFactory.TEST_ALBUM_2_DTO));
     }
-/*
+
     @Test
     void getAlbumsByBand_nullArgument_throwsIllegalArgumentException() {
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> albumFacade.getAlbumsByBand(null));
         verify(albumService, times(0)).getAlbumsByBand(any());
     }
-*/
+
     @Test
     void getAlbumsByBand_twoAlbumsFound_returnsList() {
         // Arrange
@@ -147,6 +152,8 @@ public class AlbumFacadeTest {
         Mockito.when(albumService.getAlbumsByBand(bandId)).thenReturn(List.of(TestDataFactory.TEST_ALBUM_1, TestDataFactory.TEST_ALBUM_2));
         Mockito.when(albumMapper.toDTO(TestDataFactory.TEST_ALBUM_1)).thenReturn(TestDataFactory.TEST_ALBUM_1_DTO);
         Mockito.when(albumMapper.toDTO(TestDataFactory.TEST_ALBUM_2)).thenReturn(TestDataFactory.TEST_ALBUM_2_DTO);
+        Mockito.when(songFacade.getSongsByAlbum(TestDataFactory.TEST_ALBUM_1.getId())).thenReturn(List.of());
+        Mockito.when(songFacade.getSongsByAlbum(TestDataFactory.TEST_ALBUM_2.getId())).thenReturn(List.of());
 
         // Act
         List<AlbumDTO> found = albumFacade.getAlbumsByBand(bandId);
@@ -156,7 +163,7 @@ public class AlbumFacadeTest {
         assertTrue(found.contains(TestDataFactory.TEST_ALBUM_1_DTO));
         assertTrue(found.contains(TestDataFactory.TEST_ALBUM_2_DTO));
     }
-/*
+
     @Test
     void deleteAlbum_nullId_throwsIllegalArgumentException() {
         // Act / Assert
@@ -174,33 +181,38 @@ public class AlbumFacadeTest {
         assertThrows(IllegalArgumentException.class, () -> albumFacade.deleteAlbum(invalidId));
         verify(albumService, times(1)).getAlbumById(invalidId);
     }
-*/
+
     @Test
     void deleteAlbum_validId_callsAlbumServiceDelete() {
+        // Arrange
+        Long validId = TestDataFactory.TEST_ALBUM_1.getId();
+        Mockito.when(albumService.getAlbumById(validId)).thenReturn(TestDataFactory.TEST_ALBUM_1);
+
         // Act
-        albumService.getAlbumById(TestDataFactory.TEST_ALBUM_1.getId());
+        albumFacade.deleteAlbum(validId);
 
         // Assert
-        verify(albumService, times(1)).getAlbumById(TestDataFactory.TEST_ALBUM_1.getId());
+        verify(albumService, times(1)).getAlbumById(validId);
+        verify(albumService, times(1)).deleteAlbum(validId);
     }
-/*
+
     @Test
     void updateAlbum_nullBandIds_throwsIllegalArgumentException() {
+        // Arrange
+        Long validId = 1L;
+
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> albumFacade.updateAlbum(1L, null));
+        assertThrows(IllegalArgumentException.class, () -> albumFacade.updateAlbum(validId, null));
         verify(albumService, times(0)).updateAlbum(any(), any());
     }
 
     @Test
     void updateAlbum_nullArtisId_throwsIllegalArgumentException() {
+        // Arrange
+        AlbumDTO validAlbum = TestDataFactory.TEST_ALBUM_1_DTO;
+
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> albumFacade.updateAlbum(null, any()));
+        assertThrows(IllegalArgumentException.class, () -> albumFacade.updateAlbum(null, validAlbum));
         verify(albumService, times(0)).updateAlbum(any(), any());
     }
-*/
-
 }
-
-
-
-

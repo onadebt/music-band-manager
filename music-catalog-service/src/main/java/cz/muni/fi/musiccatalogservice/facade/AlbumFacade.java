@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public class AlbumFacade {
 
     private final AlbumService albumService;
-    private final SongService songService;
     private final AlbumMapper albumMapper;
     private final SongFacade songFacade;
 
@@ -24,40 +23,78 @@ public class AlbumFacade {
     public AlbumFacade(AlbumService albumService, SongService songService,
                        AlbumMapper albumMapper, SongFacade songFacade) {
         this.albumService = albumService;
-        this.songService = songService;
         this.albumMapper = albumMapper;
         this.songFacade = songFacade;
     }
 
     public List<AlbumDTO> getAllAlbums() {
-        return albumService.getAllAlbums().stream()
+        List<Album> albums = albumService.getAllAlbums();
+        return albums.stream()
                 .map(this::enrichAlbumWithSongs)
                 .collect(Collectors.toList());
     }
 
     public List<AlbumDTO> getAlbumsByBand(Long bandId) {
-        return albumService.getAlbumsByBand(bandId).stream()
+        if (bandId == null) {
+            throw new IllegalArgumentException("Band ID cannot be null");
+        }
+
+        List<Album> albums = albumService.getAlbumsByBand(bandId);
+        if (albums == null) {
+            throw new IllegalArgumentException("Invalid band ID: " + bandId);
+        }
+
+        return albums.stream()
                 .map(this::enrichAlbumWithSongs)
                 .collect(Collectors.toList());
     }
 
     public AlbumDTO getAlbumById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Album ID cannot be null");
+        }
+
         Album album = albumService.getAlbumById(id);
+        if (album == null) {
+            throw new IllegalArgumentException("Album not found with ID: " + id);
+        }
+
         return enrichAlbumWithSongs(album);
     }
 
     public AlbumDTO createAlbum(AlbumDTO albumDTO) {
+        if (albumDTO == null) {
+            throw new IllegalArgumentException("Album data cannot be null");
+        }
+
         Album album = albumMapper.toEntity(albumDTO);
         Album savedAlbum = albumService.createAlbum(album);
         return enrichAlbumWithSongs(savedAlbum);
     }
 
     public AlbumDTO updateAlbum(Long id, AlbumDTO albumDTO) {
+        if (id == null) {
+            throw new IllegalArgumentException("Album ID cannot be null");
+        }
+
+        if (albumDTO == null) {
+            throw new IllegalArgumentException("Album data cannot be null");
+        }
+
         Album updatedAlbum = albumService.updateAlbum(id, albumMapper.toEntity(albumDTO));
         return enrichAlbumWithSongs(updatedAlbum);
     }
 
     public void deleteAlbum(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Album ID cannot be null");
+        }
+
+        Album album = albumService.getAlbumById(id);
+        if (album == null) {
+            throw new IllegalArgumentException("Album not found with ID: " + id);
+        }
+
         albumService.deleteAlbum(id);
     }
 
