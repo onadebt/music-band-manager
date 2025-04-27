@@ -1,53 +1,93 @@
-# 🎸 music-band-manager
+# 🎸 Music‑Band‑Manager
 
-## 📖 Description
-The web application allows one music band to manage their activities.
+A microservices‑based web application that helps a music band manage everything from songs to tours.
 
-## 🧩 Microservices Description
-### User Management Service
-- Handles authentication and authorization
-- Stores user profiles and their role in the system
-- Allows team members to accept / reject offers, view planned activities and their bandmates
+---
 
-### Music Catalog Service
-- Stores song details
-- Manages albums and songs
-- Allows adding, editing, deleting albums and songs
+## 📖 Overview
 
-### Band Management Service
-- Stores band details
-- Handles band creatin and management
-- Manages the hiring process (sending invitations to team members)
+This project is composed of four core Spring Boot microservices that communicate over **Apache ActiveMQ Artemis**:
 
-### Tour Management Service
-- Manages tour schedules
-- Allows band managers to create, update, and cancel tours
-- Stores information about tour dates, locations, and participating bands
+| Service                     | Purpose                                                             |
+| --------------------------- |---------------------------------------------------------------------|
+| **User Management Service** | User profiles, role management                                      |
+| **Music Catalog Service**   | Album and song CRUD                                                 |
+| **Band Management Service** | Band creation, member invitations, configuration and offer handling |
+| **Tour Management Service** | Tour scheduling and updates                                         |
 
+All APIs are self‑documenting thanks to **Springdoc OpenAPI** (Swagger UI).
+
+---
+
+
+## 🛠 Requirements
+
+| Needed for…            | Requirement                                                                                                   |
+| ---------------------- |---------------------------------------------------------------------------------------------------------------|
+| Running with Docker    | Docker Engine & Docker Compose                                                                                |
+| Building from source   | Java 21+, Maven 3.4+                                                                                          |
+| Running without Docker | Java 21+, Maven 3.4+ **Apache ActiveMQ Artemis ≥ 2.32** (install locally *or* run in a stand‑alone container) |
+
+---
 
 ## 🚀 Build & Run
 
-### Requirements
-- Java 21+
-- Maven
-- Docker & Docker Compose
+### Option 1 — **Full Docker Compose** (💡 *easiest*)
 
-### Running the application
-
-#### Option 1: Docker Compose (Recommended for Development)
 ```bash
+# from the project root
 docker compose up --build
 ```
-This command builds and starts all microservices and dependencies (e.g., databases, message brokers) as defined in the `docker-compose.yml` file.
 
-#### Option 2: Manually with Maven
-In each microservice directory (`user-service`, `band-service`, `music-catalog-service`, `tour-service`), run:
+This spins up **all** microservices, their H2 databases, and an **Artemis broker** in one shot. The very first cold build may take **≈ 120s** on a typical laptop.
+
+### Option 2 — **Run Artemis externally, services locally**
+
+If you prefer to debug the Spring Boot services directly from your IDE, keep Artemis running on its own and start each microservice with Maven.
+
+```bash
+docker run -d --name artemis \
+  -e ARTEMIS_USER=admin \
+  -e ARTEMIS_PASSWORD=admin \
+  -p 61616:61616 \  # JMS
+  -p 8161:8161   \  # Web console
+  quay.io/artemiscloud/activemq-artemis:latest
+```
+
+The broker Web console will be available at [http://localhost:8161](http://localhost:8161) (user/pass: `admin`/`admin`).
+
+
+Artemis listens on port `61616` by default.
+
+> **Connection settings** — All services assume `tcp://localhost:61616` for JMS and use the default `admin` / `admin` credentials. Adjust `application.yml` if you changed these.
+
+Next, in **each** microservice directory (`user-service`, `band-service`, `music-catalog-service`, `tour-service`) run:
 
 ```bash
 mvn clean install
 mvn spring-boot:run
 ```
 
+---
+
+## 🔍 API Endpoints (Swagger UI)
+
+| Service               | URL                                                                            |
+| --------------------- | ------------------------------------------------------------------------------ |
+| User Service          | [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html) |
+| Band Service          | [http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html) |
+| Music Catalog Service | [http://localhost:8083/swagger-ui.html](http://localhost:8083/swagger-ui.html) |
+| Tour Service          | [http://localhost:8084/swagger-ui.html](http://localhost:8084/swagger-ui.html) |
+
+---
+
+## 💡 Tips
+
+- **Hot reload** — with Spring DevTools on the classpath, code changes are live‑reloaded when running via Maven.
+- **Database persistence** — when using Docker Compose, H2 volumes are persisted under `./data/` so you won’t lose data between restarts.
+- **Scaling services** — tweak replica counts in `docker-compose.yml` if you want to test load balancing scenarios.
+
+---
 
 ## 📌 Use Case Diagram
 ![Use case diagram](assets/UsecaseDiagram.png)
@@ -71,18 +111,9 @@ Both actors share a common **Login** system, while other use cases are specific 
 This diagram illustrates the core data structures and relationships between key entities in the system. The classes map to the microservices described and support functionalities like band management, music cataloging, user roles, and tour scheduling.
 ![Class diagram](assets/ClassDiagram.png)
 
+---
 
+## 📝 AI Disclosure
 
-
-## 📚 API Documentation
-
-Each service exposes its API documentation using **Springdoc OpenAPI** (Swagger UI):
-
-- **User Service**: [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html)
-- **Band Service**: [http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html)
-- **Music Catalog Service**: [http://localhost:8083/swagger-ui.html](http://localhost:8083/swagger-ui.html)
-- **Tour Service**: [http://localhost:8084/swagger-ui.html](http://localhost:8084/swagger-ui.html)
-
-
-## AI Disclosure
 During the development of this project, AI tools were utilized.
+

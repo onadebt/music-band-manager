@@ -21,8 +21,12 @@ import java.util.Set;
 @Tag(name = "Artist API", description = "Artist management API")
 public class ArtistController {
 
+    private final ArtistFacade artistFacade;
+
     @Autowired
-    private ArtistFacade artistFacade;
+    public ArtistController(ArtistFacade artistFacade) {
+        this.artistFacade = artistFacade;
+    }
 
     @PostMapping
     @Operation(summary = "Register artist", description = "Register a new artist"
@@ -115,5 +119,4 @@ public class ArtistController {
     public ResponseEntity<List<ArtistDto>> getArtistsByBandIds(@RequestParam Set<Long> bandIds) {
         return ResponseEntity.ok(artistFacade.findByBandIds(bandIds));
     }
-
 }

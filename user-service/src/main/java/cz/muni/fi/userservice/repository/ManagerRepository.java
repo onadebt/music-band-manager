@@ -11,10 +11,7 @@ import java.util.Set;
 
 @Repository
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
-    List<Manager> findAllByCompanyName(String companyName);
-
     Optional<Manager> findByUsername(String username);
-
 
     List<Manager> findByManagedBandIds (Set<Long> bandIds);
 }

@@ -12,8 +12,6 @@ import java.util.Set;
 public interface ArtistRepository extends JpaRepository<Artist, Long> {
     Optional<Artist> findByUsername(String username);
 
-//    List<Artist> findByBandIds (Set<Long> bandIds);
-
     @Query("SELECT DISTINCT a FROM Artist a JOIN a.bandIds b WHERE b IN :bandIds")
     List<Artist> findByBandIds(@Param("bandIds") Set<Long> bandIds);
 }
