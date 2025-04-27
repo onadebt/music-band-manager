@@ -1,34 +1,21 @@
 package cz.muni.fi.tourmanagementservice.dto;
 
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
+import java.util.List;
+
+@Data
 public class TourDTO {
     private Long id;
+
+    @NotNull(message = "Band ID cannot be null")
     private Long bandId;
+
+    @NotBlank(message = "Tour name cannot be blank")
     private String tourName;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getBandId() {
-        return bandId;
-    }
-
-    public void setBandId(Long bandId) {
-        this.bandId = bandId;
-    }
-
-    public String getTourName() {
-        return tourName;
-    }
-
-    public void setTourName(String tourName) {
-        this.tourName = tourName;
-    }
+    private List<CityVisitDTO> cityVisits;
 }

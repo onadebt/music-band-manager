@@ -21,8 +21,13 @@ import java.util.Set;
 @RequestMapping("/api/managers")
 @Tag(name = "Manager API", description = "Manager management API")
 public class ManagerController {
+
+    private final ManagerFacade managerFacade;
+
     @Autowired
-    private ManagerFacade managerFacade;
+    public ManagerController(ManagerFacade managerFacade) {
+        this.managerFacade = managerFacade;
+    }
 
     @PostMapping
     @Operation(summary = "Register a new manager")

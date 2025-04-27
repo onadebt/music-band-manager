@@ -1,0 +1,37 @@
+image: maven:3.9.6-eclipse-temurin-21-alpine
+
+default:
+  tags:
+    - shared-fi
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  script:
+    - echo "Building the project..."
+    - mvn clean package -DskipTests --no-transfer-progress
+  artifacts:
+    paths:
+      - target/*.jar
+    expire_in: 1 month
+
+tests:
+  stage: test
+  needs:
+    - job: build
+  script:
+    - echo "Running unit + integration tests..."
+    - mvn verify --no-transfer-progress
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - target/surefire-reports/*.xml
+        - target/failsafe-reports/*.xml
+    paths:
+      - target/surefire-reports/
+      - target/failsafe-reports/
+    expire_in: 1 month

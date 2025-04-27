@@ -1,54 +1,71 @@
 package cz.muni.fi.tourmanagementservice.facades;
 
 
+import cz.muni.fi.tourmanagementservice.dto.CityVisitDTO;
 import cz.muni.fi.tourmanagementservice.dto.TourDTO;
-import cz.muni.fi.tourmanagementservice.exception.ResourceNotFoundException;
+import cz.muni.fi.tourmanagementservice.mapper.CityVisitMapper;
+import cz.muni.fi.tourmanagementservice.mapper.TourMapper;
+import cz.muni.fi.tourmanagementservice.model.Tour;
 import cz.muni.fi.tourmanagementservice.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Component
+@Service
 public class TourFacade {
 
     private final TourService tourService;
+    private final TourMapper tourMapper;
+    private final CityVisitMapper cityVisitMapper;
 
     @Autowired
-    public TourFacade(TourService tourService) {
+    public TourFacade(TourService tourService, TourMapper tourMapper, CityVisitMapper cityVisitMapper) {
         this.tourService = tourService;
+        this.tourMapper = tourMapper;
+        this.cityVisitMapper = cityVisitMapper;
     }
 
     public List<TourDTO> getAllTours() {
-        return tourService.getAllTours();
+        return tourService.getAllTours().stream()
+                .map(tourMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     public List<TourDTO> getToursByBand(Long bandId) {
-        return tourService.getToursByBand(bandId);
+        return tourService.getToursByBand(bandId).stream()
+                .map(tourMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     public TourDTO getTourById(Long id) {
-        return tourService.getTourById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Tour not found with id: " + id));
+        Tour tour = tourService.getTourById(id);
+        return tourMapper.toDTO(tour);
     }
 
     public TourDTO createTour(TourDTO tourDTO) {
-        return tourService.createTour(tourDTO);
+        Tour tour = tourMapper.toEntity(tourDTO);
+        System.out.println(tour.toString());
+        Tour savedTour = tourService.createTour(tour);
+        return tourMapper.toDTO(savedTour);
     }
 
     public TourDTO updateTour(Long id, TourDTO tourDTO) {
-        TourDTO updatedTour = tourService.updateTour(id, tourDTO);
-        if (updatedTour == null) {
-            throw new ResourceNotFoundException("Tour not found with id: " + id);
-        }
-        return updatedTour;
+        Tour updatedTour = tourService.updateTour(id, tourMapper.toEntity(tourDTO));
+        return tourMapper.toDTO(updatedTour);
     }
 
     public void deleteTour(Long id) {
-        boolean deleted = tourService.deleteTour(id);
-        if (!deleted) {
-            throw new ResourceNotFoundException("Tour not found with id: " + id);
-        }
+        tourService.deleteTour(id);
+    }
+
+    public void addCityVisitToTour(Long tourId, CityVisitDTO cityVisitDTO) {
+        tourService.addCityVisitToTour(tourId, cityVisitMapper.toEntity(cityVisitDTO));
+    }
+
+    public void removeCityVisitFromTour(Long tourId, Long cityVisitId) {
+        tourService.removeCityVisitFromTour(tourId, cityVisitId);
     }
 }
 

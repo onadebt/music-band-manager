@@ -15,12 +15,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class ManagerFacade implements IManagerFacade {
-    @Autowired
-    private IManagerService managerService;
+
+    private final IManagerService managerService;
+    private final ManagerMapper managerMapper;
 
     @Autowired
-    private ManagerMapper managerMapper;
-
+    public ManagerFacade(IManagerService managerService, ManagerMapper managerMapper) {
+        this.managerService = managerService;
+        this.managerMapper = managerMapper;
+    }
 
     public ManagerDto register(ManagerDto managerDto) {
         if (managerDto == null) {

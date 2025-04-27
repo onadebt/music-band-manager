@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  user-service:
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+    ports:
+      - "8091:8091"
+    environment:
+      - ARTEMIS_BROKER_URL=tcp://artemis:61616
+    depends_on:
+      - artemis
+
+  band-service:
+    build:
+      context: .
+      dockerfile: band-service/Dockerfile
+    ports:
+      - "8092:8092"
+    environment:
+      - ARTEMIS_BROKER_URL=tcp://artemis:61616
+    depends_on:
+      - artemis
+
+  music-catalog-service:
+    build:
+      context: .
+      dockerfile: music-catalog-service/Dockerfile
+    ports:
+      - "8093:8093"
+    depends_on:
+      - artemis
+
+  tour-service:
+    build:
+      context: .
+      dockerfile: tour-service/Dockerfile
+    ports:
+      - "8094:8094"
+    depends_on:
+      - artemis
+
+  artemis:
+    image: vromero/activemq-artemis:2.16.0
+    container_name: artemis-broker
+    ports:
+      - "8161:8161"
+      - "61616:61616"
+      - "5672:5672"
+      - "1883:1883"
+    volumes:
+      - artemis-data:/var/lib/artemis/data
+    environment:
+      ARTEMIS_USER: admin
+      ARTEMIS_PASSWORD: admin
+      ANONYMOUS_LOGIN: "true"
+      DISABLE_SECURITY: "true"
+
+volumes:
+  artemis-data:

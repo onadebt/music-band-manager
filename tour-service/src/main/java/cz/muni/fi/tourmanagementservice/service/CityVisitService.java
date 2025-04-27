@@ -1,7 +1,7 @@
 package cz.muni.fi.tourmanagementservice.service;
 
 
-import cz.muni.fi.tourmanagementservice.dto.CityVisitDTO;
+import cz.muni.fi.tourmanagementservice.exception.ResourceNotFoundException;
 import cz.muni.fi.tourmanagementservice.model.CityVisit;
 import cz.muni.fi.tourmanagementservice.repository.CityVisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CityVisitService {
@@ -22,83 +20,56 @@ public class CityVisitService {
         this.cityVisitRepository = cityVisitRepository;
     }
 
-    public List<CityVisitDTO> getAllCityVisits() {
-        return cityVisitRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<CityVisit> getAllCityVisits() {
+        return cityVisitRepository.findAll();
     }
 
-    public Optional<CityVisitDTO> getCityVisitById(Long cityVisitId) {
+    public CityVisit getCityVisitById(Long cityVisitId) {
+        if (cityVisitId == null)
+            throw new IllegalArgumentException("CityVisit ID cannot be null");
+
+        if (cityVisitId < 0)
+            throw new IllegalArgumentException("Invalid CityVisit ID: " + cityVisitId);
+
         return cityVisitRepository.findById(cityVisitId)
-                .map(this::convertToDTO);
-    }
-
-    public List<CityVisitDTO> getCityVisitByTour(Long tourId) {
-        return cityVisitRepository.findByTourId(tourId).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-
-
-    @Transactional
-    public CityVisitDTO createCityVisit(CityVisitDTO cityVisitDTO) {
-        CityVisit cityVisit = convertToEntity(cityVisitDTO);
-
-        CityVisit savedCityVisit = cityVisitRepository.save(cityVisit);
-        return convertToDTO(savedCityVisit);
+                .orElseThrow(() -> new ResourceNotFoundException("CityVisit not found with id: " + cityVisitId));
     }
 
 
     @Transactional
-    public CityVisitDTO updateCityVisit(Long id, CityVisitDTO cityVisitDTO) {
-        Optional<CityVisit> existingCityVisit = cityVisitRepository.findById(id);
+    public CityVisit createCityVisit(CityVisit cityVisit) {
+        if (cityVisit == null)
+            throw new IllegalArgumentException("Album cannot be null");
 
-        if (existingCityVisit.isPresent()) {
-            CityVisit cityVisit = existingCityVisit.get();
-            cityVisit.setCityName(cityVisitDTO.getCityName());
-            cityVisit.setDateFrom(cityVisitDTO.getDateFrom());
-            cityVisit.setDateTo(cityVisitDTO.getDateTo());
+        return cityVisitRepository.save(cityVisit);
+    }
 
-            CityVisit updatedCityVisit = cityVisitRepository.save(cityVisit);
-            return convertToDTO(updatedCityVisit);
-        }
-        return null;
+
+    @Transactional
+    public CityVisit updateCityVisit(Long id, CityVisit updatedCityVisit) {
+        if (id == null || id < 0)
+            throw new IllegalArgumentException("CityVisit ID cannot be null or < 0");
+
+        if (updatedCityVisit == null)
+            throw new IllegalArgumentException("UpdatedCityVisit cannot be null");
+
+        CityVisit cityVisit = getCityVisitById(id);
+
+        cityVisit.setCityName(updatedCityVisit.getCityName());
+        cityVisit.setDateFrom(updatedCityVisit.getDateFrom());
+        cityVisit.setDateTo(updatedCityVisit.getDateTo());
+        return cityVisitRepository.save(cityVisit);
     }
 
     @Transactional
-    public boolean deleteCityVisit(Long id) {
-        if (cityVisitRepository.existsById(id)) {
-            cityVisitRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
+    public void deleteCityVisit(Long id) {
+        if (id == null)
+            throw new IllegalArgumentException("CityVisit ID cannot be null");
 
+        if (id < 0)
+            throw new IllegalArgumentException("Invalid CityVisit ID: " + id);
 
-
-
-
-
-
-
-
-
-    private CityVisitDTO convertToDTO(CityVisit cityVisit) {
-        CityVisitDTO cityVisitDTO = new CityVisitDTO();
-        cityVisitDTO.setId(cityVisit.getId());
-        cityVisitDTO.setCityName(cityVisit.getCityName());
-        cityVisitDTO.setDateFrom(cityVisit.getDateFrom());
-        cityVisitDTO.setDateTo(cityVisit.getDateTo());
-
-        return cityVisitDTO;
-    }
-
-    private CityVisit convertToEntity(CityVisitDTO cityVisitDTO) {
-        CityVisit cityVisit = new CityVisit();
-        cityVisit.setCityName(cityVisitDTO.getCityName());
-        cityVisit.setDateFrom(cityVisitDTO.getDateFrom());
-        cityVisit.setDateTo(cityVisitDTO.getDateTo());
-        return cityVisit;
+        getCityVisitById(id);
+        cityVisitRepository.deleteById(id);
     }
 }

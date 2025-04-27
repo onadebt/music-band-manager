@@ -1,119 +1,106 @@
 package cz.muni.fi.musiccatalogservice.service;
 
-import cz.muni.fi.musiccatalogservice.dto.SongDTO;
-import cz.muni.fi.musiccatalogservice.model.Album;
+import cz.muni.fi.musiccatalogservice.exception.ResourceNotFoundException;
 import cz.muni.fi.musiccatalogservice.model.Song;
 import cz.muni.fi.musiccatalogservice.repository.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class SongService {
 
     private final SongRepository songRepository;
-    private final AlbumService albumService;
 
     @Autowired
-    public SongService(SongRepository songRepository, @Lazy AlbumService albumService) {
+    public SongService(SongRepository songRepository) {
         this.songRepository = songRepository;
-        this.albumService = albumService;
     }
 
-    public List<SongDTO> getAllSongs() {
-        return songRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Song> getAllSongs() {
+        return songRepository.findAll();
     }
 
-    public List<SongDTO> getSongsByAlbum(Long albumId) {
-        return songRepository.findByAlbumId(albumId).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Song> getSongsByAlbum(Long albumId) {
+        if (albumId == null) {
+            throw new IllegalArgumentException("Album ID cannot be null");
+        }
+
+        if (albumId < 0) {
+            throw new IllegalArgumentException("Invalid album ID: " + albumId);
+        }
+
+        return songRepository.findByAlbumId(albumId);
     }
 
-    public List<SongDTO> getSongsByBand(Long bandId) {
-        return songRepository.findByBandId(bandId).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Song> getSongsByBand(Long bandId) {
+        if (bandId == null) {
+            throw new IllegalArgumentException("Band ID cannot be null");
+        }
+
+        if (bandId < 0) {
+            throw new IllegalArgumentException("Invalid band ID: " + bandId);
+        }
+
+        return songRepository.findByBandId(bandId);
     }
 
-    public Optional<SongDTO> getSongById(Long id) {
+    public Song getSongById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Song ID cannot be null");
+        }
+
+        if (id < 0) {
+            throw new IllegalArgumentException("Invalid song ID: " + id);
+        }
+
         return songRepository.findById(id)
-                .map(this::convertToDTO);
+                .orElseThrow(() -> new ResourceNotFoundException("Song not found with id: " + id));
     }
 
     @Transactional
-    public SongDTO createSong(SongDTO songDTO) {
-        Song song = convertToEntity(songDTO);
-
-        // Set album relationship if albumId provided
-        if (songDTO.getAlbumId() != null) {
-            Optional<Album> album = albumService.getAlbumEntityById(songDTO.getAlbumId());
-            album.ifPresent(song::setAlbum);
+    public Song createSong(Song song) {
+        if (song == null) {
+            throw new IllegalArgumentException("Song cannot be null");
         }
 
-        Song savedSong = songRepository.save(song);
-        return convertToDTO(savedSong);
+        return songRepository.save(song);
     }
 
     @Transactional
-    public SongDTO updateSong(Long id, SongDTO songDTO) {
-        Optional<Song> existingSong = songRepository.findById(id);
-
-        if (existingSong.isPresent()) {
-            Song song = existingSong.get();
-            song.setName(songDTO.getName());
-            song.setDuration(songDTO.getDuration());
-            song.setBandId(songDTO.getBandId());
-
-            if (songDTO.getAlbumId() != null) {
-                Optional<Album> album = albumService.getAlbumEntityById(songDTO.getAlbumId());
-                album.ifPresent(song::setAlbum);
-            } else {
-                song.setAlbum(null);
-            }
-
-            Song updatedSong = songRepository.save(song);
-            return convertToDTO(updatedSong);
+    public Song updateSong(Long id, Song songDetails) {
+        if (id == null) {
+            throw new IllegalArgumentException("Song ID cannot be null");
         }
 
-        return null;
+        if (songDetails == null) {
+            throw new IllegalArgumentException("Song details cannot be null");
+        }
+
+        Song song = getSongById(id);
+        song.setName(songDetails.getName());
+        song.setDuration(songDetails.getDuration());
+        song.setBandId(songDetails.getBandId());
+        if (songDetails.getAlbum() != null) {
+            song.setAlbum(songDetails.getAlbum());
+        }
+        return songRepository.save(song);
     }
 
     @Transactional
-    public boolean deleteSong(Long id) {
-        if (songRepository.existsById(id)) {
-            songRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-
-    private SongDTO convertToDTO(Song song) {
-        SongDTO songDTO = new SongDTO();
-        songDTO.setId(song.getId());
-        songDTO.setName(song.getName());
-        songDTO.setDuration(song.getDuration());
-        songDTO.setBandId(song.getBandId());
-
-        if (song.getAlbum() != null) {
-            songDTO.setAlbumId(song.getAlbum().getId());
+    public void deleteSong(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Song ID cannot be null");
         }
 
-        return songDTO;
-    }
+        if (id < 0) {
+            throw new IllegalArgumentException("Invalid song ID: " + id);
+        }
 
-    private Song convertToEntity(SongDTO songDTO) {
-        Song song = new Song();
-        song.setName(songDTO.getName());
-        song.setDuration(songDTO.getDuration());
-        song.setBandId(songDTO.getBandId());
-        return song;
+        // Check if song exists
+        getSongById(id);
+        songRepository.deleteById(id);
     }
 }

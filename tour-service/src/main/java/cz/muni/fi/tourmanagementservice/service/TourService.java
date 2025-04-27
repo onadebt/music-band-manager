@@ -1,96 +1,115 @@
 package cz.muni.fi.tourmanagementservice.service;
 
-import cz.muni.fi.tourmanagementservice.dto.TourDTO;
+import cz.muni.fi.tourmanagementservice.exception.ResourceNotFoundException;
+import cz.muni.fi.tourmanagementservice.model.CityVisit;
 import cz.muni.fi.tourmanagementservice.model.Tour;
+import cz.muni.fi.tourmanagementservice.repository.CityVisitRepository;
 import cz.muni.fi.tourmanagementservice.repository.TourRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TourService {
 
     private final TourRepository tourRepository;
+    private final CityVisitRepository cityVisitRepository;
 
     @Autowired
-    public TourService(TourRepository tourRepository) {
+    public TourService(TourRepository tourRepository, CityVisitRepository cityVisitRepository) {
         this.tourRepository = tourRepository;
+        this.cityVisitRepository = cityVisitRepository;
     }
 
-    public List<TourDTO> getAllTours() {
-        return tourRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Tour> getAllTours() {
+        return tourRepository.findAll();
     }
 
 
-    public Optional<TourDTO> getTourById(Long tourId) {
+    public Tour getTourById(Long tourId) {
+        if (tourId == null)
+            throw new IllegalArgumentException("Tour ID cannot be null");
+
+        if (tourId < 0)
+            throw new IllegalArgumentException("Invalid tour ID: " + tourId);
+
         return tourRepository.findById(tourId)
-                .map(this::convertToDTO);
+                .orElseThrow(() -> new ResourceNotFoundException("Tour not found with id: " + tourId));
     }
 
 
-    public List<TourDTO> getToursByBand(Long bandId) {
-        return tourRepository.findByBandId(bandId).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Tour> getToursByBand(Long bandId) {
+        if (bandId == null)
+            throw new IllegalArgumentException("Band ID cannot be null");
+
+        if (bandId < 0)
+            throw new IllegalArgumentException("Invalid band ID: " + bandId);
+
+        return tourRepository.findByBandId(bandId);
     }
 
 
     @Transactional
-    public TourDTO createTour(TourDTO tourDTO) {
-        Tour tour = convertToEntity(tourDTO);
+    public Tour createTour(Tour tour) {
+        if (tour == null)
+            throw new IllegalArgumentException("Album cannot be null");
 
-        Tour savedTour = tourRepository.save(tour);
-        return convertToDTO(savedTour);
+        return tourRepository.save(tour);
     }
 
     @Transactional
-    public TourDTO updateTour(Long id, TourDTO tourDTO) {
-        Optional<Tour> existingSong = tourRepository.findById(id);
+    public Tour updateTour(Long id, Tour updatedTour) {
+        if (id == null || id < 0)
+            throw new IllegalArgumentException("Tour ID cannot be null or < 0");
 
-        if (existingSong.isPresent()) {
-            Tour tour = existingSong.get();
-            tour.setTourName(tourDTO.getTourName());
-            tour.setBandId(tourDTO.getBandId());
+        if (updatedTour == null)
+            throw new IllegalArgumentException("UpdatedTour cannot be null");
 
-            Tour updatedTour = tourRepository.save(tour);
-            return convertToDTO(updatedTour);
-        }
-        return null;
+        Tour tour = getTourById(id);
+        tour.setTourName(updatedTour.getTourName());
+        tour.setCityVisits(updatedTour.getCityVisits());
+        tour.setBandId(updatedTour.getBandId());
+        return tourRepository.save(tour);
     }
 
     @Transactional
-    public boolean deleteTour(Long id) {
-        if (tourRepository.existsById(id)) {
-            tourRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void deleteTour(Long tourId) {
+        if (tourId == null)
+            throw new IllegalArgumentException("Tour ID cannot be null");
+
+        if (tourId < 0)
+            throw new IllegalArgumentException("Invalid tour ID: " + tourId);
+
+        getTourById(tourId);
+        tourRepository.deleteById(tourId);
     }
 
+    public void addCityVisitToTour(Long tourId, CityVisit cityVisit) {
+        if (tourId == null || tourId < 0)
+            throw new IllegalArgumentException("Tour ID cannot be null or < 0");
 
+        if (cityVisit == null)
+            throw new IllegalArgumentException("UpdatedTour cannot be null");
 
-
-
-    private TourDTO convertToDTO(Tour tour) {
-        TourDTO tourDTO = new TourDTO();
-        tourDTO.setId(tour.getId());
-        tourDTO.setBandId(tour.getBandId());
-        tourDTO.setTourName(tour.getTourName());
-
-        return tourDTO;
+        Tour tour = getTourById(tourId);
+        CityVisit savedCityVisit = cityVisitRepository.save(cityVisit);
+        tour.addCityVisit(savedCityVisit);
+        tourRepository.save(tour);
     }
 
-    private Tour convertToEntity(TourDTO tourDTO) {
-        Tour tour = new Tour();
-        tour.setTourName(tourDTO.getTourName());
-        tour.setBandId(tourDTO.getBandId());
-        return tour;
-    }
+    public void removeCityVisitFromTour(Long tourId, Long cityVisitId) {
+        if (tourId == null || tourId < 0)
+            throw new IllegalArgumentException("Tour ID cannot be null or < 0");
 
+        if (cityVisitId == null || cityVisitId < 0)
+            throw new IllegalArgumentException("CityVisit ID cannot be null or < 0");
+
+        Tour tour = getTourById(tourId);
+        CityVisit cityVisit = cityVisitRepository.findById(cityVisitId)
+                .orElseThrow(() -> new ResourceNotFoundException("City visit not found with id: " + cityVisitId));
+        tour.removeCityVisit(cityVisit);
+        cityVisitRepository.delete(cityVisit);
+    }
 }

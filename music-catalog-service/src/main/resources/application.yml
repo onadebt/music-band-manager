@@ -10,7 +10,7 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -22,19 +22,20 @@ spring:
 server:
   port: 8093
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
 
-logging:
-  level:
-    root: DEBUG
-    org.springframework: DEBUG
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
+#logging:
+#  level:
+#    root: DEBUG
+#    org.springframework: DEBUG
+#    org:
+#      hibernate:
+#        SQL: DEBUG
+#        type:
+#          descriptor:
+#            sql:
+#              BasicBinder: TRACE

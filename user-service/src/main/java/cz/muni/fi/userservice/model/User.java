@@ -1,5 +1,6 @@
 package cz.muni.fi.userservice.model;
 
+import cz.muni.fi.shared.enm.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,6 +36,7 @@ public abstract class User {
     @Column
     private String lastName;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Column
+    @Enumerated(EnumType.STRING)
     private Role role;
 }

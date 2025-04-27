@@ -18,6 +18,11 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
+  artemis:
+    mode: native
+    user: admin
+    password: admin
+    broker-url: ${ARTEMIS_BROKER_URL:tcp://localhost:61616}
 
 server:
   port: 8091
