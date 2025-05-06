@@ -8,6 +8,7 @@ import cz.muni.fi.bandmanagementservice.repository.BandOfferRepository;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import cz.muni.fi.events.bandoffer.BandOfferAcceptedEvent;
 import cz.muni.fi.shared.enm.BandOfferStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,12 @@ class BandOfferRestControllerIT {
     private BandOfferEventProducer bandOfferEventProducer;
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    @BeforeEach
+    void setUp() {
+        bandOfferRepository.deleteAll();
+        bandRepository.deleteAll();
+    }
 
     @Test
     void createBandOffer_shouldCreateNewOffer() throws Exception {
