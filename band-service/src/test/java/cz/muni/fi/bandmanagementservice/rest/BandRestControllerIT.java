@@ -6,6 +6,7 @@ import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import cz.muni.fi.events.band.BandAddMemberEvent;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ class BandRestControllerIT {
 
     @MockitoBean
     BandEventProducer bandEventProducer;
+
+    @BeforeEach
+    void setUp() {
+        bandRepository.deleteAll();
+    }
 
     @Test
     void createBand_persistsEntity() throws Exception {

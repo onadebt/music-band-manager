@@ -10,10 +10,7 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
+    show-sql: true
   h2:
     console:
       enabled: true
@@ -21,6 +18,11 @@ spring:
 
 server:
   port: 8094
+
+app:
+  db:
+    clear: false
+    seed: false
 
 springdoc:
   api-docs:
