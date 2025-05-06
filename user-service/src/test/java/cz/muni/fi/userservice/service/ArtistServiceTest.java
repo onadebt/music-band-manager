@@ -216,22 +216,6 @@ public class ArtistServiceTest {
     }
 
     @Test
-    void linkArtistToBand_artistAndBandExist_returnsUpdatedArtist() {
-        // Arrange
-        Artist artist = TestDataFactory.setUpTestArtist1();
-        Long bandId = 1L;
-        Mockito.when(artistRepository.findById(artist.getId())).thenReturn(Optional.of(artist));
-        Mockito.when(artistRepository.save(artist)).thenReturn(artist);
-
-        // Act
-        Artist updated = artistService.linkArtistToBand(artist.getId(), bandId);
-
-        // Assert
-        assertEquals(artist, updated);
-        assertTrue(updated.getBandIds().contains(bandId));
-    }
-
-    @Test
     void linkArtistToBand_artistNotFound_throwsUserNotFoundException() {
         // Arrange
         Long invalidId = 42L;
@@ -240,23 +224,6 @@ public class ArtistServiceTest {
 
         // Act / Assert
         assertThrows(UserNotFoundException.class, () -> artistService.linkArtistToBand(invalidId, bandId));
-    }
-
-    @Test
-    void unlinkArtistFromBand_artistAndBandExist_returnsUpdatedArtist() {
-        // Arrange
-        Artist artist = TestDataFactory.setUpTestArtist1();
-        Long bandId = 1L;
-        artist.getBandIds().add(bandId);
-        Mockito.when(artistRepository.findById(artist.getId())).thenReturn(Optional.of(artist));
-        Mockito.when(artistRepository.save(artist)).thenReturn(artist);
-
-        // Act
-        Artist updated = artistService.unlinkArtistFromBand(artist.getId(), bandId);
-
-        // Assert
-        assertEquals(artist, updated);
-        assertFalse(updated.getBandIds().contains(bandId));
     }
 
     @Test

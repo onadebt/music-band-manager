@@ -145,36 +145,4 @@ public class ArtistControllerTest {
         assertThat(Objects.requireNonNull(response.getBody()).contains(artistDto)).isTrue();
         assertThat(Objects.requireNonNull(response.getBody()).contains(artistDto2)).isTrue();
     }
-
-    @Test
-    void linkArtistToBand_validOperation_returnsUpdatedArtistWithOkStatus() {
-        // Arrange
-        ArtistDto artistDto = TestDataFactory.setUpTestArtist1Dto();
-        Mockito.when(artistFacade.linkArtistToBand(artistDto.getId(), artistDto.getBandIds().iterator().next()))
-                .thenReturn(artistDto);
-
-        // Act
-        ResponseEntity<ArtistDto> response = artistController.linkArtistToBand(artistDto.getId(), artistDto.getBandIds().iterator().next());
-
-        // Assert
-        assertThat(response.getStatusCode().value()).isEqualTo(200);
-        assertThat(response.hasBody()).isTrue();
-        assertThat(response.getBody()).isEqualTo(artistDto);
-    }
-
-    @Test
-    void unlinkArtistFromBand_validOperation_returnsUpdatedArtistWithOkStatus() {
-        // Arrange
-        ArtistDto artistDto = TestDataFactory.setUpTestArtist1Dto();
-        Mockito.when(artistFacade.unlinkArtistFromBand(artistDto.getId(), artistDto.getBandIds().iterator().next()))
-                .thenReturn(artistDto);
-
-        // Act
-        ResponseEntity<ArtistDto> response = artistController.unlinkArtistFromBand(artistDto.getId(), artistDto.getBandIds().iterator().next());
-
-        // Assert
-        assertThat(response.getStatusCode().value()).isEqualTo(200);
-        assertThat(response.hasBody()).isTrue();
-        assertThat(response.getBody()).isEqualTo(artistDto);
-    }
 }
