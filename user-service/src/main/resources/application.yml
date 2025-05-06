@@ -27,6 +27,12 @@ spring:
 server:
   port: 8091
 
+app:
+  db:
+    clear: true
+    seed: true
+
+
 springdoc:
   api-docs:
     path: /v3/api-docs
