@@ -97,7 +97,7 @@ public class ArtistController {
         return ResponseEntity.ok(artistFacade.findByUsername(username));
     }
 
-    @PostMapping("/bands/{artistId}")
+    @PatchMapping("/bands/{artistId}")
     @Operation(summary = "Update artist's band IDs")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Artist's bands updated"),

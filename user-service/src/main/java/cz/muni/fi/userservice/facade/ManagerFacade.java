@@ -34,17 +34,17 @@ public class ManagerFacade implements IManagerFacade {
         return managerMapper.toDto(manager);
     }
 
-    public ManagerDto update(Long id, ManagerUpdateDto updateDto) {
+    public ManagerDto update(Long id, ManagerUpdateDto managerUpdateDto) {
         if (id == null) {
             throw new IllegalArgumentException("ID cannot be null");
         }
-        if (updateDto == null) {
+        if (managerUpdateDto == null) {
             throw new IllegalArgumentException("ManagerDTO cannot be null");
         }
 
         Manager manager = managerService.findById(id);
-        Manager updatedManager = managerMapper.updateManagerFromDto(updateDto, manager);
-        updatedManager = managerService.save(updatedManager);
+        Manager updatedManager = managerMapper.updateManagerFromDto(managerUpdateDto, manager);
+        updatedManager = managerService.updateManager(id, updatedManager);
         return managerMapper.toDto(updatedManager);
     }
 
@@ -79,7 +79,8 @@ public class ManagerFacade implements IManagerFacade {
         if (bandIds == null) {
             throw new IllegalArgumentException("Band IDs cannot be null or empty");
         }
-        return managerService.findByManagedBandIds(bandIds).stream()
+        List<Manager> managers = managerService.findByManagedBandIds(bandIds);
+        return managers.stream()
                 .map(managerMapper::toDto)
                 .collect(Collectors.toList());
     }
