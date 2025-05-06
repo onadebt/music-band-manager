@@ -29,8 +29,8 @@ server:
 
 app:
   db:
-    clear: true
-    seed: true
+    clear: false
+    seed: false
 
 springdoc:
   api-docs:
