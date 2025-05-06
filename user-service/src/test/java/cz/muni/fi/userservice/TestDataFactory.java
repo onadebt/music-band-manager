@@ -12,17 +12,8 @@ import java.util.Set;
  * @author Tomáš MAREK
  */
 public class TestDataFactory {
-    public static final Artist TEST_ARTIST_1 = setUpTestArtist1();
-    public static final Artist TEST_ARTIST_2 = setUpTestArtist2();
-    public static final ArtistDto TEST_ARTIST_1_DTO = setUpTestArtist1Dto();
-    public static final ArtistDto TEST_ARTIST_2_DTO = setUpTestArtist2Dto();
-    public static final Manager TEST_MANAGER_1 = setUpTestManager1();
-    public static final Manager TEST_MANAGER_2 = setUpTestManager2();
-    public static final ManagerDto TEST_MANAGER_1_DTO = setUpTestManager1Dto();
-    public static final ManagerDto TEST_MANAGER_2_DTO = setUpTestManager2Dto();
 
-
-    private static Manager setUpTestManager1() {
+    public static Manager setUpTestManager1() {
         Manager testManager = new Manager();
         testManager.setManagedBandIds(Set.of(1L, 2L, 3L));
         testManager.setCompanyName("Test Music Management Company");
@@ -36,7 +27,7 @@ public class TestDataFactory {
         return testManager;
     }
 
-    private static ManagerDto setUpTestManager1Dto(){
+    public static ManagerDto setUpTestManager1Dto(){
         ManagerDto testManager = new ManagerDto();
         testManager.setManagedBandIds(Set.of(1L, 2L, 3L));
         testManager.setCompanyName("Test Music Management Company");
@@ -50,7 +41,7 @@ public class TestDataFactory {
         return testManager;
     }
 
-    private static Manager setUpTestManager2() {
+    public static Manager setUpTestManager2() {
         Manager testManager = new Manager();
         testManager.setManagedBandIds(Set.of(2L, 3L, 4L));
         testManager.setCompanyName("Managers of Music");
@@ -64,7 +55,7 @@ public class TestDataFactory {
         return testManager;
     }
 
-    private static ManagerDto setUpTestManager2Dto() {
+    public static ManagerDto setUpTestManager2Dto() {
         ManagerDto testManager = new ManagerDto();
         testManager.setManagedBandIds(Set.of(2L, 3L, 4L));
         testManager.setCompanyName("Managers of Music");
@@ -78,7 +69,7 @@ public class TestDataFactory {
         return testManager;
     }
 
-    private static Artist setUpTestArtist1() {
+    public static Artist setUpTestArtist1() {
         Artist testArtist = new Artist("Till Lindemann", "Born in 1963, Leipzig", "Singer", Set.of(1L, 2L, 3L));
         testArtist.setId(1L);
         testArtist.setUsername("xlindemann");
@@ -90,7 +81,7 @@ public class TestDataFactory {
         return testArtist;
     }
 
-    private static ArtistDto setUpTestArtist1Dto() {
+    public static ArtistDto setUpTestArtist1Dto() {
         ArtistDto artistDTO = new ArtistDto();
         artistDTO.setId(1L);
         artistDTO.setUsername("xlindemann");
@@ -106,7 +97,7 @@ public class TestDataFactory {
         return artistDTO;
     }
 
-    private static Artist setUpTestArtist2() {
+    public static Artist setUpTestArtist2() {
         Artist testArtis = new Artist("Joakim Brodén", "Born in 1980, Falun", "Singer, Keyboard", Set.of(2L, 4L));
         testArtis.setId(2L);
         testArtis.setUsername("brodenj");
@@ -118,7 +109,7 @@ public class TestDataFactory {
         return testArtis;
     }
 
-    private static ArtistDto setUpTestArtist2Dto() {
+    public static ArtistDto setUpTestArtist2Dto() {
         ArtistDto artistDTO = new ArtistDto();
         artistDTO.setId(2L);
         artistDTO.setUsername("brodenj");
