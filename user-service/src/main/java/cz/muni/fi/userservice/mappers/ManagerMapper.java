@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 public interface ManagerMapper {
     Manager toEntity(ManagerDto registerDTO);
 
-    ManagerDto toDTO(Manager manager);
+    ManagerDto toDto(Manager manager);
 
     default Manager updateManagerFromDto(ManagerUpdateDto updateDto, @MappingTarget Manager manager) {
         UserMapper userMapper = Mappers.getMapper(UserMapper.class);
