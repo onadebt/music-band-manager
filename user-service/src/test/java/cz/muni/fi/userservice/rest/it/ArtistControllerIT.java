@@ -1,4 +1,4 @@
-package cz.muni.fi.userservice.rest;
+package cz.muni.fi.userservice.rest.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.muni.fi.userservice.TestDataFactory;
@@ -8,6 +8,7 @@ import cz.muni.fi.userservice.dto.ArtistUpdateDto;
 import cz.muni.fi.userservice.mappers.ArtistMapper;
 import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.repository.ArtistRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -48,22 +49,30 @@ class ArtistControllerIT {
     @MockitoBean
     BandOfferEventListener bandOfferEventListener;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @BeforeEach
+    void setUp() {
+        artistRepository.deleteAll();
+    }
+
     @Test
-    void register_persistsEntity() throws Exception {
+    void register_validArtist_persistsEntity() throws Exception {
         // Arrange
         long before = artistRepository.count();
-        ArtistDto registered = TestDataFactory.TEST_ARTIST_1_DTO;
+        ArtistDto registered = TestDataFactory.setUpTestArtist1Dto();
         registered.setId(null);
 
         // Act
         mockMvc.perform(post("/api/artists")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(registered)))
+                        .content(objectMapper.writeValueAsString(registered)))
                 .andExpect(status().isOk());
 
         // Assert
         assertThat(artistRepository.count()).isEqualTo(before + 1);
-        assertThat(artistRepository.findByUsername("xlindemann")).isPresent();
+        assertThat(artistRepository.findByUsername(registered.getUsername())).isPresent();
     }
 
     @Test
@@ -90,7 +99,7 @@ class ArtistControllerIT {
         // Act
         mockMvc.perform(put("/api/artists/{id}", emptyId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(updateDto)))
+                        .content(objectMapper.writeValueAsString(updateDto)))
                 .andExpect(status().isNotFound());
 
         // Assert
@@ -99,9 +108,6 @@ class ArtistControllerIT {
 
     @Test
     void getAllArtists_noArtists_returnsEmptyList() throws Exception {
-        // Arrange
-        artistRepository.deleteAll();
-
         // Act
         mockMvc.perform(get("/api/artists"))
                 .andExpect(status().isOk())
@@ -110,11 +116,8 @@ class ArtistControllerIT {
 
     @Test
     void getAllArtists_twoArtists_returnsList() throws Exception {
-        // Arrange
-        artistRepository.deleteAll();
-
-        Artist artist1 = TestDataFactory.TEST_ARTIST_1;
-        Artist artist2 = TestDataFactory.TEST_ARTIST_2;
+        Artist artist1 = TestDataFactory.setUpTestArtist1();
+        Artist artist2 = TestDataFactory.setUpTestArtist2();
         artist1.setId(null);
         artist2.setId(null);
 
@@ -125,13 +128,13 @@ class ArtistControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[*].lastName",
-                        containsInAnyOrder("Lindemann", "Brodén")));
+                        containsInAnyOrder(artist1.getLastName(), artist2.getLastName())));
     }
 
     @Test
     void getArtistById_validId_returnsEntityAndOk() throws Exception {
         // Arrange
-        Artist artist = TestDataFactory.TEST_ARTIST_1;
+        Artist artist = TestDataFactory.setUpTestArtist1();
         artist.setId(null);
         artist = artistRepository.save(artist);
 
@@ -155,7 +158,7 @@ class ArtistControllerIT {
         // Arrange
         long before = artistRepository.count();
 
-        Artist artist = TestDataFactory.TEST_ARTIST_1;
+        Artist artist = TestDataFactory.setUpTestArtist1();
         artist.setId(null);
         artist = artistRepository.save(artist);
 
@@ -180,7 +183,7 @@ class ArtistControllerIT {
     @Test
     void getArtistByUsername_validUsername_returnEntityAndOk() throws Exception {
         // Arrange
-        Artist artist = saveArtist(TestDataFactory.TEST_ARTIST_1);
+        Artist artist = saveArtist(TestDataFactory.setUpTestArtist1());
 
         // Act
         mockMvc.perform(get("/api/artists/username/{username}", artist.getUsername()))
@@ -200,13 +203,13 @@ class ArtistControllerIT {
     @Test
     void updateBands_validSet_returnsOkAndUpdatesRepository() throws Exception {
         // Arrange
-        Artist artist = saveArtist(TestDataFactory.TEST_ARTIST_1);
+        Artist artist = saveArtist(TestDataFactory.setUpTestArtist1());
         Set<Long> newBands = Set.of(4L, 5L, 6L, 7L);
 
         // Act
-        mockMvc.perform(post("/api/artists/bands/{artistId}", artist.getId())
+        mockMvc.perform(patch("/api/artists/bands/{artistId}", artist.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(newBands)))
+                        .content(objectMapper.writeValueAsString(newBands)))
                 .andExpect(status().isOk());
 
         // Assert
@@ -223,20 +226,75 @@ class ArtistControllerIT {
         Set<Long> newBands = Set.of(4L, 5L, 6L, 7L);
 
         // Act
-        mockMvc.perform(post("/api/artists/bands/{artistId}", emptyId)
+        mockMvc.perform(patch("/api/artists/bands/{artistId}", emptyId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(newBands)))
+                        .content(objectMapper.writeValueAsString(newBands)))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void update_sourceExists_replacesEntity() throws Exception {
+        // Arrange
+        Artist artist = TestDataFactory.setUpTestArtist1();
+        artist = saveArtist(artist);
+        ArtistUpdateDto updateDto = toArtistUpdateDto(artist);
+        updateDto.setStageName("New Name");
+
+        // Act
+        mockMvc.perform(put("/api/artists/{id}", artist.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateDto)))
+                .andExpect(status().isOk());
+
+        // Assert
+        assertThat(artistRepository.count()).isEqualTo(1);
+        Optional<Artist> updated = artistRepository.findById(artist.getId());
+        assertThat(updated).isPresent();
+        assertThat(updated.get().getStageName()).isEqualTo("New Name");
     }
 
 
     @Test
-    void getArtistsByBandIds_fitsNoArtist_returnEmptyList() throws Exception {
-        artistRepository.deleteAll();
-
+    void getArtistsByBandIds_findsAllArtist_returnOkAndAllArtists() throws Exception {
         // Arrange
-        saveArtist(TestDataFactory.TEST_ARTIST_1);
-        saveArtist(TestDataFactory.TEST_ARTIST_2);
+        Artist artist1 = TestDataFactory.setUpTestArtist1();
+        Artist artist2 = TestDataFactory.setUpTestArtist2();
+        artist1.setId(null);
+        artist2.setId(null);
+        artist1 = saveArtist(artist1);
+        artist2 = saveArtist(artist2);
+
+        // Act
+        mockMvc.perform(get("/api/artists/bands")
+                        .param("bandIds", "2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[*].username",
+                        containsInAnyOrder(artist1.getUsername(), artist2.getUsername())));
+    }
+
+    @Test
+    void getArtistsByBandIds_fitsOneArtis_returnOkAndArtist() throws Exception{
+        // Arrange
+        Artist artist1 = TestDataFactory.setUpTestArtist1();
+        artist1.setId(null);
+        artist1 = saveArtist(artist1);
+
+        // Act
+        mockMvc.perform(get("/api/artists/bands")
+                        .param("bandIds", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].username").value(artist1.getUsername()));
+    }
+
+    @Test
+    void getArtistsByBandIds_fitsNoArtist_returnEmptyList() throws Exception {
+        // Arrange
+        Artist artist1 = TestDataFactory.setUpTestArtist1();
+        Artist artist2 = TestDataFactory.setUpTestArtist2();
+        artist1.setId(null);
+        artist2.setId(null);
+        artist1 = saveArtist(artist1);
+        artist2 = saveArtist(artist2);
 
         // Act
         mockMvc.perform(get("/api/artists/bands")
@@ -244,6 +302,9 @@ class ArtistControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
     }
+
+
+
 
     private Artist saveArtist(Artist artist) {
         artist.setId(null);
