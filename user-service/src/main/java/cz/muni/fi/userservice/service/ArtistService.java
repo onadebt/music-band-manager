@@ -1,5 +1,6 @@
 package cz.muni.fi.userservice.service;
 
+import cz.muni.fi.userservice.exception.UserAlreadyExistsException;
 import cz.muni.fi.userservice.exception.UserNotFoundException;
 import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.repository.ArtistRepository;
@@ -28,7 +29,7 @@ public class ArtistService implements IArtistService {
     public Artist save(Artist artist) {
         var existingArtist = artistRepository.findByUsername(artist.getUsername());
         if (existingArtist.isPresent()) {
-            throw new UserNotFoundException(artist.getUsername());
+            throw new UserAlreadyExistsException(artist);
         }
 
         String hashedPassword = passwordEncoder.encode(artist.getPassword());
@@ -86,19 +87,19 @@ public class ArtistService implements IArtistService {
         return artistRepository.save(existingArtist);
     }
 
-    public void linkArtistToBand(Long artistId, Long bandId) {
+    public Artist linkArtistToBand(Long artistId, Long bandId) {
         Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new UserNotFoundException(artistId));
         Set<Long> bandIds = artist.getBandIds();
         bandIds.add(bandId);
         artist.setBandIds(bandIds);
-        artistRepository.save(artist);
+        return artistRepository.save(artist);
     }
 
-    public void unlinkArtistFromBand(Long artistId, Long bandId) {
+    public Artist unlinkArtistFromBand(Long artistId, Long bandId) {
         Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new UserNotFoundException(artistId));
         Set<Long> bandIds = artist.getBandIds();
         bandIds.remove(bandId);
         artist.setBandIds(bandIds);
-        artistRepository.save(artist);
+        return artistRepository.save(artist);
     }
 }

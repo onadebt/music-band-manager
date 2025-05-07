@@ -3,6 +3,7 @@ package cz.muni.fi.userservice.rest;
 import cz.muni.fi.userservice.TestDataFactory;
 import cz.muni.fi.userservice.dto.ManagerDto;
 import cz.muni.fi.userservice.facade.ManagerFacade;
+import cz.muni.fi.userservice.model.Manager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,21 +36,24 @@ public class ManagerControllerTest {
     @Test
     void register_validRequest_returnsCreatedArtisWithOkStatus() {
         // Arrange
-        Mockito.when(managerFacade.register(TestDataFactory.TEST_MANAGER_1_DTO)).thenReturn(TestDataFactory.TEST_MANAGER_1_DTO);
+        ManagerDto managerDto = TestDataFactory.setUpTestManager1Dto();
+        Mockito.when(managerFacade.register(managerDto)).thenReturn(managerDto);
         // Act
-        ResponseEntity<ManagerDto> response = managerController.register(TestDataFactory.TEST_MANAGER_1_DTO);
+        ResponseEntity<ManagerDto> response = managerController.register(managerDto);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(201);
         assertThat(response.hasBody()).isTrue();
-        assertThat(response.getBody()).isEqualTo(TestDataFactory.TEST_MANAGER_1_DTO);
+        assertThat(response.getBody()).isEqualTo(managerDto);
         verify(managerFacade, times(1)).register(any());
     }
 
     @Test
     void getAllManagers_twoManagersStored_returnsListWithOkStatus() {
         // Arrange
-        Mockito.when(managerFacade.findAll()).thenReturn(List.of(TestDataFactory.TEST_MANAGER_1_DTO, TestDataFactory.TEST_MANAGER_2_DTO));
+        ManagerDto managerDto = TestDataFactory.setUpTestManager1Dto();
+        ManagerDto managerDto2 = TestDataFactory.setUpTestManager2Dto();
+        Mockito.when(managerFacade.findAll()).thenReturn(List.of(managerDto, managerDto2));
 
         // Act
         ResponseEntity<List<ManagerDto>> response = managerController.getAllManagers();
@@ -57,55 +61,61 @@ public class ManagerControllerTest {
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.hasBody()).isTrue();
-        assertThat(Objects.requireNonNull(response.getBody()).contains(TestDataFactory.TEST_MANAGER_1_DTO)).isTrue();
-        assertThat(Objects.requireNonNull(response.getBody()).contains(TestDataFactory.TEST_MANAGER_2_DTO)).isTrue();
+        assertThat(Objects.requireNonNull(response.getBody()).contains(managerDto)).isTrue();
+        assertThat(Objects.requireNonNull(response.getBody()).contains(managerDto2)).isTrue();
     }
 
     @Test
     void getById_validRequest_returnsManagerWithOkStatus() {
         // Arrange
-        Mockito.when(managerFacade.findById(TestDataFactory.TEST_MANAGER_1.getId())).thenReturn(TestDataFactory.TEST_MANAGER_1_DTO);
+        Manager manager = TestDataFactory.setUpTestManager1();
+        ManagerDto managerDto = TestDataFactory.setUpTestManager1Dto();
+        Mockito.when(managerFacade.findById(manager.getId())).thenReturn(managerDto);
 
         // Act
-        ResponseEntity<ManagerDto> response = managerController.getById(TestDataFactory.TEST_MANAGER_1.getId());
+        ResponseEntity<ManagerDto> response = managerController.getById(manager.getId());
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.hasBody()).isTrue();
-        assertThat(response.getBody()).isEqualTo(TestDataFactory.TEST_MANAGER_1_DTO);
+        assertThat(response.getBody()).isEqualTo(managerDto);
     }
 
     @Test
     void deleteById_validId_returnsEmptyEntityWithOkStatus() {
         // Act
-        ResponseEntity<Void> response = managerController.deleteById(TestDataFactory.TEST_MANAGER_1.getId());
+        Manager manager = TestDataFactory.setUpTestManager1();
+        ResponseEntity<Void> response = managerController.deleteById(manager.getId());
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(204);
         assertThat(response.hasBody()).isFalse();
-        verify(managerFacade, times(1)).deleteById(TestDataFactory.TEST_MANAGER_1.getId());
+        verify(managerFacade, times(1)).deleteById(manager.getId());
     }
 
     @Test
     void updateBands_validOperation_returnsUpdatedManagerWithOkStatus() {
         // Arrange
-        Mockito.when(managerFacade.updateBandIds(TestDataFactory.TEST_MANAGER_1_DTO.getId(), TestDataFactory.TEST_MANAGER_1_DTO.getManagedBandIds()))
-                .thenReturn(TestDataFactory.TEST_MANAGER_1_DTO);
+        ManagerDto managerDto = TestDataFactory.setUpTestManager1Dto();
+        Mockito.when(managerFacade.updateBandIds(managerDto.getId(), managerDto.getManagedBandIds()))
+                .thenReturn(managerDto);
 
         // Act
-        ResponseEntity<ManagerDto> response = managerController.updateBands(TestDataFactory.TEST_MANAGER_1_DTO.getId(), TestDataFactory.TEST_MANAGER_1_DTO.getManagedBandIds());
+        ResponseEntity<ManagerDto> response = managerController.updateBands(managerDto.getId(), managerDto.getManagedBandIds());
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.hasBody()).isTrue();
-        assertThat(response.getBody()).isEqualTo(TestDataFactory.TEST_MANAGER_1_DTO);
+        assertThat(response.getBody()).isEqualTo(managerDto);
     }
 
     @Test
     void getManagersByBandIds_twoManagersMatch_returnsListWithOkStatus() {
         // Arrange
+        ManagerDto managerDto = TestDataFactory.setUpTestManager1Dto();
+        ManagerDto managerDto2 = TestDataFactory.setUpTestManager2Dto();
         Set<Long> bandIds = Set.of(2L, 3L);
-        Mockito.when(managerFacade.findByBandIds(bandIds)).thenReturn(List.of(TestDataFactory.TEST_MANAGER_1_DTO, TestDataFactory.TEST_MANAGER_2_DTO));
+        Mockito.when(managerFacade.findByBandIds(bandIds)).thenReturn(List.of(managerDto, managerDto2));
 
         // Act
         ResponseEntity<List<ManagerDto>> response = managerController.getManagersByBandIds(Set.of(2L, 3L));
@@ -114,7 +124,7 @@ public class ManagerControllerTest {
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.hasBody()).isTrue();
         assertEquals(2, Objects.requireNonNull(response.getBody()).size());
-        assertThat(Objects.requireNonNull(response.getBody()).contains(TestDataFactory.TEST_MANAGER_1_DTO)).isTrue();
-        assertThat(Objects.requireNonNull(response.getBody()).contains(TestDataFactory.TEST_MANAGER_2_DTO)).isTrue();
+        assertThat(Objects.requireNonNull(response.getBody()).contains(managerDto)).isTrue();
+        assertThat(Objects.requireNonNull(response.getBody()).contains(managerDto2)).isTrue();
     }
 }

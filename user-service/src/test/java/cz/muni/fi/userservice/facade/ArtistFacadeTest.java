@@ -3,6 +3,7 @@ package cz.muni.fi.userservice.facade;
 import cz.muni.fi.userservice.TestDataFactory;
 import cz.muni.fi.userservice.dto.ArtistDto;
 import cz.muni.fi.userservice.mappers.ArtistMapper;
+import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.service.interfaces.IArtistService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Tomáš MAREK
@@ -45,16 +45,19 @@ public class ArtistFacadeTest {
     @Test
     void register_validArtistDto_returnsSavedArtist() {
         // Arrange
-        Mockito.when(artistService.save(TestDataFactory.TEST_ARTIST_1)).thenReturn(TestDataFactory.TEST_ARTIST_1);
-        Mockito.when(artistMapper.toEntity(TestDataFactory.TEST_ARTIST_1_DTO)).thenReturn(TestDataFactory.TEST_ARTIST_1);
-        Mockito.when(artistMapper.toDto(TestDataFactory.TEST_ARTIST_1)).thenReturn(TestDataFactory.TEST_ARTIST_1_DTO);
+        Artist testArtist = TestDataFactory.setUpTestArtist1();
+        ArtistDto testArtistDto = TestDataFactory.setUpTestArtist1Dto();
+
+        when(artistService.save(testArtist)).thenReturn(testArtist);
+        when(artistMapper.toEntity(testArtistDto)).thenReturn(testArtist);
+        when(artistMapper.toDto(testArtist)).thenReturn(testArtistDto);
 
         // Act
-        ArtistDto registered = artistFacade.register(TestDataFactory.TEST_ARTIST_1_DTO);
+        ArtistDto registered = artistFacade.register(testArtistDto);
 
         // Assert
-        verify(artistService, times(1)).save(TestDataFactory.TEST_ARTIST_1);
-        assertEquals(TestDataFactory.TEST_ARTIST_1_DTO, registered);
+        verify(artistService, times(1)).save(testArtist);
+        assertEquals(testArtistDto, registered);
     }
 
     @Test
@@ -68,7 +71,7 @@ public class ArtistFacadeTest {
     void findById_invalidId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidId = -1L;
-        Mockito.when(artistService.findById(invalidId)).thenReturn(null);
+        when(artistService.findById(invalidId)).thenReturn(null);
 
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> artistFacade.findById(invalidId));
@@ -76,15 +79,20 @@ public class ArtistFacadeTest {
 
     @Test
     void findById_validId_returnsFoundArtist() {
+        Artist testArtist = TestDataFactory.setUpTestArtist1();
+        ArtistDto testArtistDto = TestDataFactory.setUpTestArtist1Dto();
+
+
+
         // Arrange
-        Mockito.when(artistService.findById(TestDataFactory.TEST_ARTIST_1.getId())).thenReturn(TestDataFactory.TEST_ARTIST_1);
-        Mockito.when(artistMapper.toDto(TestDataFactory.TEST_ARTIST_1)).thenReturn(TestDataFactory.TEST_ARTIST_1_DTO);
+        when(artistService.findById(testArtist.getId())).thenReturn(testArtist);
+        when(artistMapper.toDto(testArtist)).thenReturn(testArtistDto);
         // Act
-        ArtistDto found = artistFacade.findById(TestDataFactory.TEST_ARTIST_1.getId());
+        ArtistDto found = artistFacade.findById(testArtist.getId());
 
         // Assert
-        assertEquals(TestDataFactory.TEST_ARTIST_1_DTO, found);
-        verify(artistService, times(1)).findById(TestDataFactory.TEST_ARTIST_1.getId());
+        assertEquals(testArtistDto, found);
+        verify(artistService, times(1)).findById(testArtist.getId());
     }
 
     @Test
@@ -98,7 +106,7 @@ public class ArtistFacadeTest {
     void findByUsername_invalidUsername_throwsIllegalArgumentException() {
         // Arrange
         String invalidUsername = "invalidUsername";
-        Mockito.when(artistService.findByUsername(invalidUsername)).thenReturn(null);
+        when(artistService.findByUsername(invalidUsername)).thenReturn(null);
 
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> artistFacade.findByUsername(invalidUsername));
@@ -106,22 +114,25 @@ public class ArtistFacadeTest {
 
     @Test
     void findByUsername_validUsername_returnsFoundArtist() {
+        Artist testArtist = TestDataFactory.setUpTestArtist1();
+        ArtistDto testArtistDto = TestDataFactory.setUpTestArtist1Dto();
+
         // Arrange
-        Mockito.when(artistService.findByUsername(TestDataFactory.TEST_ARTIST_1.getUsername())).thenReturn(TestDataFactory.TEST_ARTIST_1);
-        Mockito.when(artistMapper.toDto(TestDataFactory.TEST_ARTIST_1)).thenReturn(TestDataFactory.TEST_ARTIST_1_DTO);
+        when(artistService.findByUsername(testArtist.getUsername())).thenReturn(testArtist);
+        when(artistMapper.toDto(testArtist)).thenReturn(testArtistDto);
 
         // Act
-        ArtistDto found = artistFacade.findByUsername(TestDataFactory.TEST_ARTIST_1.getUsername());
+        ArtistDto found = artistFacade.findByUsername(testArtist.getUsername());
 
         // Assert
-        assertEquals(TestDataFactory.TEST_ARTIST_1_DTO, found);
-        verify(artistService, times(1)).findByUsername(TestDataFactory.TEST_ARTIST_1.getUsername());
+        assertEquals(testArtistDto, found);
+        verify(artistService, times(1)).findByUsername(testArtist.getUsername());
     }
 
     @Test
     void findAll_noArtistStored_returnsEmptyList() {
         // Arrange
-        Mockito.when(artistService.findAll()).thenReturn(List.of());
+        when(artistService.findAll()).thenReturn(List.of());
 
         // Act
         List<ArtistDto> found = artistFacade.findAll();
@@ -133,10 +144,15 @@ public class ArtistFacadeTest {
 
     @Test
     void findAll_twoArtistsStored_returnsList() {
+        Artist testArtist = TestDataFactory.setUpTestArtist1();
+        Artist testArtist2 = TestDataFactory.setUpTestArtist2();
+        ArtistDto testArtistDto = TestDataFactory.setUpTestArtist1Dto();
+        ArtistDto testArtistDto2 = TestDataFactory.setUpTestArtist2Dto();
+
         // Arrange
-        Mockito.when(artistService.findAll()).thenReturn(List.of(TestDataFactory.TEST_ARTIST_1, TestDataFactory.TEST_ARTIST_2));
-        Mockito.when(artistMapper.toDto(TestDataFactory.TEST_ARTIST_1)).thenReturn(TestDataFactory.TEST_ARTIST_1_DTO);
-        Mockito.when(artistMapper.toDto(TestDataFactory.TEST_ARTIST_2)).thenReturn(TestDataFactory.TEST_ARTIST_2_DTO);
+        when(artistService.findAll()).thenReturn(List.of(testArtist, testArtist2));
+        when(artistMapper.toDto(testArtist)).thenReturn(testArtistDto);
+        when(artistMapper.toDto(testArtist2)).thenReturn(testArtistDto2);
 
         // Act
         List<ArtistDto> found = artistFacade.findAll();
@@ -144,8 +160,8 @@ public class ArtistFacadeTest {
         // Assert
         assertEquals(2, found.size());
         verify(artistService, times(1)).findAll();
-        assertTrue(found.contains(TestDataFactory.TEST_ARTIST_1_DTO));
-        assertTrue(found.contains(TestDataFactory.TEST_ARTIST_2_DTO));
+        assertTrue(found.contains(testArtistDto));
+        assertTrue(found.contains(testArtistDto2));
     }
 
     @Test
@@ -157,19 +173,25 @@ public class ArtistFacadeTest {
 
     @Test
     void findByBandIds_twoArtistsFound_returnsList() {
+        Artist testArtist = TestDataFactory.setUpTestArtist1();
+        Artist testArtist2 = TestDataFactory.setUpTestArtist2();
+        ArtistDto testArtistDto = TestDataFactory.setUpTestArtist1Dto();
+        ArtistDto testArtistDto2 = TestDataFactory.setUpTestArtist2Dto();
+
+
         // Arrange
         Set<Long> bandIds = Set.of(1L, 2L);
-        Mockito.when(artistService.findByBandIds(bandIds)).thenReturn(List.of(TestDataFactory.TEST_ARTIST_1, TestDataFactory.TEST_ARTIST_2));
-        Mockito.when(artistMapper.toDto(TestDataFactory.TEST_ARTIST_1)).thenReturn(TestDataFactory.TEST_ARTIST_1_DTO);
-        Mockito.when(artistMapper.toDto(TestDataFactory.TEST_ARTIST_2)).thenReturn(TestDataFactory.TEST_ARTIST_2_DTO);
+        when(artistService.findByBandIds(bandIds)).thenReturn(List.of(testArtist, testArtist2));
+        when(artistMapper.toDto(testArtist)).thenReturn(testArtistDto);
+        when(artistMapper.toDto(testArtist2)).thenReturn(testArtistDto2);
 
         // Act
         List<ArtistDto> found = artistFacade.findByBandIds(bandIds);
 
         // Assert
         verify(artistService, times(1)).findByBandIds(bandIds);
-        assertTrue(found.contains(TestDataFactory.TEST_ARTIST_1_DTO));
-        assertTrue(found.contains(TestDataFactory.TEST_ARTIST_2_DTO));
+        assertTrue(found.contains(testArtistDto));
+        assertTrue(found.contains(testArtistDto2));
     }
 
     @Test
@@ -183,7 +205,7 @@ public class ArtistFacadeTest {
     void deleteById_invalidId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidId = -1L;
-        Mockito.when(artistService.findById(invalidId)).thenReturn(null);
+        when(artistService.findById(invalidId)).thenReturn(null);
 
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> artistFacade.deleteById(invalidId));
@@ -192,11 +214,13 @@ public class ArtistFacadeTest {
 
     @Test
     void deleteById_validId_callsArtistServiceDelete() {
+        Artist testArtist = TestDataFactory.setUpTestArtist1();
+
         // Act
-        artistService.deleteById(TestDataFactory.TEST_ARTIST_1.getId());
+        artistService.deleteById(testArtist.getId());
 
         // Assert
-        verify(artistService, times(1)).deleteById(TestDataFactory.TEST_ARTIST_1.getId());
+        verify(artistService, times(1)).deleteById(testArtist.getId());
     }
 
     @Test
@@ -215,16 +239,19 @@ public class ArtistFacadeTest {
 
     @Test
     void updateBandsIds_changedBandIds_returnsUpdatedArtist() {
+        Artist testArtist = TestDataFactory.setUpTestArtist1();
+        ArtistDto testArtistDto = TestDataFactory.setUpTestArtist1Dto();
+
         // Arrange
         Set<Long> bandIds = Set.of(1L, 2L);
-        Mockito.when(artistService.updateArtistByBandIds(TestDataFactory.TEST_ARTIST_1.getId(), bandIds)).thenReturn(TestDataFactory.TEST_ARTIST_1);
-        Mockito.when(artistMapper.toDto(TestDataFactory.TEST_ARTIST_1)).thenReturn(TestDataFactory.TEST_ARTIST_1_DTO);
+        when(artistService.updateArtistByBandIds(testArtist.getId(), bandIds)).thenReturn(testArtist);
+        when(artistMapper.toDto(testArtist)).thenReturn(testArtistDto);
 
         // Act
-        ArtistDto updated = artistFacade.updateBandIds(TestDataFactory.TEST_ARTIST_1.getId(), bandIds);
+        ArtistDto updated = artistFacade.updateBandIds(testArtist.getId(), bandIds);
 
         // Assert
-        assertEquals(TestDataFactory.TEST_ARTIST_1_DTO, updated);
-        verify(artistService, times(1)).updateArtistByBandIds(TestDataFactory.TEST_ARTIST_1.getId(), bandIds);
+        assertEquals(testArtistDto, updated);
+        verify(artistService, times(1)).updateArtistByBandIds(testArtist.getId(), bandIds);
     }
 }

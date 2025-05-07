@@ -73,15 +73,16 @@ public class ManagerController {
         return ResponseEntity.ok(managerFacade.findAll());
     }
 
-    @PostMapping("/bands/{artistId}")
-    @Operation(summary = "Get manager by username")
+    @PatchMapping("/bands/{managerId}")
+    @Operation(summary = "Update manager bands by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Manager bands updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "404", description = "Manager not found", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<ManagerDto> updateBands(@PathVariable Long artistId, @RequestBody Set<Long> bandIds) {
-        return ResponseEntity.ok(managerFacade.updateBandIds(artistId, bandIds));
+    public ResponseEntity<ManagerDto> updateBands(@PathVariable Long managerId, @RequestBody Set<Long> bandIds) {
+        return ResponseEntity.ok(managerFacade.updateBandIds(managerId, bandIds));
     }
 
     @GetMapping("/bands")
@@ -101,7 +102,7 @@ public class ManagerController {
             @ApiResponse(responseCode = "404", description = "Manager not found", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<ManagerDto> updateManager(@PathVariable Long id, @RequestBody ManagerUpdateDto updateDto) {
+    public ResponseEntity<ManagerDto> update(@PathVariable Long id, @RequestBody ManagerUpdateDto updateDto) {
         return ResponseEntity.ok(managerFacade.update(id, updateDto));
     }
 }

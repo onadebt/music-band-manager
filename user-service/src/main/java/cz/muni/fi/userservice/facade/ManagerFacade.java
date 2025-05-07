@@ -31,21 +31,21 @@ public class ManagerFacade implements IManagerFacade {
         }
         Manager manager = managerMapper.toEntity(managerDto);
         manager = managerService.save(manager);
-        return managerMapper.toDTO(manager);
+        return managerMapper.toDto(manager);
     }
 
-    public ManagerDto update(Long id, ManagerUpdateDto updateDto) {
+    public ManagerDto update(Long id, ManagerUpdateDto managerUpdateDto) {
         if (id == null) {
             throw new IllegalArgumentException("ID cannot be null");
         }
-        if (updateDto == null) {
+        if (managerUpdateDto == null) {
             throw new IllegalArgumentException("ManagerDTO cannot be null");
         }
 
         Manager manager = managerService.findById(id);
-        Manager updatedManager = managerMapper.updateManagerFromDto(updateDto, manager);
-        updatedManager = managerService.save(updatedManager);
-        return managerMapper.toDTO(updatedManager);
+        Manager updatedManager = managerMapper.updateManagerFromDto(managerUpdateDto, manager);
+        updatedManager = managerService.updateManager(id, updatedManager);
+        return managerMapper.toDto(updatedManager);
     }
 
     public ManagerDto findById(Long id) {
@@ -56,12 +56,12 @@ public class ManagerFacade implements IManagerFacade {
         if (manager == null) {
             throw new IllegalArgumentException("Manager with ID " + id + " does not exist");
         }
-        return managerMapper.toDTO(manager);
+        return managerMapper.toDto(manager);
     }
 
     public List<ManagerDto> findAll() {
         return managerService.findAll().stream()
-                .map(managerMapper::toDTO)
+                .map(managerMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -79,8 +79,9 @@ public class ManagerFacade implements IManagerFacade {
         if (bandIds == null) {
             throw new IllegalArgumentException("Band IDs cannot be null or empty");
         }
-        return managerService.findByManagedBandIds(bandIds).stream()
-                .map(managerMapper::toDTO)
+        List<Manager> managers = managerService.findByManagedBandIds(bandIds);
+        return managers.stream()
+                .map(managerMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -92,6 +93,6 @@ public class ManagerFacade implements IManagerFacade {
             throw new IllegalArgumentException("Band IDs cannot be null");
         }
         Manager manager = managerService.updateManagerBandIds(managerId, bandIds);
-        return managerMapper.toDTO(manager);
+        return managerMapper.toDto(manager);
     }
 }

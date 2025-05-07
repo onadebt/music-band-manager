@@ -8,11 +8,13 @@ import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.service.interfaces.IArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class ArtistFacade implements IArtistFacade {
 
@@ -106,7 +108,25 @@ public class ArtistFacade implements IArtistFacade {
 
         Artist artist = artistService.findById(id);
         Artist updatedArtist = artistMapper.updateArtistFromDto(artistUpdateDto, artist);
-        artistService.save(updatedArtist);
+        artistService.updateArtist(id, updatedArtist);
         return artistMapper.toDto(updatedArtist);
+    }
+
+    public ArtistDto linkArtistToBand(Long artistId, Long bandId) {
+        if (artistId == null || bandId == null) {
+            throw new IllegalArgumentException("Artist ID and Band ID cannot be null");
+        }
+
+        artistService.linkArtistToBand(artistId, bandId);
+        return findById(artistId);
+    }
+
+    public ArtistDto unlinkArtistFromBand(Long artistId, Long bandId) {
+        if (artistId == null || bandId == null) {
+            throw new IllegalArgumentException("Artist ID and Band ID cannot be null");
+        }
+
+        artistService.unlinkArtistFromBand(artistId, bandId);
+        return findById(artistId);
     }
 }

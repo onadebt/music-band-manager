@@ -97,7 +97,7 @@ public class ArtistController {
         return ResponseEntity.ok(artistFacade.findByUsername(username));
     }
 
-    @PostMapping("/bands/{artistId}")
+    @PatchMapping("/bands/{artistId}")
     @Operation(summary = "Update artist's band IDs")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Artist's bands updated"),
@@ -107,6 +107,32 @@ public class ArtistController {
     })
     public ResponseEntity<ArtistDto> updateBands(@PathVariable Long artistId, @RequestBody Set<Long> bandIds) {
         return ResponseEntity.ok(artistFacade.updateBandIds(artistId, bandIds));
+    }
+
+    @PatchMapping("/link/{artistId}/{bandId}")
+    @Operation(summary = "Link artist to band")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Artist linked to band successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/problem+json")),
+            @ApiResponse(responseCode = "404", description = "Artist or band not found", content = @Content(mediaType = "application/problem+json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<ArtistDto> linkArtistToBand(@PathVariable Long artistId, @PathVariable Long bandId) {
+        ArtistDto artistDto = artistFacade.linkArtistToBand(artistId, bandId);
+        return ResponseEntity.ok(artistDto);
+    }
+
+    @PatchMapping("/unlink/{artistId}/{bandId}")
+    @Operation(summary = "Unlink artist from band")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Artist unlinked from band successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/problem+json")),
+            @ApiResponse(responseCode = "404", description = "Artist or band not found", content = @Content(mediaType = "application/problem+json")),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
+    })
+    public ResponseEntity<ArtistDto> unlinkArtistFromBand(@PathVariable Long artistId, @PathVariable Long bandId) {
+        ArtistDto artistDto = artistFacade.unlinkArtistFromBand(artistId, bandId);
+        return ResponseEntity.ok(artistDto);
     }
 
     @GetMapping("/bands")
