@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
@@ -66,7 +67,7 @@ public class BandOfferRepositoryTest {
         var foundBandOffers = bandOfferRepository.findByBandId(bandOffer1.getBandId());
 
         // Assert
-        assertTrue(foundBandOffers.size() == 2);
+        assertEquals(2, foundBandOffers.size());
     }
 
     @Test
@@ -98,7 +99,7 @@ public class BandOfferRepositoryTest {
         var foundBandOffers = bandOfferRepository.findByInvitedMusicianId(bandOffer1.getInvitedMusicianId());
 
         // Assert
-        assertTrue(foundBandOffers.size() == 2);
+        assertEquals(2, foundBandOffers.size());
     }
 
     @Test
