@@ -1,8 +1,8 @@
 package cz.muni.fi.tourmanagementservice.controller;
 
 
-import cz.muni.fi.tourmanagementservice.dto.CityVisitDTO;
-import cz.muni.fi.tourmanagementservice.dto.TourDTO;
+import cz.muni.fi.tourmanagementservice.dto.CityVisitDto;
+import cz.muni.fi.tourmanagementservice.dto.TourDto;
 import cz.muni.fi.tourmanagementservice.facades.TourFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -44,7 +44,7 @@ public class TourController {
             @ApiResponse(responseCode = "200", description = "List of tours retrieved successfully"),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<List<TourDTO>> getAllTours() {
+    public ResponseEntity<List<TourDto>> getAllTours() {
         return ResponseEntity.ok(tourFacade.getAllTours());
     }
 
@@ -54,7 +54,7 @@ public class TourController {
             @ApiResponse(responseCode = "200", description = "Tour found"),
             @ApiResponse(responseCode = "404", description = "Tour not found", content = @Content(mediaType = "application/problem+json"))
     })
-    public ResponseEntity<List<TourDTO>> getToursByBand(
+    public ResponseEntity<List<TourDto>> getToursByBand(
             @Parameter(description = "Band ID", required = true) @PathVariable Long bandId) {
         return ResponseEntity.ok(tourFacade.getToursByBand(bandId));
     }
@@ -65,7 +65,7 @@ public class TourController {
             @ApiResponse(responseCode = "200", description = "Tour found"),
             @ApiResponse(responseCode = "404", description = "Tour not found", content = @Content(mediaType = "application/problem+json"))
     })
-    public ResponseEntity<TourDTO> getTourById(
+    public ResponseEntity<TourDto> getTourById(
             @Parameter(description = "Tour ID", required = true) @PathVariable Long id) {
         return ResponseEntity.ok(tourFacade.getTourById(id));
     }
@@ -77,9 +77,9 @@ public class TourController {
             @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json")),
     })
-    public ResponseEntity<TourDTO> createTour(
-            @Parameter(description = "Tour to create", required = true) @Valid @RequestBody TourDTO tourDTO) {
-        TourDTO createdTour = tourFacade.createTour(tourDTO);
+    public ResponseEntity<TourDto> createTour(
+            @Parameter(description = "Tour to create", required = true) @Valid @RequestBody TourDto tourDTO) {
+        TourDto createdTour = tourFacade.createTour(tourDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTour);
     }
 
@@ -91,10 +91,10 @@ public class TourController {
             @ApiResponse(responseCode = "404", description = "Tour not found", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<TourDTO> updateTour(
+    public ResponseEntity<TourDto> updateTour(
             @Parameter(description = "Tour ID", required = true) @PathVariable Long id,
-            @Parameter(description = "Tour to create", required = true) @Valid @RequestBody TourDTO tourDTO) {
-        TourDTO updatedTour = tourFacade.updateTour(id, tourDTO);
+            @Parameter(description = "Tour to create", required = true) @Valid @RequestBody TourDto tourDTO) {
+        TourDto updatedTour = tourFacade.updateTour(id, tourDTO);
         return ResponseEntity.ok(updatedTour);
     }
 
@@ -120,7 +120,7 @@ public class TourController {
     })
     public ResponseEntity<Void> addCityVisitToTour(
             @Parameter(description = "Tour ID", required = true) @PathVariable Long tourId,
-            @Parameter(description = "City visit to add", required = true) @Valid @RequestBody CityVisitDTO cityVisitDTO) {
+            @Parameter(description = "City visit to add", required = true) @Valid @RequestBody CityVisitDto cityVisitDTO) {
         tourFacade.addCityVisitToTour(tourId, cityVisitDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

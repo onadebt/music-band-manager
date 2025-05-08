@@ -1,4 +1,4 @@
-package cz.muni.fi.bandmanagementservice.rest;
+package cz.muni.fi.bandmanagementservice.rest.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.muni.fi.bandmanagementservice.artemis.BandEventProducer;

@@ -1,4 +1,4 @@
-package cz.muni.fi.bandmanagementservice.rest;
+package cz.muni.fi.bandmanagementservice.rest.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.muni.fi.bandmanagementservice.artemis.BandOfferEventProducer;
@@ -43,7 +43,8 @@ class BandOfferRestControllerIT {
     @MockitoBean
     private BandOfferEventProducer bandOfferEventProducer;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
