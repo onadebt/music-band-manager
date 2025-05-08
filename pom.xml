@@ -21,6 +21,7 @@
         <module>band-service</module>
         <module>tour-service</module>
         <module>shared</module>
+        <module>auth-service</module>
     </modules>
 
     <build>
