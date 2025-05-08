@@ -9,7 +9,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class CityVisitDTO {
+public class CityVisitDto {
     private Long id;
 
     @NotBlank(message = "City name cannot be blank")

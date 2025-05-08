@@ -1,6 +1,6 @@
 package cz.muni.fi.tourmanagementservice.facade;
 
-import cz.muni.fi.tourmanagementservice.dto.CityVisitDTO;
+import cz.muni.fi.tourmanagementservice.dto.CityVisitDto;
 import cz.muni.fi.tourmanagementservice.facades.CityVisitFacade;
 import cz.muni.fi.tourmanagementservice.mapper.CityVisitMapper;
 import cz.muni.fi.tourmanagementservice.model.CityVisit;
@@ -34,7 +34,7 @@ public class CityVisitFacadeTest {
     private CityVisitFacade cityVisitFacade;
 
     private CityVisit cityVisit;
-    private CityVisitDTO cityVisitDTO;
+    private CityVisitDto cityVisitDTO;
     private List<CityVisit> cityVisitList;
 
     @BeforeEach
@@ -55,7 +55,7 @@ public class CityVisitFacadeTest {
 
         cityVisitList = Arrays.asList(cityVisit, cityVisit2);
 
-        cityVisitDTO = new CityVisitDTO();
+        cityVisitDTO = new CityVisitDto();
         cityVisitDTO.setId(1L);
         cityVisitDTO.setCityName("Prague");
         cityVisitDTO.setDateFrom(new Date());
@@ -67,7 +67,7 @@ public class CityVisitFacadeTest {
         when(cityVisitService.getAllCityVisits()).thenReturn(cityVisitList);
         when(cityVisitMapper.toDTO(any(CityVisit.class))).thenReturn(cityVisitDTO);
 
-        List<CityVisitDTO> result = cityVisitFacade.getAllCityVisits();
+        List<CityVisitDto> result = cityVisitFacade.getAllCityVisits();
 
         assertEquals(2, result.size());
         verify(cityVisitService, times(1)).getAllCityVisits();
@@ -79,7 +79,7 @@ public class CityVisitFacadeTest {
         when(cityVisitService.getCityVisitById(anyLong())).thenReturn(cityVisit);
         when(cityVisitMapper.toDTO(any(CityVisit.class))).thenReturn(cityVisitDTO);
 
-        CityVisitDTO result = cityVisitFacade.getCityVisitById(1L);
+        CityVisitDto result = cityVisitFacade.getCityVisitById(1L);
 
         assertNotNull(result);
         assertEquals("Prague", result.getCityName());
@@ -89,11 +89,11 @@ public class CityVisitFacadeTest {
 
     @Test
     public void testCreateCityVisit() {
-        when(cityVisitMapper.toEntity(any(CityVisitDTO.class))).thenReturn(cityVisit);
+        when(cityVisitMapper.toEntity(any(CityVisitDto.class))).thenReturn(cityVisit);
         when(cityVisitService.createCityVisit(any(CityVisit.class))).thenReturn(cityVisit);
         when(cityVisitMapper.toDTO(any(CityVisit.class))).thenReturn(cityVisitDTO);
 
-        CityVisitDTO result = cityVisitFacade.createCityVisit(cityVisitDTO);
+        CityVisitDto result = cityVisitFacade.createCityVisit(cityVisitDTO);
 
         assertNotNull(result);
         assertEquals("Prague", result.getCityName());
@@ -105,11 +105,11 @@ public class CityVisitFacadeTest {
     @Test
     public void testUpdateCityVisit() {
         when(cityVisitService.getCityVisitById(anyLong())).thenReturn(cityVisit);
-        doNothing().when(cityVisitMapper).updateEntityFromDto(any(CityVisitDTO.class), any(CityVisit.class));
+        doNothing().when(cityVisitMapper).updateEntityFromDto(any(CityVisitDto.class), any(CityVisit.class));
         when(cityVisitService.createCityVisit(any(CityVisit.class))).thenReturn(cityVisit);
         when(cityVisitMapper.toDTO(any(CityVisit.class))).thenReturn(cityVisitDTO);
 
-        CityVisitDTO result = cityVisitFacade.updateCityVisit(1L, cityVisitDTO);
+        CityVisitDto result = cityVisitFacade.updateCityVisit(1L, cityVisitDTO);
 
         assertNotNull(result);
         assertEquals("Prague", result.getCityName());

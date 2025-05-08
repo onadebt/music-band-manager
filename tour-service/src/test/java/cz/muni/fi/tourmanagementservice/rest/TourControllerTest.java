@@ -1,8 +1,8 @@
 package cz.muni.fi.tourmanagementservice.rest;
 
 import cz.muni.fi.tourmanagementservice.controller.TourController;
-import cz.muni.fi.tourmanagementservice.dto.CityVisitDTO;
-import cz.muni.fi.tourmanagementservice.dto.TourDTO;
+import cz.muni.fi.tourmanagementservice.dto.CityVisitDto;
+import cz.muni.fi.tourmanagementservice.dto.TourDto;
 import cz.muni.fi.tourmanagementservice.facades.TourFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,38 +29,38 @@ public class TourControllerTest {
     @InjectMocks
     private TourController tourController;
 
-    private TourDTO tourDTO;
-    private List<TourDTO> tourDTOList;
+    private TourDto tourDTO;
+    private List<TourDto> tourDtoList;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        CityVisitDTO cityVisitDTO = new CityVisitDTO();
+        CityVisitDto cityVisitDTO = new CityVisitDto();
         cityVisitDTO.setId(1L);
         cityVisitDTO.setCityName("Prague");
         cityVisitDTO.setDateFrom(new Date());
         cityVisitDTO.setDateTo(new Date());
 
-        tourDTO = new TourDTO();
+        tourDTO = new TourDto();
         tourDTO.setId(1L);
         tourDTO.setTourName("Europe Tour");
         tourDTO.setBandId(1L);
         tourDTO.setCityVisits(Arrays.asList(cityVisitDTO));
 
-        TourDTO tourDTO2 = new TourDTO();
-        tourDTO2.setId(2L);
-        tourDTO2.setTourName("American Tour");
-        tourDTO2.setBandId(1L);
+        TourDto tourDto2 = new TourDto();
+        tourDto2.setId(2L);
+        tourDto2.setTourName("American Tour");
+        tourDto2.setBandId(1L);
 
-        tourDTOList = Arrays.asList(tourDTO, tourDTO2);
+        tourDtoList = Arrays.asList(tourDTO, tourDto2);
     }
 
     @Test
     public void testGetAllTours() {
-        when(tourFacade.getAllTours()).thenReturn(tourDTOList);
+        when(tourFacade.getAllTours()).thenReturn(tourDtoList);
 
-        ResponseEntity<List<TourDTO>> response = tourController.getAllTours();
+        ResponseEntity<List<TourDto>> response = tourController.getAllTours();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(2, response.getBody().size());
@@ -69,9 +69,9 @@ public class TourControllerTest {
 
     @Test
     public void testGetToursByBand() {
-        when(tourFacade.getToursByBand(anyLong())).thenReturn(tourDTOList);
+        when(tourFacade.getToursByBand(anyLong())).thenReturn(tourDtoList);
 
-        ResponseEntity<List<TourDTO>> response = tourController.getToursByBand(1L);
+        ResponseEntity<List<TourDto>> response = tourController.getToursByBand(1L);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(2, response.getBody().size());
@@ -82,7 +82,7 @@ public class TourControllerTest {
     public void testGetTourById() {
         when(tourFacade.getTourById(anyLong())).thenReturn(tourDTO);
 
-        ResponseEntity<TourDTO> response = tourController.getTourById(1L);
+        ResponseEntity<TourDto> response = tourController.getTourById(1L);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Europe Tour", response.getBody().getTourName());
@@ -91,9 +91,9 @@ public class TourControllerTest {
 
     @Test
     public void testCreateTour() {
-        when(tourFacade.createTour(any(TourDTO.class))).thenReturn(tourDTO);
+        when(tourFacade.createTour(any(TourDto.class))).thenReturn(tourDTO);
 
-        ResponseEntity<TourDTO> response = tourController.createTour(tourDTO);
+        ResponseEntity<TourDto> response = tourController.createTour(tourDTO);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals("Europe Tour", response.getBody().getTourName());
@@ -102,9 +102,9 @@ public class TourControllerTest {
 
     @Test
     public void testUpdateTour() {
-        when(tourFacade.updateTour(anyLong(), any(TourDTO.class))).thenReturn(tourDTO);
+        when(tourFacade.updateTour(anyLong(), any(TourDto.class))).thenReturn(tourDTO);
 
-        ResponseEntity<TourDTO> response = tourController.updateTour(1L, tourDTO);
+        ResponseEntity<TourDto> response = tourController.updateTour(1L, tourDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Europe Tour", response.getBody().getTourName());
@@ -123,9 +123,9 @@ public class TourControllerTest {
 
     @Test
     public void testAddCityVisitToTour() {
-        CityVisitDTO cityVisitDTO = new CityVisitDTO();
+        CityVisitDto cityVisitDTO = new CityVisitDto();
         cityVisitDTO.setCityName("Berlin");
-        doNothing().when(tourFacade).addCityVisitToTour(anyLong(), any(CityVisitDTO.class));
+        doNothing().when(tourFacade).addCityVisitToTour(anyLong(), any(CityVisitDto.class));
 
         ResponseEntity<Void> response = tourController.addCityVisitToTour(1L, cityVisitDTO);
 

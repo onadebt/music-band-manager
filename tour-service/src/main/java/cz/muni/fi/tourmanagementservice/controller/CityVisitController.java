@@ -1,7 +1,7 @@
 package cz.muni.fi.tourmanagementservice.controller;
 
 
-import cz.muni.fi.tourmanagementservice.dto.CityVisitDTO;
+import cz.muni.fi.tourmanagementservice.dto.CityVisitDto;
 import cz.muni.fi.tourmanagementservice.facades.CityVisitFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -42,7 +42,7 @@ public class CityVisitController {
             @ApiResponse(responseCode = "200", description = "List of city visits retrieved successfully"),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<List<CityVisitDTO>> getAllCityVisits() {
+    public ResponseEntity<List<CityVisitDto>> getAllCityVisits() {
         return ResponseEntity.ok(cityVisitFacade.getAllCityVisits());
     }
 
@@ -52,7 +52,7 @@ public class CityVisitController {
             @ApiResponse(responseCode = "200", description = "City visit found"),
             @ApiResponse(responseCode = "404", description = "City visit not found", content = @Content(mediaType = "application/problem+json"))
     })
-    public ResponseEntity<CityVisitDTO> getCityVisitById(
+    public ResponseEntity<CityVisitDto> getCityVisitById(
             @Parameter(description = "City Visit ID", required = true) @PathVariable Long id) {
         return ResponseEntity.ok(cityVisitFacade.getCityVisitById(id));
     }
@@ -66,9 +66,9 @@ public class CityVisitController {
             @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json")),
     })
-    public ResponseEntity<CityVisitDTO> createCityVisit(
-            @Parameter(description = "City Visit to create", required = true) @Valid @RequestBody CityVisitDTO cityVisitDTO) {
-        CityVisitDTO createdCityVisit = cityVisitFacade.createCityVisit(cityVisitDTO);
+    public ResponseEntity<CityVisitDto> createCityVisit(
+            @Parameter(description = "City Visit to create", required = true) @Valid @RequestBody CityVisitDto cityVisitDTO) {
+        CityVisitDto createdCityVisit = cityVisitFacade.createCityVisit(cityVisitDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCityVisit);
     }
 
@@ -80,10 +80,10 @@ public class CityVisitController {
             @ApiResponse(responseCode = "404", description = "City visit not found", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<CityVisitDTO> updateCityVisit(
+    public ResponseEntity<CityVisitDto> updateCityVisit(
             @Parameter(description = "City Visit ID", required = true) @PathVariable Long id,
-            @Parameter(description = "Updated City Visit", required = true) @Valid @RequestBody CityVisitDTO cityVisitDTO) {
-        CityVisitDTO updatedCityVisit = cityVisitFacade.updateCityVisit(id, cityVisitDTO);
+            @Parameter(description = "Updated City Visit", required = true) @Valid @RequestBody CityVisitDto cityVisitDTO) {
+        CityVisitDto updatedCityVisit = cityVisitFacade.updateCityVisit(id, cityVisitDTO);
         return ResponseEntity.ok(updatedCityVisit);
     }
 
