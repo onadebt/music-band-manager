@@ -1,4 +1,4 @@
-package cz.muni.fi.musiccatalogservice.controller;
+package cz.muni.fi.musiccatalogservice.controller.it;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
