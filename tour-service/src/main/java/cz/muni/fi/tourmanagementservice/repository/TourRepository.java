@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface TourRepository extends JpaRepository<Tour, Long> {
-    List<Tour> findByBandId(Long bandId);
+    List<Tour> findAllByBandId(Long bandId);
 }
