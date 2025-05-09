@@ -17,8 +17,6 @@ def setup_args():
                         help='Users to spawn per second (default: 10)')
     parser.add_argument('--run-time', type=int, default=20, 
                         help='Duration of the test in seconds (default: 300)')
-    parser.add_argument('--host', type=str, default='http://localhost:8080', 
-                        help='Host to load test (default: http://localhost:8080)')
     parser.add_argument('--output', type=str, default='showcase_results', 
                         help='Output directory for results (default: showcase_results)')
     parser.add_argument('--services', type=str, default='all',
@@ -30,11 +28,11 @@ def ensure_output_dir(output_dir):
         os.makedirs(output_dir)
     return output_dir
 
-def check_services_availability(host):
+def check_services_availability():
     import requests
     from requests.exceptions import RequestException
     
-    base_url = host.split('://')[0] + '://' + host.split('://')[1].split(':')[0] if '://' in host else host.split(':')[0]
+    base_url = "http://localhost"
     
     token = AUTH_TOKEN
     if token.startswith("Bearer "):
@@ -43,8 +41,6 @@ def check_services_availability(host):
     auth_headers = {
         "Authorization": f"Bearer {token}"
     }
-    
-    print(f"DEBUG - Auth Header: {auth_headers['Authorization'][:20]}...")
     
     services = {
         "user-service": f"{base_url}:8091/api/artists",
@@ -59,10 +55,7 @@ def check_services_availability(host):
     
     for service_name, endpoint in services.items():
         try:
-            headers = {}
-            if service_name == "band-management":
-                headers = auth_headers
-                print(f"DEBUG - Using auth headers for {service_name}: {headers}")
+            headers = auth_headers
             
             timeout = DEFAULT_TIMEOUT
             
@@ -92,7 +85,7 @@ def check_services_availability(host):
     
     return all_available
 
-def run_locust_test(users, spawn_rate, run_time, host, output_dir, services):
+def run_locust_test(users, spawn_rate, run_time, output_dir, services):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     html_report = os.path.join(output_dir, f"report_{timestamp}.html")
@@ -106,10 +99,10 @@ def run_locust_test(users, spawn_rate, run_time, host, output_dir, services):
         "locust",
         "-f", "locustfile.py",
         "--headless",
+        "--host", "http://localhost",
         "--users", str(users),
         "--spawn-rate", str(spawn_rate),
         "--run-time", f"{run_time}s",
-        "--host", host,
         "--html", html_report
     ]
     
@@ -338,14 +331,13 @@ def main():
     print("=" * 70)
     print("BAND MANAGER SHOWCASE: FESTIVAL SEASON RUSH")
     print("=" * 70)
-    print(f"Target API: {args.host}")
     print(f"Users: {args.users}")
     print(f"Spawn Rate: {args.spawn_rate} users/second")
     print(f"Duration: {args.run_time} seconds")
     print(f"Services to test: {args.services}")
     print("=" * 70)
     
-    if not check_services_availability(args.host):
+    if not check_services_availability():
         print("\n⚠️ Warning: Some services may not be available. Continue anyway? (y/n)")
         if input().lower() != 'y':
             print("Showcase cancelled by user.")
@@ -355,7 +347,6 @@ def main():
         args.users, 
         args.spawn_rate, 
         args.run_time, 
-        args.host, 
         output_dir,
         args.services
     )

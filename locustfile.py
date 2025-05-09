@@ -46,6 +46,9 @@ class BandManagerUser(HttpUser):
         req_method = getattr(requests, method.lower())
         start_time = time.time()
         
+        if 'headers' not in kwargs:
+            kwargs['headers'] = self.auth_headers
+        
         try:
             response = req_method(url, **kwargs)
             response_time = (time.time() - start_time) * 1000
