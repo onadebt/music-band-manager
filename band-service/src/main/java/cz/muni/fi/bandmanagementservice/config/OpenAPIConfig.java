@@ -1,4 +1,4 @@
-package cz.muni.fi.bandmanagementservice;
+package cz.muni.fi.bandmanagementservice.config;
 
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.customizers.OpenApiCustomizer;
