@@ -1,15 +1,11 @@
 package cz.muni.fi.tourmanagementservice.facades;
 
 
-import cz.muni.fi.tourmanagementservice.dto.CityVisitDTO;
+import cz.muni.fi.tourmanagementservice.dto.CityVisitDto;
 import cz.muni.fi.tourmanagementservice.mapper.CityVisitMapper;
-import cz.muni.fi.tourmanagementservice.mapper.TourMapper;
 import cz.muni.fi.tourmanagementservice.model.CityVisit;
-import cz.muni.fi.tourmanagementservice.model.Tour;
 import cz.muni.fi.tourmanagementservice.service.CityVisitService;
-import cz.muni.fi.tourmanagementservice.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,18 +23,18 @@ public class CityVisitFacade {
         this.cityVisitMapper = cityVisitMapper;
     }
 
-    public List<CityVisitDTO> getAllCityVisits() {
+    public List<CityVisitDto> getAllCityVisits() {
         return cityVisitService.getAllCityVisits().stream()
                 .map(cityVisitMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public CityVisitDTO getCityVisitById(Long id) {
+    public CityVisitDto getCityVisitById(Long id) {
         CityVisit cityVisit = cityVisitService.getCityVisitById(id);
         return cityVisitMapper.toDTO(cityVisit);
     }
 
-    public CityVisitDTO createCityVisit(CityVisitDTO cityVisitDTO) {
+    public CityVisitDto createCityVisit(CityVisitDto cityVisitDTO) {
         CityVisit cityVisit = cityVisitMapper.toEntity(cityVisitDTO);
 
         CityVisit savedCityVisit = cityVisitService.createCityVisit(cityVisit);
@@ -46,7 +42,7 @@ public class CityVisitFacade {
     }
 
 
-    public CityVisitDTO updateCityVisit(Long id, CityVisitDTO cityVisitDTO) {
+    public CityVisitDto updateCityVisit(Long id, CityVisitDto cityVisitDTO) {
         CityVisit cityVisit = cityVisitService.getCityVisitById(id);
         cityVisitMapper.updateEntityFromDto(cityVisitDTO, cityVisit);
 

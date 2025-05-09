@@ -1,9 +1,9 @@
-package cz.muni.fi.tourmanagementservice.rest;
+package cz.muni.fi.tourmanagementservice.rest.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import cz.muni.fi.tourmanagementservice.dto.CityVisitDTO;
-import cz.muni.fi.tourmanagementservice.dto.TourDTO;
+import cz.muni.fi.tourmanagementservice.dto.CityVisitDto;
+import cz.muni.fi.tourmanagementservice.dto.TourDto;
 import cz.muni.fi.tourmanagementservice.model.CityVisit;
 import cz.muni.fi.tourmanagementservice.model.Tour;
 import cz.muni.fi.tourmanagementservice.repository.CityVisitRepository;
@@ -101,7 +101,7 @@ public class TourControllerIT {
 
     @Test
     public void testCreateTour() throws Exception {
-        TourDTO tourDTO = new TourDTO();
+        TourDto tourDTO = new TourDto();
         tourDTO.setTourName("North America Tour 2025");
         tourDTO.setBandId(2L);
 
@@ -117,7 +117,7 @@ public class TourControllerIT {
 
     @Test
     public void testUpdateTour() throws Exception {
-        TourDTO tourDTO = new TourDTO();
+        TourDto tourDTO = new TourDto();
         tourDTO.setTourName("Updated Tour Name");
         tourDTO.setBandId(testTour.getBandId());
 
@@ -141,7 +141,7 @@ public class TourControllerIT {
 
     @Test
     public void testAddCityVisitToTour() throws Exception {
-        CityVisitDTO cityVisitDTO = new CityVisitDTO();
+        CityVisitDto cityVisitDTO = new CityVisitDto();
         cityVisitDTO.setCityName("Berlin");
 
         Date dateFrom = new Date(System.currentTimeMillis() + 5 * 24 * 60 * 60 * 1000);
@@ -176,7 +176,7 @@ public class TourControllerIT {
 
     @Test
     public void testCreateTourWithInvalidData() throws Exception {
-        TourDTO tourDTO = new TourDTO();
+        TourDto tourDTO = new TourDto();
         tourDTO.setTourName("a");
         tourDTO.setBandId(null);
 

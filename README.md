@@ -9,7 +9,8 @@ A microservices‑based web application that helps a music band manage everythin
 This project is composed of four core Spring Boot microservices that communicate over **Apache ActiveMQ Artemis**:
 
 | Service                     | Purpose                                                             |
-| --------------------------- |---------------------------------------------------------------------|
+|-----------------------------|---------------------------------------------------------------------|
+| **Authentication Service**  | Obtaining access tokens                                             |
 | **User Management Service** | User profiles, role management                                      |
 | **Music Catalog Service**   | Album and song CRUD                                                 |
 | **Band Management Service** | Band creation, member invitations, configuration and offer handling |
@@ -72,12 +73,23 @@ mvn spring-boot:run
 
 ## 🔍 API Endpoints (Swagger UI)
 
-| Service               | URL                                                                            |
-| --------------------- | ------------------------------------------------------------------------------ |
-| User Service          | [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html) |
-| Band Service          | [http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html) |
-| Music Catalog Service | [http://localhost:8083/swagger-ui.html](http://localhost:8083/swagger-ui.html) |
-| Tour Service          | [http://localhost:8084/swagger-ui.html](http://localhost:8084/swagger-ui.html) |
+| Service                | URL                                                                            |
+|------------------------|--------------------------------------------------------------------------------|
+| Authentication Service | [http://localhost:8084/token](http://localhost:8084/token)                     |
+| User Service           | [http://localhost:8091/swagger-ui.html](http://localhost:8081/swagger-ui.html) |
+| Band Service           | [http://localhost:8092/swagger-ui.html](http://localhost:8082/swagger-ui.html) |
+| Music Catalog Service  | [http://localhost:8093/swagger-ui.html](http://localhost:8083/swagger-ui.html) |
+| Tour Service           | [http://localhost:8094/swagger-ui.html](http://localhost:8084/swagger-ui.html) |
+
+---
+## 🔒 Authentication and Authorization
+
+- **1)** Go to [Authentication Service](http://localhost:8084/token) to log in and redeem your Bearer access token
+- **2)** Use your Bearer access token in swagger of your chosen service to log in
+- There are three scopes used in the application:
+    - **test_1** - Used for general operations, where no special authorization is required
+    - **test_2** - Used for band manager's operations
+    - **test_3** - Used for musician's operations
 
 ---
 

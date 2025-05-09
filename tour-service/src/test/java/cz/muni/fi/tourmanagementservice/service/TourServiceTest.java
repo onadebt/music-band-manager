@@ -90,13 +90,13 @@ public class TourServiceTest {
     @Test
     void getToursByBand_ShouldReturnTours() {
         List<Tour> tours = Arrays.asList(tour);
-        when(tourRepository.findByBandId(2L)).thenReturn(tours);
+        when(tourRepository.findAllByBandId(2L)).thenReturn(tours);
 
         List<Tour> result = tourService.getToursByBand(2L);
 
         assertEquals(1, result.size());
         assertEquals(2L, result.get(0).getBandId());
-        verify(tourRepository, times(1)).findByBandId(2L);
+        verify(tourRepository, times(1)).findAllByBandId(2L);
     }
 
     @Test

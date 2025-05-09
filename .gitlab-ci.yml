@@ -25,6 +25,8 @@ tests:
   script:
     - echo "Running unit + integration tests..."
     - mvn verify --no-transfer-progress
+    - cat target/surefire-reports/*.txt
+    - cat target/failsafe-reports/*.txt
   artifacts:
     when: always
     reports:

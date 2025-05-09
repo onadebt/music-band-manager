@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TourDTO {
+public class TourDto {
     private Long id;
 
     @NotNull(message = "Band ID cannot be null")
@@ -17,5 +17,5 @@ public class TourDTO {
     @NotBlank(message = "Tour name cannot be blank")
     private String tourName;
 
-    private List<CityVisitDTO> cityVisits;
+    private List<CityVisitDto> cityVisits;
 }

@@ -18,6 +18,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -303,7 +304,59 @@ class ArtistControllerIT {
                 .andExpect(jsonPath("$").isEmpty());
     }
 
+    @Test
+    void linkArtistToBand_validId_returnOkAndArtist() throws Exception {
+        // Arrange
+        Artist artist = TestDataFactory.setUpTestArtist1();
+        artist.setId(null);
+        artist.setBandIds(new HashSet<>());
+        artist = saveArtist(artist);
+        Long bandId = 123L;
 
+        // Act & Assert
+        mockMvc.perform(patch("/api/artists/link/{artistId}/{bandId}", artist.getId(), bandId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.bandIds", hasSize(1)))
+                .andExpect(jsonPath("$.bandIds[0]").value(bandId));
+    }
+
+    @Test
+    void linkArtistToBand_invalidId_returnNotFound() throws Exception {
+        // Arrange
+        Long emptyId = -123L;
+        Long bandId = 123L;
+
+        // Act & Assert
+        mockMvc.perform(patch("/api/artists/link/{artistId}/{bandId}", emptyId, bandId))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void unlinkArtistFromBand_validId_returnOkAndArtist() throws Exception {
+        // Arrange
+        Artist artist = TestDataFactory.setUpTestArtist1();
+        artist.setId(null);
+        artist.setBandIds(new HashSet<>(Set.of(123L, 456L)));
+        artist = saveArtist(artist);
+        Long bandId = 123L;
+
+        // Act & Assert
+        mockMvc.perform(patch("/api/artists/unlink/{artistId}/{bandId}", artist.getId(), bandId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.bandIds", hasSize(1)))
+                .andExpect(jsonPath("$.bandIds[0]").value(456L));
+    }
+
+    @Test
+    void unlinkArtistFromBand_invalidId_returnNotFound() throws Exception {
+        // Arrange
+        Long emptyId = -123L;
+        Long bandId = 123L;
+
+        // Act & Assert
+        mockMvc.perform(patch("/api/artists/unlink/{artistId}/{bandId}", emptyId, bandId))
+                .andExpect(status().isNotFound());
+    }
 
 
     private Artist saveArtist(Artist artist) {

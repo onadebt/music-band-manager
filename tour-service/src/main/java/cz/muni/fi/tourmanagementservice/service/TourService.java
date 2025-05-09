@@ -47,7 +47,7 @@ public class TourService {
         if (bandId < 0)
             throw new IllegalArgumentException("Invalid band ID: " + bandId);
 
-        return tourRepository.findByBandId(bandId);
+        return tourRepository.findAllByBandId(bandId);
     }
 
 

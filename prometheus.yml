@@ -1,0 +1,23 @@
+global:
+  scrape_interval: 10s
+
+scrape_configs:
+  - job_name: 'user-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['user-service:8091']
+
+  - job_name: 'band-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['band-service:8092']
+
+  - job_name: 'music-catalog-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['music-catalog-service:8093']
+
+  - job_name: 'tour-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['tour-service:8094']

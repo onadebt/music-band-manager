@@ -17,7 +17,7 @@ public class TestDataFactory {
     public static final Song TEST_SONG_2 = setUpTestSong2();
     public static final SongDTO TEST_SONG_2_DTO = setUpTestSong2Dto();
 
-    private static Album setUpTestAlbum1() {
+    public static Album setUpTestAlbum1() {
         Album testAlbum = new Album();
         testAlbum.setId(1L);
         testAlbum.setBandId(1L);
@@ -26,7 +26,7 @@ public class TestDataFactory {
         return testAlbum;
     }
 
-    private static Album setUpTestAlbum2() {
+    public static Album setUpTestAlbum2() {
         Album testAlbum = new Album();
         testAlbum.setId(2L);
         testAlbum.setBandId(2L);
@@ -35,7 +35,7 @@ public class TestDataFactory {
         return testAlbum;
     }
 
-    private static AlbumDTO setUpTestAlbum2Dto() {
+    public static AlbumDTO setUpTestAlbum2Dto() {
         AlbumDTO testAlbum = new AlbumDTO();
         testAlbum.setId(2L);
         testAlbum.setBandId(2L);
@@ -44,7 +44,7 @@ public class TestDataFactory {
         return testAlbum;
     }
 
-    private static AlbumDTO setUpTestAlbum1Dto() {
+    public static AlbumDTO setUpTestAlbum1Dto() {
         AlbumDTO testAlbum = new AlbumDTO();
         testAlbum.setId(1L);
         testAlbum.setBandId(1L);
@@ -53,7 +53,7 @@ public class TestDataFactory {
         return testAlbum;
     }
 
-    private static Song setUpTestSong1() {
+    public static Song setUpTestSong1() {
         Song song = new Song();
         song.setId(1L);
         song.setName("Test name");
@@ -61,7 +61,7 @@ public class TestDataFactory {
         return song;
     }
 
-    private static SongDTO setUpTestSong1Dto() {
+    public static SongDTO setUpTestSong1Dto() {
         SongDTO song = new SongDTO();
         song.setId(1L);
         song.setName("Test name");
@@ -69,7 +69,7 @@ public class TestDataFactory {
         return song;
     }
 
-    private static Song setUpTestSong2() {
+    public static Song setUpTestSong2() {
         Song song = new Song();
         song.setId(2L);
         song.setName("Test name 2");
@@ -77,7 +77,7 @@ public class TestDataFactory {
         return song;
     }
 
-    private static SongDTO setUpTestSong2Dto() {
+    public static SongDTO setUpTestSong2Dto() {
         SongDTO song = new SongDTO();
         song.setId(2L);
         song.setName("Test name 2");
