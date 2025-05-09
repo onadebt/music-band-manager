@@ -1,8 +1,9 @@
-package cz.muni.fi.musiccatalogservice.controller;
+package cz.muni.fi.musiccatalogservice.controller.it;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import cz.muni.fi.musiccatalogservice.controller.it.config.DisableSecurityTestConfig;
 import cz.muni.fi.musiccatalogservice.dto.AlbumDTO;
 import cz.muni.fi.musiccatalogservice.model.Album;
 import cz.muni.fi.musiccatalogservice.model.Song;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@Import(DisableSecurityTestConfig.class)
 @Transactional
 class AlbumRestControllerIT {
 

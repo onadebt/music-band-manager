@@ -1,8 +1,8 @@
 package cz.muni.fi.tourmanagementservice.facades;
 
 
-import cz.muni.fi.tourmanagementservice.dto.CityVisitDTO;
-import cz.muni.fi.tourmanagementservice.dto.TourDTO;
+import cz.muni.fi.tourmanagementservice.dto.CityVisitDto;
+import cz.muni.fi.tourmanagementservice.dto.TourDto;
 import cz.muni.fi.tourmanagementservice.mapper.CityVisitMapper;
 import cz.muni.fi.tourmanagementservice.mapper.TourMapper;
 import cz.muni.fi.tourmanagementservice.model.Tour;
@@ -27,31 +27,31 @@ public class TourFacade {
         this.cityVisitMapper = cityVisitMapper;
     }
 
-    public List<TourDTO> getAllTours() {
+    public List<TourDto> getAllTours() {
         return tourService.getAllTours().stream()
                 .map(tourMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<TourDTO> getToursByBand(Long bandId) {
+    public List<TourDto> getToursByBand(Long bandId) {
         return tourService.getToursByBand(bandId).stream()
                 .map(tourMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public TourDTO getTourById(Long id) {
+    public TourDto getTourById(Long id) {
         Tour tour = tourService.getTourById(id);
         return tourMapper.toDTO(tour);
     }
 
-    public TourDTO createTour(TourDTO tourDTO) {
+    public TourDto createTour(TourDto tourDTO) {
         Tour tour = tourMapper.toEntity(tourDTO);
         System.out.println(tour.toString());
         Tour savedTour = tourService.createTour(tour);
         return tourMapper.toDTO(savedTour);
     }
 
-    public TourDTO updateTour(Long id, TourDTO tourDTO) {
+    public TourDto updateTour(Long id, TourDto tourDTO) {
         Tour updatedTour = tourService.updateTour(id, tourMapper.toEntity(tourDTO));
         return tourMapper.toDTO(updatedTour);
     }
@@ -60,7 +60,7 @@ public class TourFacade {
         tourService.deleteTour(id);
     }
 
-    public void addCityVisitToTour(Long tourId, CityVisitDTO cityVisitDTO) {
+    public void addCityVisitToTour(Long tourId, CityVisitDto cityVisitDTO) {
         tourService.addCityVisitToTour(tourId, cityVisitMapper.toEntity(cityVisitDTO));
     }
 

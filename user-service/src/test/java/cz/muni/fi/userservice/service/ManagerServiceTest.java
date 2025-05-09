@@ -31,25 +31,28 @@ public class ManagerServiceTest {
     @Test
     void save_managerSaved_returnsSavedManager() {
         // Arrange
-        Mockito.when(managerRepository.save(TestDataFactory.TEST_MANAGER_1)).thenReturn(TestDataFactory.TEST_MANAGER_1);
+        Manager manager = TestDataFactory.setUpTestManager1();
+
+        Mockito.when(managerRepository.save(manager)).thenReturn(manager);
 
         // Act
-        Manager saved = managerService.save(TestDataFactory.TEST_MANAGER_1);
+        Manager saved = managerService.save(manager);
 
         // Assert
-        assertEquals(TestDataFactory.TEST_MANAGER_1, saved);
+        assertEquals(manager, saved);
     }
 
     @Test
     void findById_managerFound_returnsManager() {
         // Arrange
-        Mockito.when(managerRepository.findById(TestDataFactory.TEST_MANAGER_1.getId())).thenReturn(Optional.of(TestDataFactory.TEST_MANAGER_1));
+        Manager manager = TestDataFactory.setUpTestManager1();
+        Mockito.when(managerRepository.findById(manager.getId())).thenReturn(Optional.of(manager));
 
         // Act
-        Manager found = managerService.findById(TestDataFactory.TEST_MANAGER_1.getId());
+        Manager found = managerService.findById(manager.getId());
 
         // Assert
-        assertEquals(TestDataFactory.TEST_MANAGER_1, found);
+        assertEquals(manager, found);
     }
 
     @Test
@@ -77,27 +80,30 @@ public class ManagerServiceTest {
     @Test
     void findAll_twoManagersStored_returnsList() {
         // Arrange
-        Mockito.when(managerRepository.findAll()).thenReturn(List.of(TestDataFactory.TEST_MANAGER_1, TestDataFactory.TEST_MANAGER_2));
+        Manager manager = TestDataFactory.setUpTestManager1();
+        Manager manager2 = TestDataFactory.setUpTestManager2();
+        Mockito.when(managerRepository.findAll()).thenReturn(List.of(manager, manager2));
 
         // Act
         List<Manager> found = managerService.findAll();
 
         // Assert
         assertEquals(2, found.size());
-        assertTrue(found.contains(TestDataFactory.TEST_MANAGER_1));
-        assertTrue(found.contains(TestDataFactory.TEST_MANAGER_2));
+        assertTrue(found.contains(manager));
+        assertTrue(found.contains(manager2));
     }
 
     @Test
     void deleteById_managerPresent_noReturn() {
         // Arrange
-        Mockito.when(managerRepository.findById(TestDataFactory.TEST_MANAGER_1.getId())).thenReturn(Optional.of(TestDataFactory.TEST_MANAGER_1));
+        Manager manager = TestDataFactory.setUpTestManager1();
+        Mockito.when(managerRepository.findById(manager.getId())).thenReturn(Optional.of(manager));
 
         // Act
-        managerService.deleteById(TestDataFactory.TEST_MANAGER_1.getId());
+        managerService.deleteById(manager.getId());
 
         // Assert
-        Mockito.verify(managerRepository, Mockito.times(1)).deleteById(TestDataFactory.TEST_MANAGER_1.getId());
+        Mockito.verify(managerRepository, Mockito.times(1)).deleteById(manager.getId());
     }
 
     @Test
@@ -116,16 +122,18 @@ public class ManagerServiceTest {
     @Test
     void findByManagedBandIds_managersInBands_returnsList() {
         // Arrange
+        Manager manager = TestDataFactory.setUpTestManager1();
+        Manager manager2 = TestDataFactory.setUpTestManager2();
         Set<Long> bands = Set.of(2L, 3L);
-        Mockito.when(managerRepository.findByManagedBandIds(bands)).thenReturn(List.of(TestDataFactory.TEST_MANAGER_1, TestDataFactory.TEST_MANAGER_2));
+        Mockito.when(managerRepository.findByManagedBandIds(bands)).thenReturn(List.of(manager, manager2));
 
         // Act
         List<Manager> found = managerService.findByManagedBandIds(bands);
 
         // Assert
         assertEquals(2, found.size());
-        assertTrue(found.contains(TestDataFactory.TEST_MANAGER_1));
-        assertTrue(found.contains(TestDataFactory.TEST_MANAGER_2));
+        assertTrue(found.contains(manager));
+        assertTrue(found.contains(manager2));
     }
 
     @Test
@@ -157,30 +165,33 @@ public class ManagerServiceTest {
     @Test
     void updateManagerByBandsIds_newBandAdded_returnsUpdatedManager() {
         // Arrange
-        Mockito.when(managerRepository.findById(TestDataFactory.TEST_MANAGER_1.getId())).thenReturn(Optional.of(TestDataFactory.TEST_MANAGER_1));
-        Mockito.when(managerRepository.save(TestDataFactory.TEST_MANAGER_1)).thenReturn(TestDataFactory.TEST_MANAGER_1);
+        Manager manager = TestDataFactory.setUpTestManager1();
+        Set<Long> bandIds = Set.of(1L, 2L, 3L);
+        Mockito.when(managerRepository.findById(manager.getId())).thenReturn(Optional.of(manager));
+        Mockito.when(managerRepository.save(manager)).thenReturn(manager);
         Set<Long> newBandIds = Set.of(1L, 2L, 3L, 4L);
 
         // Act
-        Manager updated = managerService.updateManagerBandIds(TestDataFactory.TEST_MANAGER_1.getId(), newBandIds);
+        Manager updated = managerService.updateManagerBandIds(manager.getId(), newBandIds);
 
         // Assert
-        assertEquals(TestDataFactory.TEST_MANAGER_1, updated);
+        assertEquals(manager, updated);
         assertEquals(newBandIds, updated.getManagedBandIds());
     }
 
     @Test
     void updateManagerByBandsIds_allBandsRemoved_returnsUpdatedManager() {
         // Arrange
-        Mockito.when(managerRepository.findById(TestDataFactory.TEST_MANAGER_1.getId())).thenReturn(Optional.of(TestDataFactory.TEST_MANAGER_1));
-        Mockito.when(managerRepository.save(TestDataFactory.TEST_MANAGER_1)).thenReturn(TestDataFactory.TEST_MANAGER_1);
+        Manager manager = TestDataFactory.setUpTestManager1();
+        Mockito.when(managerRepository.findById(manager.getId())).thenReturn(Optional.of(manager));
+        Mockito.when(managerRepository.save(manager)).thenReturn(manager);
         Set<Long> emptyBands = Set.of();
 
         // Act
-        Manager updated = managerService.updateManagerBandIds(TestDataFactory.TEST_MANAGER_1.getId(), emptyBands);
+        Manager updated = managerService.updateManagerBandIds(manager.getId(), emptyBands);
 
         // Assert
-        assertEquals(TestDataFactory.TEST_MANAGER_1, updated);
+        assertEquals(manager, updated);
         assertEquals(emptyBands, updated.getManagedBandIds());
     }
 

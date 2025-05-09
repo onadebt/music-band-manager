@@ -3,6 +3,8 @@ package cz.muni.fi.userservice.repository;
 
 import cz.muni.fi.userservice.model.Manager;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,5 +15,6 @@ import java.util.Set;
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
     Optional<Manager> findByUsername(String username);
 
-    List<Manager> findByManagedBandIds (Set<Long> bandIds);
+    @Query("SELECT m FROM Manager m JOIN m.managedBandIds mb WHERE mb IN :bandIds")
+    List<Manager> findByManagedBandIds(@Param("bandIds") Set<Long> bandIds);
 }

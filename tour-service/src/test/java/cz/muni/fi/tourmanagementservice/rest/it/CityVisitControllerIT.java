@@ -1,15 +1,17 @@
-package cz.muni.fi.tourmanagementservice.rest;
+package cz.muni.fi.tourmanagementservice.rest.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import cz.muni.fi.tourmanagementservice.dto.CityVisitDTO;
+import cz.muni.fi.tourmanagementservice.dto.CityVisitDto;
 import cz.muni.fi.tourmanagementservice.model.CityVisit;
 import cz.muni.fi.tourmanagementservice.repository.CityVisitRepository;
+import cz.muni.fi.tourmanagementservice.rest.it.config.DisableSecurityTestConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@Import(DisableSecurityTestConfig.class)
 @Transactional
 public class CityVisitControllerIT {
 
@@ -73,7 +76,7 @@ public class CityVisitControllerIT {
 
     @Test
     public void testCreateCityVisit() throws Exception {
-        CityVisitDTO cityVisitDTO = new CityVisitDTO();
+        CityVisitDto cityVisitDTO = new CityVisitDto();
         cityVisitDTO.setCityName("Paris");
 
         Date dateFrom = new Date(System.currentTimeMillis() + 10 * 24 * 60 * 60 * 1000);
@@ -93,7 +96,7 @@ public class CityVisitControllerIT {
 
     @Test
     public void testUpdateCityVisit() throws Exception {
-        CityVisitDTO cityVisitDTO = new CityVisitDTO();
+        CityVisitDto cityVisitDTO = new CityVisitDto();
         cityVisitDTO.setCityName("Updated City Name");
 
         Date dateFrom = new Date(System.currentTimeMillis() + 5 * 24 * 60 * 60 * 1000);
@@ -122,7 +125,7 @@ public class CityVisitControllerIT {
 
     @Test
     public void testCreateCityVisitWithInvalidData() throws Exception {
-        CityVisitDTO cityVisitDTO = new CityVisitDTO();
+        CityVisitDto cityVisitDTO = new CityVisitDto();
         cityVisitDTO.setCityName("");
 
         Date dateFrom = new Date(System.currentTimeMillis() + 5 * 24 * 60 * 60 * 1000);
@@ -140,7 +143,7 @@ public class CityVisitControllerIT {
 
     @Test
     public void testCreateCityVisitWithInvalidDates() throws Exception {
-        CityVisitDTO cityVisitDTO = new CityVisitDTO();
+        CityVisitDto cityVisitDTO = new CityVisitDto();
         cityVisitDTO.setCityName("London");
 
         Date dateFrom = new Date(System.currentTimeMillis() - 5 * 24 * 60 * 60 * 1000);
