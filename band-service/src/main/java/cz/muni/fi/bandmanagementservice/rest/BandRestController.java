@@ -1,6 +1,7 @@
 package cz.muni.fi.bandmanagementservice.rest;
 
 import cz.muni.fi.bandmanagementservice.BandServiceApplication;
+import cz.muni.fi.bandmanagementservice.config.OpenAPIConfig;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import cz.muni.fi.bandmanagementservice.facade.BandFacade;
@@ -29,6 +30,10 @@ import java.util.List;
 @RequestMapping("/api/bands")
 @Tag(name = "Band API", description = "API for managing bands")
 public class BandRestController {
+    private static final String GENERAL_SCOPE = "test_1";
+    private static final String MANAGER_SCOPE = "test_2";
+    private static final String MUSICIAN_SCOPE = "test_3";
+
     private final BandFacade bandFacade;
 
     @Autowired
@@ -39,8 +44,8 @@ public class BandRestController {
     @PostMapping
     @Operation(summary = "Creates a new band")
     @SecurityRequirement(
-            name = BandServiceApplication.SECURITY_SCHEME_NAME,
-            scopes = {"test_2"}
+            name = OpenAPIConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE}
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Band created", content = @Content(mediaType = "application/json")),
@@ -55,8 +60,8 @@ public class BandRestController {
     @GetMapping("/{id}")
     @Operation(summary = "Returns searched band")
     @SecurityRequirement(
-            name = BandServiceApplication.SECURITY_SCHEME_NAME,
-            scopes = {"test_1"}
+            name = OpenAPIConfig.SECURITY_SCHEME_NAME,
+            scopes = {GENERAL_SCOPE}
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json")),
@@ -72,8 +77,8 @@ public class BandRestController {
 
     @PatchMapping
     @SecurityRequirement(
-            name = BandServiceApplication.SECURITY_SCHEME_NAME,
-            scopes = {"test_2"}
+            name = OpenAPIConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE}
     )
     @Operation(summary = "Update basic band info - managerId, name, logo, musical style")
     @ApiResponses(value = {
@@ -92,8 +97,8 @@ public class BandRestController {
     @GetMapping
     @Operation(summary = "Returns all bands")
     @SecurityRequirement(
-            name = BandServiceApplication.SECURITY_SCHEME_NAME,
-            scopes = {"test_1"}
+            name = OpenAPIConfig.SECURITY_SCHEME_NAME,
+            scopes = {GENERAL_SCOPE}
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content=@Content(mediaType = "application/json"))
@@ -105,8 +110,8 @@ public class BandRestController {
     @DeleteMapping("/{bandId}/members/{memberId}")
     @Operation(summary = "Remove member from the band")
     @SecurityRequirement(
-            name = BandServiceApplication.SECURITY_SCHEME_NAME,
-            scopes = {"test_2"}
+            name = OpenAPIConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE}
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Member removed", content = @Content(mediaType = "application/json")),
@@ -126,8 +131,8 @@ public class BandRestController {
     @PatchMapping("/{bandId}/members/{memberId}")
     @Operation(summary = "Add member to the band")
     @SecurityRequirement(
-            name = BandServiceApplication.SECURITY_SCHEME_NAME,
-            scopes = {"test_2"}
+            name = OpenAPIConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE}
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Member added", content = @Content(mediaType = "application/json")),

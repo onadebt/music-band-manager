@@ -1,6 +1,7 @@
 package cz.muni.fi.bandmanagementservice.rest;
 
 import cz.muni.fi.bandmanagementservice.BandServiceApplication;
+import cz.muni.fi.bandmanagementservice.config.OpenAPIConfig;
 import cz.muni.fi.bandmanagementservice.dto.BandOfferDto;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
@@ -30,6 +31,10 @@ import java.util.List;
 @RequestMapping("/api/bands/offers")
 @Tag(name="Band Offer API", description = "API for managing band join offers")
 public class BandOfferRestController {
+    private static final String GENERAL_SCOPE = "test_1";
+    private static final String MANAGER_SCOPE = "test_2";
+    private static final String MUSICIAN_SCOPE = "test_3";
+
     private final BandOfferFacade bandOfferFacade;
 
     @Autowired
@@ -40,8 +45,8 @@ public class BandOfferRestController {
     @PostMapping
     @Operation(summary = "Published new offer to join band")
     @SecurityRequirement(
-            name = BandServiceApplication.SECURITY_SCHEME_NAME,
-            scopes = {"test_2"}
+            name = OpenAPIConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE}
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Band Offer created", content = @Content(mediaType = "application/json")),
@@ -60,8 +65,8 @@ public class BandOfferRestController {
     @GetMapping("/{offerId}")
     @Operation(summary = "Gets required offer")
     @SecurityRequirement(
-            name = BandServiceApplication.SECURITY_SCHEME_NAME,
-            scopes = {"test_3"}
+            name = OpenAPIConfig.SECURITY_SCHEME_NAME,
+            scopes = {MUSICIAN_SCOPE}
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "OK", content = @Content(mediaType = "application/json")),
@@ -78,8 +83,8 @@ public class BandOfferRestController {
     @PostMapping("/{offerId}/accept")
     @Operation(summary = "Accepts offer")
     @SecurityRequirement(
-            name = BandServiceApplication.SECURITY_SCHEME_NAME,
-            scopes = {"test_3"}
+            name = OpenAPIConfig.SECURITY_SCHEME_NAME,
+            scopes = {MUSICIAN_SCOPE}
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Band offer accepted", content = @Content(mediaType = "application/json")),
@@ -99,8 +104,8 @@ public class BandOfferRestController {
     @PostMapping("/{offerId}/reject")
     @Operation(summary = "Rejects offer")
     @SecurityRequirement(
-            name = BandServiceApplication.SECURITY_SCHEME_NAME,
-            scopes = {"test_3"}
+            name = OpenAPIConfig.SECURITY_SCHEME_NAME,
+            scopes = {MUSICIAN_SCOPE}
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Band offer rejected", content = @Content(mediaType = "application/json")),
@@ -120,8 +125,8 @@ public class BandOfferRestController {
     @PostMapping("/{offerId}/revokes")
     @Operation(summary = "Revokes offer")
     @SecurityRequirement(
-            name = BandServiceApplication.SECURITY_SCHEME_NAME,
-            scopes = {"test_2"}
+            name = OpenAPIConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE}
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Band offer revoked", content = @Content(mediaType = "application/json")),
@@ -142,8 +147,8 @@ public class BandOfferRestController {
     @GetMapping
     @Operation(summary = "Returns all stored offer")
     @SecurityRequirement(
-            name = BandServiceApplication.SECURITY_SCHEME_NAME,
-            scopes = {"test_2", "test_3"}
+            name = OpenAPIConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE, MUSICIAN_SCOPE}
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json"))
@@ -155,8 +160,8 @@ public class BandOfferRestController {
     @GetMapping("/byBand/{bandId}")
     @Operation(summary = "Returns all band offers for by given band")
     @SecurityRequirement(
-            name = BandServiceApplication.SECURITY_SCHEME_NAME,
-            scopes = {"test_2", "test_3"}
+            name = OpenAPIConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE, MUSICIAN_SCOPE}
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json"))
@@ -168,8 +173,8 @@ public class BandOfferRestController {
     @GetMapping("/byMusician/{musicianId}")
     @Operation(summary = "Returns all band offers created for given musician")
     @SecurityRequirement(
-            name = BandServiceApplication.SECURITY_SCHEME_NAME,
-            scopes = {"test_2", "test_3"}
+            name = OpenAPIConfig.SECURITY_SCHEME_NAME,
+            scopes = {MUSICIAN_SCOPE, MANAGER_SCOPE}
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json"))

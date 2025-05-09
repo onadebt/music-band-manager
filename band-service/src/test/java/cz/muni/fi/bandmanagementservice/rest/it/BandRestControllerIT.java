@@ -5,6 +5,7 @@ import cz.muni.fi.bandmanagementservice.artemis.BandEventProducer;
 import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
+import cz.muni.fi.bandmanagementservice.rest.it.config.DisableSecurityTestConfig;
 import cz.muni.fi.events.band.BandAddMemberEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

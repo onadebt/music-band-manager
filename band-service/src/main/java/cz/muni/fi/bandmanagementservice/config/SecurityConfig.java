@@ -14,28 +14,31 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @Profile({ "!test"})
 public class SecurityConfig {
+    private static final String GENERAL_SCOPE = "SCOPE_test_1";
+    private static final String MANAGER_SCOPE = "SCOPE_test_2";
+    private static final String MUSICIAN_SCOPE = "SCOPE_test_3";
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.
                 authorizeHttpRequests( x -> x
                         // Bands API
-                        .requestMatchers(HttpMethod.POST, "/api/bands").hasAuthority("SCOPE_test_2")
-                        .requestMatchers(HttpMethod.GET, "/api/bands/**").hasAuthority("SCOPE_test_1")
-                        .requestMatchers(HttpMethod.PATCH, "/api/bands").hasAuthority("SCOPE_test_2")
-                        .requestMatchers(HttpMethod.GET, "/api/bands").hasAuthority("SCOPE_test_1")
-                        .requestMatchers(HttpMethod.DELETE, "/api/bands/**/members/**").hasAuthority("SCOPE_test_2")
-                        .requestMatchers(HttpMethod.PATCH, "/api/bands/**/members/**").hasAuthority("SCOPE_test_2")
+                        .requestMatchers(HttpMethod.POST, "/api/bands").hasAuthority(GENERAL_SCOPE)
+                        .requestMatchers(HttpMethod.GET, "/api/bands/**").hasAuthority(GENERAL_SCOPE)
+                        .requestMatchers(HttpMethod.PATCH, "/api/bands").hasAuthority(GENERAL_SCOPE)
+                        .requestMatchers(HttpMethod.GET, "/api/bands").hasAuthority(GENERAL_SCOPE)
+                        .requestMatchers(HttpMethod.DELETE, "/api/bands/**/members/**").hasAuthority(GENERAL_SCOPE)
+                        .requestMatchers(HttpMethod.PATCH, "/api/bands/**/members/**").hasAuthority(MANAGER_SCOPE)
 
                         // BandOffers API
-                        .requestMatchers(HttpMethod.POST, "/api/bands/offers").hasAuthority("SCOPE_test_2")
-                        .requestMatchers(HttpMethod.GET, "/api/bands/offers/**").hasAuthority("SCOPE_test_3")
-                        .requestMatchers(HttpMethod.POST, "/api/bands/offers/**/accept").hasAuthority("SCOPE_test_3")
-                        .requestMatchers(HttpMethod.POST, "/api/bands/offers/**/reject").hasAuthority("SCOPE_test_3")
-                        .requestMatchers(HttpMethod.POST, "/api/bands/offers/**/revokes").hasAuthority("SCOPE_test_2")
-                        .requestMatchers(HttpMethod.GET, "/api/bands/offers").hasAnyAuthority("SCOPE_test_2", "SCOPE_test_3")
-                        .requestMatchers(HttpMethod.GET, "/api/bands/offers/byBand/**").hasAnyAuthority("SCOPE_test_2", "SCOPE_test_3")
-                        .requestMatchers(HttpMethod.GET, "/api/bands/offers/byMusician/**").hasAnyAuthority("SCOPE_test_2", "SCOPE_test_3")
+                        .requestMatchers(HttpMethod.POST, "/api/bands/offers").hasAuthority(MANAGER_SCOPE)
+                        .requestMatchers(HttpMethod.GET, "/api/bands/offers/**").hasAuthority(MUSICIAN_SCOPE)
+                        .requestMatchers(HttpMethod.POST, "/api/bands/offers/**/accept").hasAuthority(MUSICIAN_SCOPE)
+                        .requestMatchers(HttpMethod.POST, "/api/bands/offers/**/reject").hasAuthority(MUSICIAN_SCOPE)
+                        .requestMatchers(HttpMethod.POST, "/api/bands/offers/**/revokes").hasAuthority(MANAGER_SCOPE)
+                        .requestMatchers(HttpMethod.GET, "/api/bands/offers").hasAnyAuthority(MANAGER_SCOPE, MUSICIAN_SCOPE)
+                        .requestMatchers(HttpMethod.GET, "/api/bands/offers/byBand/**").hasAnyAuthority(MANAGER_SCOPE, MUSICIAN_SCOPE)
+                        .requestMatchers(HttpMethod.GET, "/api/bands/offers/byMusician/**").hasAnyAuthority(MANAGER_SCOPE, MUSICIAN_SCOPE)
                         .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.opaqueToken(Customizer.withDefaults()
