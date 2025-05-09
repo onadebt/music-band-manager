@@ -1,4 +1,4 @@
-package cz.muni.fi.bandmanagementservice.rest.it;
+package cz.muni.fi.bandmanagementservice.rest.it.config;
 
 /**
  * @author Tomáš MAREK
@@ -6,7 +6,6 @@ package cz.muni.fi.bandmanagementservice.rest.it;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,7 +18,6 @@ public class DisableSecurityTestConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> request.anyRequest().permitAll());
-        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         http.csrf(AbstractHttpConfigurer::disable);
         http.oauth2ResourceServer(AbstractHttpConfigurer::disable);
 

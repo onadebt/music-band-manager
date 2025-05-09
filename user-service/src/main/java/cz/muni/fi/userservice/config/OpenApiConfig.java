@@ -1,9 +1,8 @@
-package cz.muni.fi.tourmanagementservice.config;
+package cz.muni.fi.userservice.config;
 
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -14,20 +13,6 @@ public class OpenApiConfig {
     private static final String SECURITY_SCHEME_BEARER = "Bearer";
     public static final String SECURITY_SCHEME_NAME = SECURITY_SCHEME_BEARER;
 
-    @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .info(new Info()
-                        .title("Tour API")
-                        .version("1.0")
-                        .description("Spring Boot REST API for Tours")
-                        .termsOfService("http://swagger.io/terms/")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org"))
-                        .contact(new Contact()
-                                .name("Tour Team")
-                                .url("https://github.com/music-catalog")
-                                .email("info@musiccatalog.com")));
-    }
 
     @Bean
     public OpenApiCustomizer openAPICustomizer() {
@@ -42,5 +27,4 @@ public class OpenApiConfig {
             ;
         };
     }
-
 }
