@@ -29,9 +29,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/tours/**").hasAuthority(MANAGER_SCOPE)
                         .requestMatchers(HttpMethod.GET, "/api/tours").hasAuthority(GENERAL_SCOPE)
                         .requestMatchers(HttpMethod.POST, "/api/tours").hasAuthority(MANAGER_SCOPE)
-                        .requestMatchers(HttpMethod.POST, "/api/tours/**/city-visit").hasAuthority(MANAGER_SCOPE)
+                        .requestMatchers(HttpMethod.POST, "/api/tours/*/city-visit").hasAuthority(MANAGER_SCOPE)
                         .requestMatchers(HttpMethod.GET, "/api/tours/band/**").hasAuthority(GENERAL_SCOPE)
-                        .requestMatchers(HttpMethod.DELETE, "/api/tours/**/city-visit/**").hasAuthority(MANAGER_SCOPE)
+                        .requestMatchers(HttpMethod.DELETE, "/api/tours/*/city-visit/**").hasAuthority(MANAGER_SCOPE)
 
                         // CityVisit API
                         .requestMatchers(HttpMethod.GET, "/api/cityVisits/**").hasAuthority(GENERAL_SCOPE)
