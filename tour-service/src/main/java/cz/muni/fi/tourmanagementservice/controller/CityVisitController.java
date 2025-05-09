@@ -1,6 +1,7 @@
 package cz.muni.fi.tourmanagementservice.controller;
 
 
+import cz.muni.fi.tourmanagementservice.config.OpenApiConfig;
 import cz.muni.fi.tourmanagementservice.dto.CityVisitDto;
 import cz.muni.fi.tourmanagementservice.facades.CityVisitFacade;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ import java.util.List;
 @RequestMapping("/api/cityVisits")
 @Tag(name = "CityVisit", description = "CityVisit management API")
 public class CityVisitController {
+    private static final String GENERAL_SCOPE = "test_1";
+    private static final String MANAGER_SCOPE = "test_2";
+    private static final String MUSICIAN_SCOPE = "test_3";
 
     private final CityVisitFacade cityVisitFacade;
 
@@ -38,6 +43,10 @@ public class CityVisitController {
 
     @GetMapping
     @Operation(summary = "Retrieve all city visits")
+    @SecurityRequirement(
+            name = OpenApiConfig.SECURITY_SCHEME_NAME,
+            scopes = {GENERAL_SCOPE}
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List of city visits retrieved successfully"),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
@@ -48,6 +57,10 @@ public class CityVisitController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Retrieve all city visits by id")
+    @SecurityRequirement(
+            name = OpenApiConfig.SECURITY_SCHEME_NAME,
+            scopes = {GENERAL_SCOPE}
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "City visit found"),
             @ApiResponse(responseCode = "404", description = "City visit not found", content = @Content(mediaType = "application/problem+json"))
@@ -60,6 +73,10 @@ public class CityVisitController {
 
     @PostMapping
     @Operation(summary = "Create new city visit", description = "Create a new city visit"
+    )
+    @SecurityRequirement(
+            name = OpenApiConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE}
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "City visit created successfully"),
@@ -74,6 +91,10 @@ public class CityVisitController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update a city visit")
+    @SecurityRequirement(
+            name = OpenApiConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE}
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "City visit updated successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/problem+json")),
@@ -89,6 +110,10 @@ public class CityVisitController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a city visit")
+    @SecurityRequirement(
+            name = OpenApiConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE}
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "City visit deleted successfully"),
             @ApiResponse(responseCode = "404", description = "City visit not found", content = @Content(mediaType = "application/problem+json"))

@@ -1,5 +1,6 @@
 package cz.muni.fi.musiccatalogservice.controller;
 
+import cz.muni.fi.musiccatalogservice.config.OpenApiConfig;
 import cz.muni.fi.musiccatalogservice.dto.SongDTO;
 import cz.muni.fi.musiccatalogservice.facade.SongFacade;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ import java.util.List;
 @RequestMapping("/api/songs")
 @Tag(name = "Song", description = "The Song API")
 public class SongController {
+    private static final String GENERAL_SCOPE = "test_1";
+    private static final String MANAGER_SCOPE = "test_2";
+    private static final String MUSICIAN_SCOPE = "test_3";
 
     private final SongFacade songFacade;
 
@@ -34,6 +39,10 @@ public class SongController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved songs",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = SongDTO.class)))
     })
+    @SecurityRequirement(
+            name = OpenApiConfig.SECURITY_SCHEME_NAME,
+            scopes = {GENERAL_SCOPE}
+    )
     @GetMapping
     public ResponseEntity<List<SongDTO>> getAllSongs() {
         return ResponseEntity.ok(songFacade.getAllSongs());
@@ -44,6 +53,10 @@ public class SongController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved songs",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = SongDTO.class)))
     })
+    @SecurityRequirement(
+            name = OpenApiConfig.SECURITY_SCHEME_NAME,
+            scopes = {GENERAL_SCOPE}
+    )
     @GetMapping("/album/{albumId}")
     public ResponseEntity<List<SongDTO>> getSongsByAlbum(
             @Parameter(description = "Album ID", required = true) @PathVariable Long albumId) {
@@ -55,6 +68,10 @@ public class SongController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved songs",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = SongDTO.class)))
     })
+    @SecurityRequirement(
+            name = OpenApiConfig.SECURITY_SCHEME_NAME,
+            scopes = {GENERAL_SCOPE}
+    )
     @GetMapping("/band/{bandId}")
     public ResponseEntity<List<SongDTO>> getSongsByBand(
             @Parameter(description = "Band ID", required = true) @PathVariable Long bandId) {
@@ -67,6 +84,10 @@ public class SongController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = SongDTO.class))),
             @ApiResponse(responseCode = "404", description = "Song not found")
     })
+    @SecurityRequirement(
+            name = OpenApiConfig.SECURITY_SCHEME_NAME,
+            scopes = {GENERAL_SCOPE}
+    )
     @GetMapping("/{id}")
     public ResponseEntity<SongDTO> getSongById(
             @Parameter(description = "Song ID", required = true) @PathVariable Long id) {
@@ -79,6 +100,10 @@ public class SongController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = SongDTO.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
+    @SecurityRequirement(
+            name = OpenApiConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE}
+    )
     @PostMapping
     public ResponseEntity<SongDTO> createSong(
             @Parameter(description = "Song to create", required = true) @Valid @RequestBody SongDTO songDTO) {
@@ -93,6 +118,10 @@ public class SongController {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "404", description = "Song not found")
     })
+    @SecurityRequirement(
+            name = OpenApiConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE}
+    )
     @PutMapping("/{id}")
     public ResponseEntity<SongDTO> updateSong(
             @Parameter(description = "Song ID", required = true) @PathVariable Long id,
@@ -106,6 +135,10 @@ public class SongController {
             @ApiResponse(responseCode = "204", description = "Song deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Song not found")
     })
+    @SecurityRequirement(
+            name = OpenApiConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE}
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSong(
             @Parameter(description = "Song ID", required = true) @PathVariable Long id) {

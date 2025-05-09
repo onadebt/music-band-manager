@@ -6,12 +6,15 @@ import cz.muni.fi.userservice.dto.ManagerDto;
 import cz.muni.fi.userservice.dto.ManagerUpdateDto;
 import cz.muni.fi.userservice.model.Manager;
 import cz.muni.fi.userservice.repository.ManagerRepository;
+import cz.muni.fi.userservice.rest.it.config.DisableSecurityTestConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@Import(DisableSecurityTestConfig.class)
+@ActiveProfiles("test")
 class ManagerControllerIT {
     @Autowired
     MockMvc mockMvc;

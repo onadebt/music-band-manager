@@ -18,11 +18,6 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @SpringBootApplication
 public class BandServiceApplication {
-    private static final String SECURITY_SCHEME_OAUTH2 = "MUNI";
-    private static final String SECURITY_SCHEME_BEARER = "Bearer";
-    public static final String SECURITY_SCHEME_NAME = SECURITY_SCHEME_BEARER;
-
-
     public static void main(String[] args) {
         SpringApplication.run(BandServiceApplication.class, args);
     }
