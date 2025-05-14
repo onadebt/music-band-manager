@@ -2,6 +2,7 @@ package cz.muni.fi.userservice.artemis;
 
 import cz.muni.fi.events.band.BandAddMemberEvent;
 import cz.muni.fi.events.band.BandEvents;
+import cz.muni.fi.events.band.BandRemoveMemberEvent;
 import cz.muni.fi.userservice.service.ArtistService;
 import lombok.AllArgsConstructor;
 import org.springframework.jms.annotation.JmsListener;
@@ -21,7 +22,7 @@ public class BandEventListener {
 
     @Transactional
     @JmsListener(destination = BandEvents.BAND_REMOVE_MEMBER_EVENT)
-    public void handleBandRemoveMemberEvent(BandAddMemberEvent event) {
+    public void handleBandRemoveMemberEvent(BandRemoveMemberEvent event) {
         artistService.unlinkArtistFromBand(event.getMemberId(), event.getBandId());
     }
 }
