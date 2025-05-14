@@ -6,7 +6,7 @@ import cz.muni.fi.userservice.dto.ArtistUpdateDto;
 import java.util.List;
 import java.util.Set;
 
-public interface IArtistFacade {
+public interface ArtistFacade {
     ArtistDto register(ArtistDto artistDTO);
 
     ArtistDto findById(Long id);
@@ -22,4 +22,8 @@ public interface IArtistFacade {
     ArtistDto updateBandIds(Long artistId, Set<Long> bandsIds);
 
     ArtistDto update(Long id, ArtistUpdateDto artistUpdateDto);
+
+    ArtistDto linkArtistToBand(Long artistId, Long bandId);
+
+    ArtistDto unlinkArtistFromBand(Long artistId, Long bandId);
 }

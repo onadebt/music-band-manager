@@ -3,7 +3,7 @@ package cz.muni.fi.userservice.rest;
 import cz.muni.fi.userservice.config.OpenApiConfig;
 import cz.muni.fi.userservice.dto.ManagerDto;
 import cz.muni.fi.userservice.dto.ManagerUpdateDto;
-import cz.muni.fi.userservice.facade.ManagerFacade;
+import cz.muni.fi.userservice.facade.interfaces.ManagerFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,7 +26,6 @@ public class ManagerController {
     private static final String GENERAL_SCOPE = "test_1";
     private static final String MANAGER_SCOPE = "test_2";
     private static final String MUSICIAN_SCOPE = "test_3";
-
 
 
     private final ManagerFacade managerFacade;

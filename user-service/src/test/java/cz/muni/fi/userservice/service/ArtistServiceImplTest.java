@@ -22,12 +22,12 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 
 @ExtendWith(MockitoExtension.class)
-public class ArtistServiceTest {
+public class ArtistServiceImplTest {
     @Mock
     ArtistRepository artistRepository;
 
     @InjectMocks
-    ArtistService artistService;
+    ArtistServiceImpl artistServiceImpl;
 
     @Test
     void save_artistSaved_returnsSavedArtist() {
@@ -36,7 +36,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.save(artist)).thenReturn(artist);
 
         // Act
-        Artist saved = artistService.save(artist);
+        Artist saved = artistServiceImpl.save(artist);
 
         // Assert
         assertEquals(artist, saved);
@@ -49,7 +49,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.findById(artist.getId())).thenReturn(Optional.of(artist));
 
         // Act
-        Artist found = artistService.findById(artist.getId());
+        Artist found = artistServiceImpl.findById(artist.getId());
 
         // Assert
         assertEquals(artist, found);
@@ -62,7 +62,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.findById(invalidId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(UserNotFoundException.class, () -> artistService.findById(invalidId));
+        assertThrows(UserNotFoundException.class, () -> artistServiceImpl.findById(invalidId));
     }
 
     @Test
@@ -72,7 +72,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.findByUsername(artist.getUsername())).thenReturn(Optional.of(artist));
 
         // Act
-        Artist found = artistService.findByUsername(artist.getUsername());
+        Artist found = artistServiceImpl.findByUsername(artist.getUsername());
 
         // Assert
         assertEquals(artist, found);
@@ -85,7 +85,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.findByUsername(invalidUsername)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(UserNotFoundException.class, () -> artistService.findByUsername(invalidUsername));
+        assertThrows(UserNotFoundException.class, () -> artistServiceImpl.findByUsername(invalidUsername));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.findAll()).thenReturn(List.of());
 
         // Act
-        List<Artist> found = artistService.findAll();
+        List<Artist> found = artistServiceImpl.findAll();
 
         // Assert
         assertEquals(0, found.size());
@@ -108,7 +108,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.findAll()).thenReturn(List.of(artist1, artist2));
 
         // Act
-        List<Artist> found = artistService.findAll();
+        List<Artist> found = artistServiceImpl.findAll();
 
         // Assert
         assertEquals(2, found.size());
@@ -123,7 +123,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.findById(artist.getId())).thenReturn(Optional.of(artist));
 
         // Act
-        artistService.deleteById(artist.getId());
+        artistServiceImpl.deleteById(artist.getId());
 
         // Assert
         Mockito.verify(artistRepository, Mockito.times(1)).findById(artist.getId());
@@ -137,7 +137,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.findByBandIds(bandIds)).thenReturn(List.of());
 
         // Act
-        List<Artist> found = artistService.findByBandIds(bandIds);
+        List<Artist> found = artistServiceImpl.findByBandIds(bandIds);
 
         // Assert
         assertEquals(0, found.size());
@@ -152,7 +152,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.findByBandIds(bands)).thenReturn(List.of(artist1, artist2));
 
         // Act
-        List<Artist> found = artistService.findByBandIds(bands);
+        List<Artist> found = artistServiceImpl.findByBandIds(bands);
 
         // Assert
         assertEquals(2, found.size());
@@ -167,7 +167,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.findByBandIds(emptyBandIds)).thenReturn(List.of());
 
         // Act
-        List<Artist> found = artistService.findByBandIds(emptyBandIds);
+        List<Artist> found = artistServiceImpl.findByBandIds(emptyBandIds);
 
         // Assert
         assertEquals(0, found.size());
@@ -182,7 +182,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.save(artist)).thenReturn(artist);
 
         // Act
-        Artist updated = artistService.updateArtistByBandIds(artist.getId(), newBandIds);
+        Artist updated = artistServiceImpl.updateArtistByBandIds(artist.getId(), newBandIds);
 
         // Assert
         assertEquals(artist, updated);
@@ -198,7 +198,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.save(artist)).thenReturn(artist);
 
         // Act
-        Artist updated = artistService.updateArtistByBandIds(artist.getId(), emptyBands);
+        Artist updated = artistServiceImpl.updateArtistByBandIds(artist.getId(), emptyBands);
 
         // Assert
         assertEquals(artist, updated);
@@ -212,7 +212,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.findById(invalidId)).thenReturn(Optional.empty());
 
         // Act / Assert
-        assertThrows(UserNotFoundException.class, () -> artistService.updateArtistByBandIds(invalidId, Set.of(1L, 2L, 3L)));
+        assertThrows(UserNotFoundException.class, () -> artistServiceImpl.updateArtistByBandIds(invalidId, Set.of(1L, 2L, 3L)));
     }
 
     @Test
@@ -223,7 +223,7 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.findById(invalidId)).thenReturn(Optional.empty());
 
         // Act / Assert
-        assertThrows(UserNotFoundException.class, () -> artistService.linkArtistToBand(invalidId, bandId));
+        assertThrows(UserNotFoundException.class, () -> artistServiceImpl.linkArtistToBand(invalidId, bandId));
     }
 
     @Test
@@ -234,6 +234,6 @@ public class ArtistServiceTest {
         Mockito.when(artistRepository.findById(invalidId)).thenReturn(Optional.empty());
 
         // Act / Assert
-        assertThrows(UserNotFoundException.class, () -> artistService.unlinkArtistFromBand(invalidId, bandId));
+        assertThrows(UserNotFoundException.class, () -> artistServiceImpl.unlinkArtistFromBand(invalidId, bandId));
     }
 }

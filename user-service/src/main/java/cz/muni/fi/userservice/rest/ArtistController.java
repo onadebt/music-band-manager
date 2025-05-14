@@ -3,7 +3,7 @@ package cz.muni.fi.userservice.rest;
 import cz.muni.fi.userservice.config.OpenApiConfig;
 import cz.muni.fi.userservice.dto.ArtistDto;
 import cz.muni.fi.userservice.dto.ArtistUpdateDto;
-import cz.muni.fi.userservice.facade.ArtistFacade;
+import cz.muni.fi.userservice.facade.interfaces.ArtistFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

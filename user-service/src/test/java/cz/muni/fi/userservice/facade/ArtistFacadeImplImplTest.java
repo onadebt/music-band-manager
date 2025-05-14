@@ -4,7 +4,7 @@ import cz.muni.fi.userservice.TestDataFactory;
 import cz.muni.fi.userservice.dto.ArtistDto;
 import cz.muni.fi.userservice.mappers.ArtistMapper;
 import cz.muni.fi.userservice.model.Artist;
-import cz.muni.fi.userservice.service.interfaces.IArtistService;
+import cz.muni.fi.userservice.service.interfaces.ArtistService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,12 +25,12 @@ import static org.mockito.Mockito.*;
  * @author Tomáš MAREK
  */
 @ExtendWith(MockitoExtension.class)
-public class ArtistFacadeTest {
+public class ArtistFacadeImplImplTest {
     @InjectMocks
-    private ArtistFacade artistFacade;
+    private ArtistFacadeImpl artistFacadeImpl;
 
     @Mock
-    private IArtistService artistService;
+    private ArtistService artistService;
 
     @Mock
     private ArtistMapper artistMapper;
@@ -38,7 +38,7 @@ public class ArtistFacadeTest {
     @Test
     void register_nullArtistDto_throwsIllegalArgumentException() {
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> artistFacade.register(null));
+        assertThrows(IllegalArgumentException.class, () -> artistFacadeImpl.register(null));
         verify(artistService, Mockito.times(0)).save(any());
     }
 
@@ -53,7 +53,7 @@ public class ArtistFacadeTest {
         when(artistMapper.toDto(testArtist)).thenReturn(testArtistDto);
 
         // Act
-        ArtistDto registered = artistFacade.register(testArtistDto);
+        ArtistDto registered = artistFacadeImpl.register(testArtistDto);
 
         // Assert
         verify(artistService, times(1)).save(testArtist);
@@ -63,7 +63,7 @@ public class ArtistFacadeTest {
     @Test
     void findById_inputNull_throwsIllegalArgumentException() {
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> artistFacade.findById(null));
+        assertThrows(IllegalArgumentException.class, () -> artistFacadeImpl.findById(null));
         verify(artistService, Mockito.times(0)).findById(any());
     }
 
@@ -74,7 +74,7 @@ public class ArtistFacadeTest {
         when(artistService.findById(invalidId)).thenReturn(null);
 
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> artistFacade.findById(invalidId));
+        assertThrows(IllegalArgumentException.class, () -> artistFacadeImpl.findById(invalidId));
     }
 
     @Test
@@ -88,7 +88,7 @@ public class ArtistFacadeTest {
         when(artistService.findById(testArtist.getId())).thenReturn(testArtist);
         when(artistMapper.toDto(testArtist)).thenReturn(testArtistDto);
         // Act
-        ArtistDto found = artistFacade.findById(testArtist.getId());
+        ArtistDto found = artistFacadeImpl.findById(testArtist.getId());
 
         // Assert
         assertEquals(testArtistDto, found);
@@ -98,7 +98,7 @@ public class ArtistFacadeTest {
     @Test
     void findByUsername_nullUsername_throwsIllegalArgumentException() {
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> artistFacade.findByUsername(null));
+        assertThrows(IllegalArgumentException.class, () -> artistFacadeImpl.findByUsername(null));
         verify(artistService, times(0)).findByUsername(any());
     }
 
@@ -109,7 +109,7 @@ public class ArtistFacadeTest {
         when(artistService.findByUsername(invalidUsername)).thenReturn(null);
 
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> artistFacade.findByUsername(invalidUsername));
+        assertThrows(IllegalArgumentException.class, () -> artistFacadeImpl.findByUsername(invalidUsername));
     }
 
     @Test
@@ -122,7 +122,7 @@ public class ArtistFacadeTest {
         when(artistMapper.toDto(testArtist)).thenReturn(testArtistDto);
 
         // Act
-        ArtistDto found = artistFacade.findByUsername(testArtist.getUsername());
+        ArtistDto found = artistFacadeImpl.findByUsername(testArtist.getUsername());
 
         // Assert
         assertEquals(testArtistDto, found);
@@ -135,7 +135,7 @@ public class ArtistFacadeTest {
         when(artistService.findAll()).thenReturn(List.of());
 
         // Act
-        List<ArtistDto> found = artistFacade.findAll();
+        List<ArtistDto> found = artistFacadeImpl.findAll();
 
         // Assert
         assertEquals(0, found.size());
@@ -155,7 +155,7 @@ public class ArtistFacadeTest {
         when(artistMapper.toDto(testArtist2)).thenReturn(testArtistDto2);
 
         // Act
-        List<ArtistDto> found = artistFacade.findAll();
+        List<ArtistDto> found = artistFacadeImpl.findAll();
 
         // Assert
         assertEquals(2, found.size());
@@ -167,7 +167,7 @@ public class ArtistFacadeTest {
     @Test
     void findByBandIds_nullArgument_throwsIllegalArgumentException() {
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> artistFacade.findByBandIds(null));
+        assertThrows(IllegalArgumentException.class, () -> artistFacadeImpl.findByBandIds(null));
         verify(artistService, times(0)).findByBandIds(any());
     }
 
@@ -186,7 +186,7 @@ public class ArtistFacadeTest {
         when(artistMapper.toDto(testArtist2)).thenReturn(testArtistDto2);
 
         // Act
-        List<ArtistDto> found = artistFacade.findByBandIds(bandIds);
+        List<ArtistDto> found = artistFacadeImpl.findByBandIds(bandIds);
 
         // Assert
         verify(artistService, times(1)).findByBandIds(bandIds);
@@ -197,7 +197,7 @@ public class ArtistFacadeTest {
     @Test
     void deleteById_nullId_throwsIllegalArgumentException() {
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> artistFacade.deleteById(null));
+        assertThrows(IllegalArgumentException.class, () -> artistFacadeImpl.deleteById(null));
         verify(artistService, times(0)).deleteById(null);
     }
 
@@ -208,7 +208,7 @@ public class ArtistFacadeTest {
         when(artistService.findById(invalidId)).thenReturn(null);
 
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> artistFacade.deleteById(invalidId));
+        assertThrows(IllegalArgumentException.class, () -> artistFacadeImpl.deleteById(invalidId));
         verify(artistService, times(1)).findById(invalidId);
     }
 
@@ -226,14 +226,14 @@ public class ArtistFacadeTest {
     @Test
     void updateBandIds_nullBandIds_throwsIllegalArgumentException() {
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> artistFacade.updateBandIds(1L, null));
+        assertThrows(IllegalArgumentException.class, () -> artistFacadeImpl.updateBandIds(1L, null));
         verify(artistService, times(0)).updateArtistByBandIds(any(), any());
     }
 
     @Test
     void updateBandIds_nullArtisId_throwsIllegalArgumentException() {
         // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> artistFacade.updateBandIds(null, Set.of()));
+        assertThrows(IllegalArgumentException.class, () -> artistFacadeImpl.updateBandIds(null, Set.of()));
         verify(artistService, times(0)).updateArtistByBandIds(any(), any());
     }
 
@@ -248,7 +248,7 @@ public class ArtistFacadeTest {
         when(artistMapper.toDto(testArtist)).thenReturn(testArtistDto);
 
         // Act
-        ArtistDto updated = artistFacade.updateBandIds(testArtist.getId(), bandIds);
+        ArtistDto updated = artistFacadeImpl.updateBandIds(testArtist.getId(), bandIds);
 
         // Assert
         assertEquals(testArtistDto, updated);

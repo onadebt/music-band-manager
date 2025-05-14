@@ -2,8 +2,7 @@ package cz.muni.fi.userservice.rest;
 
 import cz.muni.fi.userservice.TestDataFactory;
 import cz.muni.fi.userservice.dto.ArtistDto;
-import cz.muni.fi.userservice.dto.ArtistUpdateDto;
-import cz.muni.fi.userservice.facade.ArtistFacade;
+import cz.muni.fi.userservice.facade.ArtistFacadeImpl;
 import cz.muni.fi.userservice.model.Artist;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,14 +31,14 @@ public class ArtistControllerTest {
     private ArtistController artistController;
 
     @Mock
-    private ArtistFacade artistFacade;
+    private ArtistFacadeImpl artistFacadeImpl;
 
     @Test
     void register_validRequest_returnsCreatedArtisWithOkStatus() {
         // Arrange
         ArtistDto artistDto = TestDataFactory.setUpTestArtist1Dto();
 
-        Mockito.when(artistFacade.register(artistDto)).thenReturn(artistDto);
+        Mockito.when(artistFacadeImpl.register(artistDto)).thenReturn(artistDto);
         // Act
         ResponseEntity<ArtistDto> response = artistController.register(artistDto);
 
@@ -47,7 +46,7 @@ public class ArtistControllerTest {
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.hasBody()).isTrue();
         assertThat(response.getBody()).isEqualTo(artistDto);
-        verify(artistFacade, times(1)).register(any());
+        verify(artistFacadeImpl, times(1)).register(any());
     }
 
     @Test
@@ -55,7 +54,7 @@ public class ArtistControllerTest {
         // Arrange
         ArtistDto artistDto = TestDataFactory.setUpTestArtist1Dto();
         ArtistDto artistDto2 = TestDataFactory.setUpTestArtist2Dto();
-        Mockito.when(artistFacade.findAll()).thenReturn(List.of(artistDto, artistDto2));
+        Mockito.when(artistFacadeImpl.findAll()).thenReturn(List.of(artistDto, artistDto2));
 
         // Act
         ResponseEntity<List<ArtistDto>> response = artistController.getAllArtists();
@@ -73,7 +72,7 @@ public class ArtistControllerTest {
         Artist artist = TestDataFactory.setUpTestArtist1();
         ArtistDto artistDto = TestDataFactory.setUpTestArtist1Dto();
 
-        Mockito.when(artistFacade.findById(artist.getId())).thenReturn(artistDto);
+        Mockito.when(artistFacadeImpl.findById(artist.getId())).thenReturn(artistDto);
 
         // Act
         ResponseEntity<ArtistDto> response = artistController.getArtistById(artist.getId());
@@ -93,14 +92,14 @@ public class ArtistControllerTest {
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(204);
         assertThat(response.hasBody()).isFalse();
-        verify(artistFacade, times(1)).deleteById(artist.getId());
+        verify(artistFacadeImpl, times(1)).deleteById(artist.getId());
     }
 
     @Test
     void getArtistByUsername_validUsername_returnsArtistWithOkStatus() {
         // Arrange
         ArtistDto artistDto = TestDataFactory.setUpTestArtist1Dto();
-        Mockito.when(artistFacade.findByUsername(artistDto.getUsername())).thenReturn(artistDto);
+        Mockito.when(artistFacadeImpl.findByUsername(artistDto.getUsername())).thenReturn(artistDto);
 
         // Act
         ResponseEntity<ArtistDto> response = artistController.getArtistByUsername(artistDto.getUsername());
@@ -115,7 +114,7 @@ public class ArtistControllerTest {
     void updateBands_validOperation_returnsUpdatedArtistWithOkStatus() {
         // Arrange
         ArtistDto artistDto = TestDataFactory.setUpTestArtist1Dto();
-        Mockito.when(artistFacade.updateBandIds(artistDto.getId(), artistDto.getBandIds()))
+        Mockito.when(artistFacadeImpl.updateBandIds(artistDto.getId(), artistDto.getBandIds()))
                 .thenReturn(artistDto);
 
         // Act
@@ -133,7 +132,7 @@ public class ArtistControllerTest {
         ArtistDto artistDto = TestDataFactory.setUpTestArtist1Dto();
         ArtistDto artistDto2 = TestDataFactory.setUpTestArtist2Dto();
         Set<Long> bandIds = Set.of(2L, 3L);
-        Mockito.when(artistFacade.findByBandIds(bandIds)).thenReturn(List.of(artistDto, artistDto2));
+        Mockito.when(artistFacadeImpl.findByBandIds(bandIds)).thenReturn(List.of(artistDto, artistDto2));
 
         // Act
         ResponseEntity<List<ArtistDto>> response = artistController.getArtistsByBandIds(Set.of(2L, 3L));

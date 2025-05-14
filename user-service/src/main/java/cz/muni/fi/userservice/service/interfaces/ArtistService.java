@@ -5,7 +5,7 @@ import cz.muni.fi.userservice.model.Artist;
 import java.util.List;
 import java.util.Set;
 
-public interface IArtistService {
+public interface ArtistService {
     Artist save(Artist artist);
 
     Artist findById(Long id);

@@ -2,7 +2,7 @@ package cz.muni.fi.userservice.rest;
 
 import cz.muni.fi.userservice.TestDataFactory;
 import cz.muni.fi.userservice.dto.ManagerDto;
-import cz.muni.fi.userservice.facade.ManagerFacade;
+import cz.muni.fi.userservice.facade.ManagerFacadeImpl;
 import cz.muni.fi.userservice.model.Manager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,13 +31,13 @@ public class ManagerControllerTest {
     private ManagerController managerController;
 
     @Mock
-    private ManagerFacade managerFacade;
+    private ManagerFacadeImpl managerFacadeImpl;
 
     @Test
     void register_validRequest_returnsCreatedArtisWithOkStatus() {
         // Arrange
         ManagerDto managerDto = TestDataFactory.setUpTestManager1Dto();
-        Mockito.when(managerFacade.register(managerDto)).thenReturn(managerDto);
+        Mockito.when(managerFacadeImpl.register(managerDto)).thenReturn(managerDto);
         // Act
         ResponseEntity<ManagerDto> response = managerController.register(managerDto);
 
@@ -45,7 +45,7 @@ public class ManagerControllerTest {
         assertThat(response.getStatusCode().value()).isEqualTo(201);
         assertThat(response.hasBody()).isTrue();
         assertThat(response.getBody()).isEqualTo(managerDto);
-        verify(managerFacade, times(1)).register(any());
+        verify(managerFacadeImpl, times(1)).register(any());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class ManagerControllerTest {
         // Arrange
         ManagerDto managerDto = TestDataFactory.setUpTestManager1Dto();
         ManagerDto managerDto2 = TestDataFactory.setUpTestManager2Dto();
-        Mockito.when(managerFacade.findAll()).thenReturn(List.of(managerDto, managerDto2));
+        Mockito.when(managerFacadeImpl.findAll()).thenReturn(List.of(managerDto, managerDto2));
 
         // Act
         ResponseEntity<List<ManagerDto>> response = managerController.getAllManagers();
@@ -70,7 +70,7 @@ public class ManagerControllerTest {
         // Arrange
         Manager manager = TestDataFactory.setUpTestManager1();
         ManagerDto managerDto = TestDataFactory.setUpTestManager1Dto();
-        Mockito.when(managerFacade.findById(manager.getId())).thenReturn(managerDto);
+        Mockito.when(managerFacadeImpl.findById(manager.getId())).thenReturn(managerDto);
 
         // Act
         ResponseEntity<ManagerDto> response = managerController.getById(manager.getId());
@@ -90,14 +90,14 @@ public class ManagerControllerTest {
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(204);
         assertThat(response.hasBody()).isFalse();
-        verify(managerFacade, times(1)).deleteById(manager.getId());
+        verify(managerFacadeImpl, times(1)).deleteById(manager.getId());
     }
 
     @Test
     void updateBands_validOperation_returnsUpdatedManagerWithOkStatus() {
         // Arrange
         ManagerDto managerDto = TestDataFactory.setUpTestManager1Dto();
-        Mockito.when(managerFacade.updateBandIds(managerDto.getId(), managerDto.getManagedBandIds()))
+        Mockito.when(managerFacadeImpl.updateBandIds(managerDto.getId(), managerDto.getManagedBandIds()))
                 .thenReturn(managerDto);
 
         // Act
@@ -115,7 +115,7 @@ public class ManagerControllerTest {
         ManagerDto managerDto = TestDataFactory.setUpTestManager1Dto();
         ManagerDto managerDto2 = TestDataFactory.setUpTestManager2Dto();
         Set<Long> bandIds = Set.of(2L, 3L);
-        Mockito.when(managerFacade.findByBandIds(bandIds)).thenReturn(List.of(managerDto, managerDto2));
+        Mockito.when(managerFacadeImpl.findByBandIds(bandIds)).thenReturn(List.of(managerDto, managerDto2));
 
         // Act
         ResponseEntity<List<ManagerDto>> response = managerController.getManagersByBandIds(Set.of(2L, 3L));

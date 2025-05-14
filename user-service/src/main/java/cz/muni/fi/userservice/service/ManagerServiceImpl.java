@@ -4,7 +4,7 @@ import cz.muni.fi.userservice.exception.UserAlreadyExistsException;
 import cz.muni.fi.userservice.exception.UserNotFoundException;
 import cz.muni.fi.userservice.model.Manager;
 import cz.muni.fi.userservice.repository.ManagerRepository;
-import cz.muni.fi.userservice.service.interfaces.IManagerService;
+import cz.muni.fi.userservice.service.interfaces.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,13 +16,13 @@ import java.util.Set;
 
 @Transactional
 @Service
-public class ManagerService implements IManagerService {
+public class ManagerServiceImpl implements ManagerService {
 
     private final ManagerRepository managerRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
-    public ManagerService(ManagerRepository managerRepository) {
+    public ManagerServiceImpl(ManagerRepository managerRepository) {
         this.managerRepository = managerRepository;
     }
 
