@@ -1,10 +1,20 @@
 version: '3.8'
 
 services:
+  builder:
+    image: maven:3.9.6-eclipse-temurin-21-alpine
+    volumes:
+      - .:/app
+      - maven-repo:/root/.m2
+    working_dir: /app
+    command: mvn clean package -DskipTests
+
   auth-service:
     build:
       context: .
       dockerfile: auth-service/Dockerfile
+    depends_on:
+      - builder
     ports:
       - "8084:8084"
 
@@ -12,44 +22,48 @@ services:
     build:
       context: .
       dockerfile: user-service/Dockerfile
+    depends_on:
+      - builder
+      - artemis
     ports:
       - "8091:8091"
     environment:
       - ARTEMIS_BROKER_URL=tcp://artemis:61616
-    depends_on:
-      - artemis
 
   band-service:
     build:
       context: .
       dockerfile: band-service/Dockerfile
+    depends_on:
+      - builder
+      - artemis
     ports:
       - "8092:8092"
     environment:
       - ARTEMIS_BROKER_URL=tcp://artemis:61616
-    depends_on:
-      - artemis
 
   music-catalog-service:
     build:
       context: .
       dockerfile: music-catalog-service/Dockerfile
+    depends_on:
+      - builder
+      - artemis
     ports:
       - "8093:8093"
-    depends_on:
-      - artemis
 
   tour-service:
     build:
       context: .
       dockerfile: tour-service/Dockerfile
+    depends_on:
+      - builder
+      - artemis
     ports:
       - "8094:8094"
-    depends_on:
-      - artemis
 
   artemis:
-    image: vromero/activemq-artemis:2.16.0
+    image: apache/activemq-artemis:2.41.0-alpine
     container_name: artemis-broker
     ports:
       - "8161:8161"
@@ -78,3 +92,4 @@ services:
 
 volumes:
   artemis-data:
+  maven-repo:
