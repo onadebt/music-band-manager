@@ -4,7 +4,8 @@ import random
 import datetime
 import time
 import requests
-from config import USER_SERVICE, BAND_SERVICE, MUSIC_SERVICE, TOUR_SERVICE, AUTH_TOKEN
+import uuid
+from config import USER_SERVICE, BAND_SERVICE, MUSIC_SERVICE, TOUR_SERVICE, AUTH_TOKEN, DEFAULT_TIMEOUT
 
 BAND_NAMES = ["Sonic Wave", "Electric Pulse", "Midnight Serenade", "Rhythm Rebels", "Harmony Junction"]
 MUSICIAN_NAMES = ["John Smith", "Emma Johnson", "Michael Lee", "Sarah Wilson", "David Brown", "Lisa Chen"]
@@ -18,6 +19,8 @@ COMPANY_NAMES = ["Harmony Productions", "SoundWave Management", "Stellar Artists
 STAGE_NAMES = ["DJ Thunder", "Melody Maker", "The Wizard", "Harmony Queen", "Beat Master", "Sonic Star", "Groove Machine"]
 SKILLS = ["Guitar", "Bass", "Drums", "Vocals", "Keyboard", "Saxophone", "Violin", "Trumpet", "Production", "Songwriting"]
 
+def unique_suffix():
+    return uuid.uuid4().hex[:8]
 
 class BandManagerUser(HttpUser):
     def on_start(self):
@@ -80,7 +83,8 @@ class BandManagerUser(HttpUser):
     @tag('users')
     @task(1)
     def register_manager(self):
-        username = f"manager_{random.randint(1000, 9999)}_{int(time.time())}"
+        suffix = unique_suffix()
+        username = f"manager_{suffix}"
         manager_data = {
             "username": username,
             "password": "password123",
@@ -113,7 +117,8 @@ class BandManagerUser(HttpUser):
     @tag('users')
     @task(1)
     def register_artist(self):
-        username = f"artist_{random.randint(1000, 9999)}_{int(time.time())}"
+        suffix = unique_suffix()
+        username = f"manager_{suffix}"
         artist_data = {
             "username": username,
             "password": "password123",
@@ -221,9 +226,10 @@ class BandManagerUser(HttpUser):
             return
             
         artist_id = random.choice(self.artist_ids)
+        suffix = unique_suffix()
         update_data = {
-            "username": f"artist_{random.randint(1000, 9999)}",
-            "email": f"updated_artist_{random.randint(1000, 9999)}@example.com",
+            "username": f"artist_{suffix}",
+            "email": f"updated_artist_{suffix}@example.com",
             "firstName": random.choice(FIRST_NAMES),
             "lastName": random.choice(LAST_NAMES),
             "stageName": random.choice(STAGE_NAMES) + str(random.randint(1, 100)),
@@ -247,9 +253,10 @@ class BandManagerUser(HttpUser):
             return
             
         manager_id = random.choice(self.manager_ids)
+        suffix = unique_suffix()
         update_data = {
-            "username": f"manager_{random.randint(1000, 9999)}",
-            "email": f"updated_manager_{random.randint(1000, 9999)}@example.com",
+            "username": f"manager_{suffix}",
+            "email": f"updated_manager_{suffix}@example.com",
             "firstName": random.choice(FIRST_NAMES),
             "lastName": random.choice(LAST_NAMES),
             "companyName": random.choice(COMPANY_NAMES) + f" {random.randint(1, 100)}"
@@ -394,7 +401,7 @@ class BandManagerUser(HttpUser):
             f"{BAND_SERVICE}/api/bands/{band_id}",
             "/api/bands/{id} [GET]",
             headers=self.auth_headers,
-            timeout=5
+            timeout=DEFAULT_TIMEOUT
         )
     
     @tag('bands')
@@ -419,7 +426,7 @@ class BandManagerUser(HttpUser):
             "/api/bands [PATCH]",
             json=update_data,
             headers=self.auth_headers,
-            timeout=5
+            timeout=DEFAULT_TIMEOUT
         )
     
     @tag('bands')
@@ -447,7 +454,7 @@ class BandManagerUser(HttpUser):
             f"{BAND_SERVICE}/api/bands/offers?bandId={band_id}&invitedMusicianId={artist_id}&offeringManagerId={manager_id}",
             "/api/bands/offers [POST]",
             headers=self.auth_headers,
-            timeout=5
+            timeout=DEFAULT_TIMEOUT
         )
     
     @tag('bands')
@@ -464,7 +471,7 @@ class BandManagerUser(HttpUser):
             f"{BAND_SERVICE}/api/bands/offers/{offer_id}/{action}",
             f"/api/bands/offers/{{id}}/{action} [POST]",
             headers=self.auth_headers,
-            timeout=5
+            timeout=DEFAULT_TIMEOUT
         )
         
         if response.status_code in [200, 201]:
@@ -479,13 +486,15 @@ class BandManagerUser(HttpUser):
         band_id = random.choice(self.band_ids)
         artist_id = random.choice(self.artist_ids)
         
-        self.make_request(
-            'patch',
-            f"{BAND_SERVICE}/api/bands/{band_id}/members/{artist_id}",
-            "/api/bands/{id}/members/{id} [PATCH]",
-            headers=self.auth_headers,
-            timeout=5
-        )
+        response = self.make_request(
+                'patch',
+                f"{BAND_SERVICE}/api/bands/{band_id}/members/{artist_id}",
+                "/api/bands/{id}/members/{id} [PATCH]",
+                headers=self.auth_headers,
+                timeout=DEFAULT_TIMEOUT
+            )
+        if response.status_code == 400:
+            print(f"[WARN] Artist {artist_id} might already be in band {band_id}")
                 
     @tag('bands')
     @task(1)
@@ -496,13 +505,15 @@ class BandManagerUser(HttpUser):
         band_id = random.choice(self.band_ids)
         artist_id = random.choice(self.artist_ids)
         
-        self.make_request(
-            'delete',
-            f"{BAND_SERVICE}/api/bands/{band_id}/members/{artist_id}",
-            "/api/bands/{id}/members/{id} [DELETE]",
-            headers=self.auth_headers,
-            timeout=5
+        response = self.make_request(
+                'delete',
+                f"{BAND_SERVICE}/api/bands/{band_id}/members/{artist_id}",
+                "/api/bands/{id}/members/{id} [DELETE]",
+                headers=self.auth_headers,
+                timeout=DEFAULT_TIMEOUT
         )
+        if response.status_code == 400:
+            print(f"[WARN] Artist {artist_id} may not be in band {band_id}")
     
     @tag('tours')
     @task(1)
@@ -540,7 +551,7 @@ class BandManagerUser(HttpUser):
             "/api/tours [POST]",
             json=tour_data,
             headers=self.auth_headers,
-            timeout=5
+            timeout=DEFAULT_TIMEOUT
         )
         
         if response.status_code == 201:
@@ -564,7 +575,7 @@ class BandManagerUser(HttpUser):
             f"{TOUR_SERVICE}/api/tours/band/{band_id}",
             "/api/tours/band/{id} [GET]",
             headers=self.auth_headers,
-            timeout=5
+            timeout=DEFAULT_TIMEOUT
         )
         
         if response.status_code == 200:
@@ -589,7 +600,7 @@ class BandManagerUser(HttpUser):
             f"{TOUR_SERVICE}/api/tours/{tour_id}",
             "/api/tours/{id} [GET for update]",
             headers=self.auth_headers,
-            timeout=5
+            timeout=DEFAULT_TIMEOUT
         )
         
         if response.status_code != 200:
@@ -605,7 +616,7 @@ class BandManagerUser(HttpUser):
                 "/api/tours/{id} [PUT]",
                 json=tour_data,
                 headers=self.auth_headers,
-                timeout=5
+                timeout=DEFAULT_TIMEOUT
             )
         except (json.JSONDecodeError, AttributeError, KeyError):
             pass
@@ -634,7 +645,7 @@ class BandManagerUser(HttpUser):
             "/api/tours/{id}/city-visit [POST]",
             json=city_visit,
             headers=self.auth_headers,
-            timeout=5
+            timeout=DEFAULT_TIMEOUT
         )
     
     @tag('albums')
@@ -661,7 +672,7 @@ class BandManagerUser(HttpUser):
             "/api/albums [POST]",
             json=album_data,
             headers=self.auth_headers,
-            timeout=5
+            timeout=DEFAULT_TIMEOUT
         )
         
         if response.status_code == 201:
@@ -697,7 +708,7 @@ class BandManagerUser(HttpUser):
             "/api/songs [POST]",
             json=song_data,
             headers=self.auth_headers,
-            timeout=5
+            timeout=DEFAULT_TIMEOUT
         )
         
         if response.status_code == 201:
@@ -721,7 +732,7 @@ class BandManagerUser(HttpUser):
             f"{MUSIC_SERVICE}/api/songs/band/{band_id}",
             "/api/songs/band/{id} [GET]",
             headers=self.auth_headers,
-            timeout=5
+            timeout=DEFAULT_TIMEOUT
         )
         
         if response.status_code == 200:
@@ -746,7 +757,7 @@ class BandManagerUser(HttpUser):
             f"{MUSIC_SERVICE}/api/albums/band/{band_id}",
             "/api/albums/band/{id} [GET]",
             headers=self.auth_headers,
-            timeout=5
+            timeout=DEFAULT_TIMEOUT
         )
         
         if response.status_code == 200:
