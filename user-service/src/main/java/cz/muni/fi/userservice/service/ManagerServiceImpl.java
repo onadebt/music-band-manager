@@ -19,11 +19,12 @@ import java.util.Set;
 public class ManagerServiceImpl implements ManagerService {
 
     private final ManagerRepository managerRepository;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public ManagerServiceImpl(ManagerRepository managerRepository) {
         this.managerRepository = managerRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     public Manager save(Manager manager) {

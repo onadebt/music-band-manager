@@ -19,11 +19,12 @@ import java.util.Set;
 public class ArtistServiceImpl implements ArtistService {
 
     private final ArtistRepository artistRepository;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public ArtistServiceImpl(ArtistRepository artistRepository) {
         this.artistRepository = artistRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     public Artist save(Artist artist) {
