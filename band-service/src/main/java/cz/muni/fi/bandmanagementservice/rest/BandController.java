@@ -1,8 +1,6 @@
 package cz.muni.fi.bandmanagementservice.rest;
 
 import cz.muni.fi.bandmanagementservice.config.OpenAPIConfig;
-import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.facade.BandFacade;
 import cz.muni.fi.bandmanagementservice.dto.BandDto;
 import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;

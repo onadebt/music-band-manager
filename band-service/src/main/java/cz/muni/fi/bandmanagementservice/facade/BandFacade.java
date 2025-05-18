@@ -8,7 +8,6 @@ import cz.muni.fi.bandmanagementservice.service.BandService;
 import cz.muni.fi.bandmanagementservice.dto.BandDto;
 import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

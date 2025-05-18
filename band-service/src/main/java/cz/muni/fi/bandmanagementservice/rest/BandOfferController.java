@@ -2,8 +2,6 @@ package cz.muni.fi.bandmanagementservice.rest;
 
 import cz.muni.fi.bandmanagementservice.config.OpenAPIConfig;
 import cz.muni.fi.bandmanagementservice.dto.BandOfferDto;
-import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.facade.BandOfferFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
