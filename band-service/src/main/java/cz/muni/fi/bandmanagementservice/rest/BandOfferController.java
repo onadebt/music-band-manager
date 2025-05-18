@@ -55,13 +55,8 @@ public class BandOfferController {
     public ResponseEntity<BandOfferDto> createBandOffer(@RequestParam Long bandId,
                                                         @RequestParam Long invitedMusicianId,
                                                         @RequestParam Long offeringManagerId) {
-        try {
-            return new ResponseEntity<>(bandOfferFacade.postBandOffer(bandId, invitedMusicianId, offeringManagerId), HttpStatus.CREATED);
-        } catch (InvalidOperationException e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (BandOfferNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
+        return new ResponseEntity<>(bandOfferFacade.postBandOffer(bandId, invitedMusicianId, offeringManagerId), HttpStatus.CREATED);
     }
 
     @GetMapping("/{offerId}")
@@ -75,11 +70,7 @@ public class BandOfferController {
             @ApiResponse(responseCode = "404", description = "Band offer not found")
     })
     public ResponseEntity<BandOfferDto> getBandOffer(@PathVariable Long offerId) {
-        try {
-            return new ResponseEntity<>(bandOfferFacade.getBandOffer(offerId), HttpStatus.OK);
-        } catch (BandOfferNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(bandOfferFacade.getBandOffer(offerId), HttpStatus.OK);
     }
 
     @PostMapping("/{offerId}/accept")
@@ -94,13 +85,7 @@ public class BandOfferController {
             @ApiResponse(responseCode = "404", description = "Band offer not found")
     })
     public ResponseEntity<BandOfferDto> acceptBandOffer(@PathVariable Long offerId) {
-        try {
-            return new ResponseEntity<>(bandOfferFacade.acceptBandOffer(offerId), HttpStatus.OK);
-        } catch (InvalidOperationException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (BandOfferNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(bandOfferFacade.acceptBandOffer(offerId), HttpStatus.OK);
     }
 
     @PostMapping("/{offerId}/reject")
@@ -115,13 +100,7 @@ public class BandOfferController {
             @ApiResponse(responseCode = "404", description = "Band offer not found")
     })
     public ResponseEntity<BandOfferDto> rejectBandOffer(@PathVariable Long offerId) {
-        try {
-            return new ResponseEntity<>(bandOfferFacade.rejectBandOffer(offerId), HttpStatus.CREATED);
-        } catch (InvalidOperationException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (BandOfferNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(bandOfferFacade.rejectBandOffer(offerId), HttpStatus.CREATED);
     }
 
     @PostMapping("/{offerId}/revokes")
@@ -136,14 +115,8 @@ public class BandOfferController {
             @ApiResponse(responseCode = "404", description = "Band offer not found")
     })
     public ResponseEntity<Void> revokeBandOffer(@PathVariable Long offerId) {
-        try {
-            bandOfferFacade.revokeOffer(offerId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (BandOfferNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (InvalidOperationException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        bandOfferFacade.revokeOffer(offerId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping

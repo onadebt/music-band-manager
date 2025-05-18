@@ -67,11 +67,7 @@ public class BandController {
             @ApiResponse(responseCode = "404", description = "Band not found")
     })
     public ResponseEntity<BandDto> getBand(@PathVariable Long id) {
-        try {
-            return new ResponseEntity<>(bandFacade.getBand(id), HttpStatus.OK);
-        } catch (BandNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(bandFacade.getBand(id), HttpStatus.OK);
     }
 
     @PatchMapping
@@ -86,11 +82,7 @@ public class BandController {
             @ApiResponse(responseCode = "400", description = "Band could not be updated", content = @Content(mediaType = "application/problem+json"))
     })
     public ResponseEntity<BandDto> updateBand(@RequestBody @Valid BandInfoUpdateRequest bandInfoUpdateRequest) {
-        try {
-            return new ResponseEntity<>(bandFacade.updateBand(bandInfoUpdateRequest), HttpStatus.OK);
-        } catch (BandNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(bandFacade.updateBand(bandInfoUpdateRequest), HttpStatus.OK);
     }
 
     @GetMapping
@@ -118,13 +110,7 @@ public class BandController {
             @ApiResponse(responseCode = "404", description = "Band doest not exist", content = @Content(mediaType = "application/problem+json"))
     })
     public ResponseEntity<BandDto> removeMember(@PathVariable Long bandId, @PathVariable Long memberId) {
-        try {
-            return new ResponseEntity<>(bandFacade.removeMember(bandId, memberId), HttpStatus.NO_CONTENT);
-        } catch (BandNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (InvalidOperationException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(bandFacade.removeMember(bandId, memberId), HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{bandId}/members/{memberId}")
@@ -139,12 +125,6 @@ public class BandController {
             @ApiResponse(responseCode = "404", description = "Band does not exist", content = @Content(mediaType = "application/problem+json"))
     })
     public ResponseEntity<BandDto> addMember(@PathVariable Long bandId, @PathVariable Long memberId) {
-        try {
-            return new ResponseEntity<>(bandFacade.addMember(bandId, memberId), HttpStatus.OK);
-        } catch (BandNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (InvalidOperationException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(bandFacade.addMember(bandId, memberId), HttpStatus.OK);
     }
 }

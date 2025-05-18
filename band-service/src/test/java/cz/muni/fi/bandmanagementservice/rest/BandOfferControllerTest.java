@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -44,9 +45,7 @@ public class BandOfferControllerTest {
     void testGetBandOffer_NotFound() {
         when(bandOfferFacade.getBandOffer(1L)).thenThrow(new BandOfferNotFoundException(1L));
 
-        ResponseEntity<BandOfferDto> response = controller.getBandOffer(1L);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(BandOfferNotFoundException.class, () -> controller.getBandOffer(1L));
     }
 
     @Test
@@ -75,18 +74,14 @@ public class BandOfferControllerTest {
     void testAcceptBandOffer_InvalidOperation() {
         when(bandOfferFacade.acceptBandOffer(1L)).thenThrow(new InvalidOperationException("Invalid operation"));
 
-        ResponseEntity<BandOfferDto> response = controller.acceptBandOffer(1L);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertThrows(InvalidOperationException.class, () -> controller.acceptBandOffer(1L));
     }
 
     @Test
     void testAcceptBandOffer_NotFound() {
         when(bandOfferFacade.acceptBandOffer(1L)).thenThrow(new BandOfferNotFoundException(1L));
 
-        ResponseEntity<BandOfferDto> response = controller.acceptBandOffer(1L);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(BandOfferNotFoundException.class, () -> controller.acceptBandOffer(1L));
     }
 
 
@@ -103,9 +98,7 @@ public class BandOfferControllerTest {
         doThrow(new BandOfferNotFoundException(1L))
                 .when(bandOfferFacade).revokeOffer(1L);
 
-        ResponseEntity<Void> response = controller.revokeBandOffer(1L);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(BandOfferNotFoundException.class, () -> controller.revokeBandOffer(1L));
     }
 
     @Test
@@ -113,9 +106,7 @@ public class BandOfferControllerTest {
         doThrow(new InvalidOperationException("Invalid operation"))
                 .when(bandOfferFacade).revokeOffer(1L);
 
-        ResponseEntity<Void> response = controller.revokeBandOffer(1L);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertThrows(InvalidOperationException.class, () -> controller.revokeBandOffer(1L));
     }
 }
 

@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 
@@ -57,9 +58,8 @@ public class BandControllerTest {
     void testGetBand_NotFound() {
         when(bandFacade.getBand(1L)).thenThrow(new BandNotFoundException(1L));
 
-        ResponseEntity<BandDto> response = controller.getBand(1L);
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(BandNotFoundException.class, () -> controller.getBand(1L));
     }
 
     @Test
@@ -79,9 +79,7 @@ public class BandControllerTest {
         BandInfoUpdateRequest updateRequest = new BandInfoUpdateRequest();
         when(bandFacade.updateBand(updateRequest)).thenThrow(new BandNotFoundException(null));
 
-        ResponseEntity<BandDto> response = controller.updateBand(updateRequest);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(BandNotFoundException.class, () -> controller.updateBand(updateRequest));
     }
 
     @Test
@@ -110,9 +108,7 @@ public class BandControllerTest {
     void testRemoveMember_NotFound() {
         when(bandFacade.removeMember(1L, 2L)).thenThrow(new BandNotFoundException(1L));
 
-        ResponseEntity<BandDto> response = controller.removeMember(1L, 2L);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(BandNotFoundException.class, () -> controller.removeMember(1L, 2L));
     }
 
     @Test
@@ -130,8 +126,6 @@ public class BandControllerTest {
     void testAddMember_NotFound() {
         when(bandFacade.addMember(1L, 2L)).thenThrow(new BandNotFoundException(1L));
 
-        ResponseEntity<BandDto> response = controller.addMember(1L, 2L);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(BandNotFoundException.class, () -> controller.addMember(1L, 2L));
     }
 }
