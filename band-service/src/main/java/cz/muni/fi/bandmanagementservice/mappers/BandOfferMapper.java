@@ -10,7 +10,4 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface BandOfferMapper {
     BandOfferDto toDto(BandOffer bandOffer);
-
-    BandOffer toEntity(BandOfferDto bandOfferDto);
-
 }

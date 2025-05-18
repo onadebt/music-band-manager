@@ -10,5 +10,4 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface BandInfoUpdateMapper {
     BandInfoUpdate toEntity(BandInfoUpdateRequest bandInfoUpdateRequest);
-
 }

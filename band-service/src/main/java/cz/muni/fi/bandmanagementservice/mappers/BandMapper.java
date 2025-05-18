@@ -9,10 +9,5 @@ import org.mapstruct.Mapper;
  */
 @Mapper(componentModel = "spring")
 public interface BandMapper {
-
-    Band toEntity(BandDto bandDto);
-
     BandDto toDto(Band band);
-
-
 }
