@@ -25,7 +25,7 @@ public class BandInfoUpdateRequest {
     private String musicalStyle;
 
     @Schema(description = "url of band logo")
-    private String logo;
+    private String logoUrl;
 
     @Schema(description = "id of the band manager")
     private Long managerId;

@@ -1,5 +1,7 @@
 package cz.muni.fi.bandmanagementservice.facade;
 
+import cz.muni.fi.bandmanagementservice.TestDataFactory;
+import cz.muni.fi.bandmanagementservice.mappers.BandInfoUpdateMapper;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.mappers.BandMapper;
@@ -8,17 +10,27 @@ import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
 import cz.muni.fi.bandmanagementservice.service.BandService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class BandFacadeTest {
+    @Mock
+    private BandMapper bandMapper;
+
+    @Mock
+    private BandInfoUpdateMapper bandInfoUpdateMapper;
 
     @Mock
     private BandService bandService;
@@ -26,30 +38,31 @@ public class BandFacadeTest {
     @InjectMocks
     private BandFacade bandFacade;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+
 
     @Test
     public void testCreateBand() {
-        Band band = new Band(1L, "Band Name", "Rock", 1L);
-        when(bandService.createBand("Band Name", "Rock", 1L)).thenReturn(band);
+        Band band = TestDataFactory.setUpBand1();
+        BandDto dto = TestDataFactory.setUpBandDto1();
+        when(bandMapper.toDto(band)).thenReturn(dto);
+        when(bandService.createBand("Band 1", "Rock", 1L)).thenReturn(band);
 
-        BandDto bandDto = bandFacade.createBand("Band Name", "Rock", 1L);
+        BandDto bandDto = bandFacade.createBand("Band 1", "Rock", 1L);
 
-        assertEquals("Band Name", bandDto.getName());
-        verify(bandService, times(1)).createBand("Band Name", "Rock", 1L);
+        assertEquals("Band 1", bandDto.getName());
+        verify(bandService, times(1)).createBand("Band 1", "Rock", 1L);
     }
 
     @Test
     public void testGetBand() {
-        Band band = new Band(1L, "Band Name", "Rock", 1L);
+        Band band = TestDataFactory.setUpBand1();
+        BandDto dto = TestDataFactory.setUpBandDto1();
         when(bandService.getBand(1L)).thenReturn(band);
+        when(bandMapper.toDto(band)).thenReturn(dto);
 
         BandDto bandDto = bandFacade.getBand(1L);
 
-        assertEquals("Band Name", bandDto.getName());
+        assertEquals("Band 1", bandDto.getName());
         verify(bandService, times(1)).getBand(1L);
     }
 
@@ -58,14 +71,27 @@ public class BandFacadeTest {
         BandInfoUpdateRequest request = new BandInfoUpdateRequest();
         request.setId(1L);
         request.setName("Updated Band");
-        BandInfoUpdate bandInfoUpdate = BandMapper.mapFromInfoUpdateRequest(request);
-        Band band = new Band(1L, "Updated Band", "Jazz", 1L);
-        when(bandService.updateBand(bandInfoUpdate)).thenReturn(band);
+        request.setMusicalStyle("Jazz");
+        request.setLogoUrl(null);
+        request.setManagerId(2L);
+
+        BandInfoUpdate infoUpdate = new BandInfoUpdate(1L, "Updated Band", "Jazz", 2L, null);
+
+        Band updatedBand = new Band(1L, "Updated Band", "Jazz", 2L);
+        BandDto updatedBandDto = new BandDto();
+        updatedBandDto.setId(1L);
+        updatedBandDto.setName("Updated Band");
+        updatedBandDto.setMusicalStyle("Jazz");
+        updatedBandDto.setLogo(null);
+
+        when(bandMapper.toDto(updatedBand)).thenReturn(updatedBandDto);
+        when(bandInfoUpdateMapper.toEntity(request)).thenReturn(infoUpdate);
+        when(bandService.updateBand(infoUpdate)).thenReturn(updatedBand);
 
         BandDto bandDto = bandFacade.updateBand(request);
 
         assertEquals("Updated Band", bandDto.getName());
-        verify(bandService, times(1)).updateBand(bandInfoUpdate);
+        verify(bandService, times(1)).updateBand(infoUpdate);
     }
 
     @Test
@@ -81,23 +107,29 @@ public class BandFacadeTest {
 
     @Test
     public void testAddMember() {
-        Band band = new Band(1L, "Band Name", "Rock", 1L);
+        Band band = TestDataFactory.setUpBand1();
+        BandDto dto = TestDataFactory.setUpBandDto1();
+
         when(bandService.addMember(1L, 2L)).thenReturn(band);
+        when(bandMapper.toDto(band)).thenReturn(dto);
 
         BandDto bandDto = bandFacade.addMember(1L, 2L);
 
-        assertEquals("Band Name", bandDto.getName());
+        assertEquals("Band 1", bandDto.getName());
         verify(bandService, times(1)).addMember(1L, 2L);
     }
 
     @Test
     public void testRemoveMember() {
-        Band band = new Band(1L, "Band Name", "Rock", 1L);
+        Band band = TestDataFactory.setUpBand1();
+        BandDto dto = TestDataFactory.setUpBandDto1();
+
+        when(bandMapper.toDto(band)).thenReturn(dto);
         when(bandService.removeMember(1L, 2L)).thenReturn(band);
 
         BandDto bandDto = bandFacade.removeMember(1L, 2L);
 
-        assertEquals("Band Name", bandDto.getName());
+        assertEquals("Band 1", bandDto.getName());
         verify(bandService, times(1)).removeMember(1L, 2L);
     }
 }
