@@ -1,10 +1,16 @@
 package cz.muni.fi.bandmanagementservice.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author Tomáš MAREK
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Schema(title = "Offer to join a band", description = "Object containing info regarding an offer to join a band")
 public class BandOfferDto {
 
@@ -28,44 +34,4 @@ public class BandOfferDto {
 
     @Schema(description = "status of the offer")
     private StatusEnum status;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getBandId() {
-        return bandId;
-    }
-
-    public void setBandId(Long bandId) {
-        this.bandId = bandId;
-    }
-
-    public Long getInvitedMusicianId() {
-        return invitedMusicianId;
-    }
-
-    public void setInvitedMusicianId(Long invitedMusicianId) {
-        this.invitedMusicianId = invitedMusicianId;
-    }
-
-    public Long getOfferingManagerId() {
-        return offeringManagerId;
-    }
-
-    public void setOfferingManagerId(Long offeringManagerId) {
-        this.offeringManagerId = offeringManagerId;
-    }
-
-    public StatusEnum getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusEnum status) {
-        this.status = status;
-    }
 }

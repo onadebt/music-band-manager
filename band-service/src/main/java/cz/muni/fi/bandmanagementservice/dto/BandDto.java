@@ -1,12 +1,18 @@
 package cz.muni.fi.bandmanagementservice.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
 
 /**
  * @author Tomáš MAREK
  */
+@Getter
+@Setter
+@NoArgsConstructor
 @Schema(title = "A musical band", description = "Object representing a musical band, with its manager and members")
 public class BandDto {
     @Schema(description = "band id", example = "1")
@@ -26,52 +32,4 @@ public class BandDto {
 
     @Schema(description = "array of member id's")
     private Set<Long> members;
-
-    public Set<Long> getMembers() {
-        return members;
-    }
-
-    public void setMembers(Set<Long> members) {
-        this.members = members;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMusicalStyle() {
-        return musicalStyle;
-    }
-
-    public void setMusicalStyle(String musicalStyle) {
-        this.musicalStyle = musicalStyle;
-    }
-
-    public String getLogo() {
-        return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
-    }
-
-    public Long getManagerId() {
-        return managerId;
-    }
-
-    public void setManagerId(Long managerId) {
-        this.managerId = managerId;
-    }
 }

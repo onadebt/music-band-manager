@@ -48,10 +48,10 @@ public class BandService {
     }
 
     public Band updateBand(BandInfoUpdate bandInfoUpdate){
-        Band updatedBand = new Band(bandInfoUpdate.id(), bandInfoUpdate
-                .name(), bandInfoUpdate.musicalStyle(), bandInfoUpdate.managerId(),
-                bandInfoUpdate.logoUrl());
-        Optional<Band> updated = bandRepository.findById(bandInfoUpdate.id());
+        Band updatedBand = new Band(bandInfoUpdate.getId(), bandInfoUpdate
+                .getName(), bandInfoUpdate.getMusicalStyle(), bandInfoUpdate.getManagerId(),
+                bandInfoUpdate.getLogoUrl());
+        Optional<Band> updated = bandRepository.findById(bandInfoUpdate.getId());
         if (updated.isEmpty()){
             throw new ResourceNotFoundException("Band with id %d does not exists".formatted(updatedBand.getId()));
         }
