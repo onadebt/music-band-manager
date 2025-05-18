@@ -1,8 +1,8 @@
 package cz.muni.fi.bandmanagementservice.service;
 
 import cz.muni.fi.bandmanagementservice.artemis.BandOfferEventProducer;
+import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
-import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandOffer;
 import cz.muni.fi.bandmanagementservice.repository.BandOfferRepository;
@@ -38,7 +38,7 @@ public class BandOfferService {
     public BandOffer getBandOffer(Long bandOfferId) {
         Optional<BandOffer> maybeBandOffer = bandOfferRepository.findById(bandOfferId);
         if (maybeBandOffer.isEmpty()) {
-            throw new ResourceNotFoundException("BandOffer with id %s does not exist!".formatted(bandOfferId));
+            throw new BandOfferNotFoundException(bandOfferId);
         }
         return maybeBandOffer.get();
     }

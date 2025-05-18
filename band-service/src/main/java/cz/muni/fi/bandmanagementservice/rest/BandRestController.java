@@ -1,9 +1,8 @@
 package cz.muni.fi.bandmanagementservice.rest;
 
-import cz.muni.fi.bandmanagementservice.BandServiceApplication;
 import cz.muni.fi.bandmanagementservice.config.OpenAPIConfig;
+import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
-import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import cz.muni.fi.bandmanagementservice.facade.BandFacade;
 import cz.muni.fi.bandmanagementservice.dto.BandDto;
 import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
@@ -70,7 +69,7 @@ public class BandRestController {
     public ResponseEntity<BandDto> getBand(@PathVariable Long id) {
         try {
             return new ResponseEntity<>(bandFacade.getBand(id), HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
+        } catch (BandNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -89,7 +88,7 @@ public class BandRestController {
     public ResponseEntity<BandDto> updateBand(@RequestBody @Valid BandInfoUpdateRequest bandInfoUpdateRequest) {
         try {
             return new ResponseEntity<>(bandFacade.updateBand(bandInfoUpdateRequest), HttpStatus.OK);
-        } catch (ResourceNotFoundException e){
+        } catch (BandNotFoundException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -121,7 +120,7 @@ public class BandRestController {
     public ResponseEntity<BandDto> removeMember(@PathVariable Long bandId, @PathVariable Long memberId) {
         try {
             return new ResponseEntity<>(bandFacade.removeMember(bandId, memberId), HttpStatus.NO_CONTENT);
-        } catch (ResourceNotFoundException e) {
+        } catch (BandNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (InvalidOperationException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -142,7 +141,7 @@ public class BandRestController {
     public ResponseEntity<BandDto> addMember(@PathVariable Long bandId, @PathVariable Long memberId) {
         try {
             return new ResponseEntity<>(bandFacade.addMember(bandId, memberId), HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
+        } catch (BandNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (InvalidOperationException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

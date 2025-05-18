@@ -1,8 +1,8 @@
 package cz.muni.fi.bandmanagementservice.service;
 
 import cz.muni.fi.bandmanagementservice.artemis.BandOfferEventProducer;
+import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
-import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandOffer;
 import cz.muni.fi.events.bandoffer.BandOfferAcceptedEvent;
@@ -54,7 +54,7 @@ class BandOfferServiceTest {
     void testGetBandOffer_NonExistingOffer() {
         when(bandOfferRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> bandOfferService.getBandOffer(1L));
+        assertThrows(BandOfferNotFoundException.class, () -> bandOfferService.getBandOffer(1L));
         verify(bandOfferRepository).findById(1L);
     }
 

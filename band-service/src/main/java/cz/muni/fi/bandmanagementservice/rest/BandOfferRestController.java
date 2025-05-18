@@ -1,10 +1,9 @@
 package cz.muni.fi.bandmanagementservice.rest;
 
-import cz.muni.fi.bandmanagementservice.BandServiceApplication;
 import cz.muni.fi.bandmanagementservice.config.OpenAPIConfig;
 import cz.muni.fi.bandmanagementservice.dto.BandOfferDto;
+import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
-import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import cz.muni.fi.bandmanagementservice.facade.BandOfferFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -75,7 +74,7 @@ public class BandOfferRestController {
     public ResponseEntity<BandOfferDto> getBandOffer(@PathVariable Long offerId) {
         try {
             return new ResponseEntity<>(bandOfferFacade.getBandOffer(offerId), HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
+        } catch (BandOfferNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -96,7 +95,7 @@ public class BandOfferRestController {
             return new ResponseEntity<>(bandOfferFacade.acceptBandOffer(offerId), HttpStatus.OK);
         } catch (InvalidOperationException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (ResourceNotFoundException e) {
+        } catch (BandOfferNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -117,7 +116,7 @@ public class BandOfferRestController {
             return new ResponseEntity<>(bandOfferFacade.rejectBandOffer(offerId), HttpStatus.CREATED);
         } catch (InvalidOperationException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (ResourceNotFoundException e) {
+        } catch (BandOfferNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -137,7 +136,7 @@ public class BandOfferRestController {
         try {
             bandOfferFacade.revokeOffer(offerId);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
+        } catch (BandOfferNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (InvalidOperationException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

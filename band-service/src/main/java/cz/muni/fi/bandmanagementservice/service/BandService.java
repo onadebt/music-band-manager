@@ -1,11 +1,11 @@
 package cz.muni.fi.bandmanagementservice.service;
 
 import cz.muni.fi.bandmanagementservice.artemis.BandEventProducer;
+import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
 import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
-import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import cz.muni.fi.events.band.BandRemoveMemberEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class BandService {
     public Band getBand(Long id){
         Optional<Band> maybeBand = bandRepository.findById(id);
         if (maybeBand.isEmpty()){
-            throw new ResourceNotFoundException("Band with id %d does not exist".formatted(id));
+            throw new BandNotFoundException(id);
         }
         return maybeBand.get();
     }
@@ -53,7 +53,7 @@ public class BandService {
                 bandInfoUpdate.getLogoUrl());
         Optional<Band> updated = bandRepository.findById(bandInfoUpdate.getId());
         if (updated.isEmpty()){
-            throw new ResourceNotFoundException("Band with id %d does not exists".formatted(updatedBand.getId()));
+            throw new BandNotFoundException(updatedBand.getId());
         }
         updatedBand.setMembers(updated.get().getMembers());
         return bandRepository.save(updatedBand);

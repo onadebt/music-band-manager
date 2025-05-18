@@ -1,8 +1,8 @@
 package cz.muni.fi.bandmanagementservice.rest;
 
 import cz.muni.fi.bandmanagementservice.dto.BandOfferDto;
+import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
-import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import cz.muni.fi.bandmanagementservice.facade.BandOfferFacade;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +42,7 @@ public class BandOfferRestControllerTest {
 
     @Test
     void testGetBandOffer_NotFound() {
-        when(bandOfferFacade.getBandOffer(1L)).thenThrow(new ResourceNotFoundException("Not found"));
+        when(bandOfferFacade.getBandOffer(1L)).thenThrow(new BandOfferNotFoundException(1L));
 
         ResponseEntity<BandOfferDto> response = controller.getBandOffer(1L);
 
@@ -82,7 +82,7 @@ public class BandOfferRestControllerTest {
 
     @Test
     void testAcceptBandOffer_NotFound() {
-        when(bandOfferFacade.acceptBandOffer(1L)).thenThrow(new ResourceNotFoundException("Not found"));
+        when(bandOfferFacade.acceptBandOffer(1L)).thenThrow(new BandOfferNotFoundException(1L));
 
         ResponseEntity<BandOfferDto> response = controller.acceptBandOffer(1L);
 
@@ -100,7 +100,7 @@ public class BandOfferRestControllerTest {
 
     @Test
     void testRevokeBandOffer_NotFound() {
-        doThrow(new ResourceNotFoundException("Not found"))
+        doThrow(new BandOfferNotFoundException(1L))
                 .when(bandOfferFacade).revokeOffer(1L);
 
         ResponseEntity<Void> response = controller.revokeBandOffer(1L);

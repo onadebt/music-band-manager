@@ -2,7 +2,7 @@ package cz.muni.fi.bandmanagementservice.rest;
 
 import cz.muni.fi.bandmanagementservice.dto.BandDto;
 import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
-import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
+import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
 import cz.muni.fi.bandmanagementservice.facade.BandFacade;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,7 +55,7 @@ public class BandRestControllerTest {
 
     @Test
     void testGetBand_NotFound() {
-        when(bandFacade.getBand(1L)).thenThrow(new ResourceNotFoundException("Not found"));
+        when(bandFacade.getBand(1L)).thenThrow(new BandNotFoundException(1L));
 
         ResponseEntity<BandDto> response = controller.getBand(1L);
 
@@ -77,7 +77,7 @@ public class BandRestControllerTest {
     @Test
     void testUpdateBand_NotFound() {
         BandInfoUpdateRequest updateRequest = new BandInfoUpdateRequest();
-        when(bandFacade.updateBand(updateRequest)).thenThrow(new ResourceNotFoundException("Not found"));
+        when(bandFacade.updateBand(updateRequest)).thenThrow(new BandNotFoundException(null));
 
         ResponseEntity<BandDto> response = controller.updateBand(updateRequest);
 
@@ -108,7 +108,7 @@ public class BandRestControllerTest {
 
     @Test
     void testRemoveMember_NotFound() {
-        when(bandFacade.removeMember(1L, 2L)).thenThrow(new ResourceNotFoundException("Not found"));
+        when(bandFacade.removeMember(1L, 2L)).thenThrow(new BandNotFoundException(1L));
 
         ResponseEntity<BandDto> response = controller.removeMember(1L, 2L);
 
@@ -128,7 +128,7 @@ public class BandRestControllerTest {
 
     @Test
     void testAddMember_NotFound() {
-        when(bandFacade.addMember(1L, 2L)).thenThrow(new ResourceNotFoundException("Not found"));
+        when(bandFacade.addMember(1L, 2L)).thenThrow(new BandNotFoundException(1L));
 
         ResponseEntity<BandDto> response = controller.addMember(1L, 2L);
 
