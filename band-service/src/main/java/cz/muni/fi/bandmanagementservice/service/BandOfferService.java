@@ -1,6 +1,7 @@
 package cz.muni.fi.bandmanagementservice.service;
 
 import cz.muni.fi.bandmanagementservice.artemis.BandOfferEventProducer;
+import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
 import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.model.Band;
@@ -46,7 +47,7 @@ public class BandOfferService {
     public BandOffer createBandOffer(Long bandId, Long invitedMusicianId, Long offeringManagerId) {
         Optional<Band> maybeOfferedBand = bandRepository.findById(bandId);
         if (maybeOfferedBand.isEmpty()) {
-            throw new InvalidOperationException("Band with id %s does not exist".formatted(bandId));
+            throw new BandNotFoundException(bandId);
         }
         Band offeredBand = maybeOfferedBand.get();
         if (!offeredBand.getManagerId().equals(offeringManagerId)) {

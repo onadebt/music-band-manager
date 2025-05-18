@@ -49,7 +49,8 @@ public class BandOfferRestController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Band Offer created", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "400", description = "Cannot create given band offer")
+            @ApiResponse(responseCode = "400", description = "Cannot create given band offer"),
+            @ApiResponse(responseCode = "404", description = "Band not found")
     })
     public ResponseEntity<BandOfferDto> createBandOffer(@RequestParam Long bandId,
                                                         @RequestParam Long invitedMusicianId,
@@ -58,6 +59,8 @@ public class BandOfferRestController {
             return new ResponseEntity<>(bandOfferFacade.postBandOffer(bandId, invitedMusicianId, offeringManagerId), HttpStatus.CREATED);
         } catch (InvalidOperationException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (BandOfferNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

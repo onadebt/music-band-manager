@@ -1,6 +1,7 @@
 package cz.muni.fi.bandmanagementservice.service;
 
 import cz.muni.fi.bandmanagementservice.artemis.BandOfferEventProducer;
+import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
 import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
 import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.model.Band;
@@ -84,6 +85,13 @@ class BandOfferServiceTest {
 
         assertThrows(InvalidOperationException.class, () -> bandOfferService.createBandOffer(1L, 2L, 3L));
         verify(bandRepository).findById(1L);
+    }
+
+    @Test
+    void testCreateBandOffer_InvalidBandId(){
+        when(bandRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(BandNotFoundException.class, () -> bandOfferService.createBandOffer(1L, 2L, 3L));
     }
 
     @Test
