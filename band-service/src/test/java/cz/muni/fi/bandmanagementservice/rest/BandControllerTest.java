@@ -23,12 +23,12 @@ import static org.mockito.Mockito.when;
  * Created by Ivan Yatskiv, changed during refactor by Tomáš Marek
  */
 @ExtendWith(MockitoExtension.class)
-public class BandRestControllerTest {
+public class BandControllerTest {
     @Mock
     private BandFacade bandFacade;
 
     @InjectMocks
-    private BandRestController controller;
+    private BandController controller;
 
 
     @Test

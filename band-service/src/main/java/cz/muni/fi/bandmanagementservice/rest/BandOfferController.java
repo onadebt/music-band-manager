@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/bands/offers")
 @Tag(name="Band Offer API", description = "API for managing band join offers")
-public class BandOfferRestController {
+public class BandOfferController {
     private static final String GENERAL_SCOPE = "test_1";
     private static final String MANAGER_SCOPE = "test_2";
     private static final String MUSICIAN_SCOPE = "test_3";
@@ -37,7 +37,7 @@ public class BandOfferRestController {
     private final BandOfferFacade bandOfferFacade;
 
     @Autowired
-    BandOfferRestController(BandOfferFacade bandOfferFacade){
+    BandOfferController(BandOfferFacade bandOfferFacade){
         this.bandOfferFacade = bandOfferFacade;
     }
 

@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(DisableSecurityTestConfig.class)
 @Transactional
 @ActiveProfiles("test")
-class BandOfferRestControllerIT {
+class BandOfferControllerIT {
 
     @Autowired
     private MockMvc mockMvc;

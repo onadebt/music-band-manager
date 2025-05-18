@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(DisableSecurityTestConfig.class)
 @Transactional
 @ActiveProfiles("test")
-class BandRestControllerIT {
+class BandControllerIT {
 
     @Autowired
     MockMvc mockMvc;

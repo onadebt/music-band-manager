@@ -22,12 +22,12 @@ import static org.mockito.Mockito.when;
  * Created by Ivan Yatskiv, changed during refactor by Tomáš Marek
  */
 @ExtendWith(MockitoExtension.class)
-public class BandOfferRestControllerTest {
+public class BandOfferControllerTest {
     @Mock
     BandOfferFacade bandOfferFacade;
 
     @InjectMocks
-    BandOfferRestController controller;
+    BandOfferController controller;
 
     @Test
     void testGetBandOffer_Success() {
