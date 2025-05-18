@@ -1,5 +1,6 @@
 package cz.muni.fi.bandmanagementservice.dto;
 
+import cz.muni.fi.shared.enm.BandOfferStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,12 +27,6 @@ public class BandOfferDto {
     @Schema(description = "id of offer manager")
     private Long offeringManagerId;
 
-    public enum StatusEnum {
-        PENDING(),
-        ACCEPTED(),
-        REJECTED();
-    }
-
     @Schema(description = "status of the offer")
-    private StatusEnum status;
+    private BandOfferStatus status;
 }

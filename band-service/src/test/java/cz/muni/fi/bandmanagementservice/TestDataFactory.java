@@ -7,6 +7,8 @@ import cz.muni.fi.bandmanagementservice.model.BandOffer;
 
 import java.util.Set;
 
+import static cz.muni.fi.shared.enm.BandOfferStatus.PENDING;
+
 public class TestDataFactory {
 
     public static Band setUpBand1() {
@@ -70,7 +72,7 @@ public class TestDataFactory {
         bandOfferDto.setBandId(1L);
         bandOfferDto.setInvitedMusicianId(1L);
         bandOfferDto.setOfferingManagerId(1L);
-        bandOfferDto.setStatus(BandOfferDto.StatusEnum.PENDING);
+        bandOfferDto.setStatus(PENDING);
         return bandOfferDto;
     }
 
@@ -89,7 +91,7 @@ public class TestDataFactory {
         bandOfferDto.setBandId(2L);
         bandOfferDto.setInvitedMusicianId(2L);
         bandOfferDto.setOfferingManagerId(2L);
-        bandOfferDto.setStatus(BandOfferDto.StatusEnum.PENDING);
+        bandOfferDto.setStatus(PENDING);
         return bandOfferDto;
     }
 }
