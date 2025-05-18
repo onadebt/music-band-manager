@@ -9,6 +9,8 @@ import cz.muni.fi.bandmanagementservice.dto.BandDto;
 import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +18,8 @@ import java.util.stream.Collectors;
 /**
  * @author Tomáš MAREK
  */
-@Component
+@Service
+@Transactional
 public class BandFacade {
     private final BandService bandService;
     private final BandMapper bandMapper;
@@ -34,6 +37,7 @@ public class BandFacade {
         return bandMapper.toDto(band);
     }
 
+    @Transactional(readOnly = true)
     public BandDto getBand(Long id) {
         return bandMapper.toDto(bandService.getBand(id));
     }
@@ -43,6 +47,7 @@ public class BandFacade {
         return bandMapper.toDto(bandService.updateBand(bandInfoUpdate));
     }
 
+    @Transactional(readOnly = true)
     public List<BandDto> getAllBands(){
         return bandService.getAllBands().stream().map(bandMapper::toDto).collect(Collectors.toList());
     }

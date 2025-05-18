@@ -5,6 +5,8 @@ import cz.muni.fi.bandmanagementservice.service.BandOfferService;
 import cz.muni.fi.bandmanagementservice.dto.BandOfferDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,7 +14,8 @@ import java.util.stream.Collectors;
 /**
  * @author Tomáš MAREK
  */
-@Component
+@Service
+@Transactional
 public class BandOfferFacade {
     private final BandOfferService bandOfferService;
     private final BandOfferMapper bandOfferMapper;
@@ -23,8 +26,7 @@ public class BandOfferFacade {
         this.bandOfferMapper = bandOfferMapper;
     }
 
-
-
+    @Transactional(readOnly = true)
     public BandOfferDto getBandOffer(Long offerId) {
         return bandOfferMapper.toDto(bandOfferService.getBandOffer(offerId));
     }
@@ -45,17 +47,18 @@ public class BandOfferFacade {
         bandOfferService.revokeOffer(offerId);
     }
 
+    @Transactional(readOnly = true)
     public List<BandOfferDto> getAllBandOffers(){
         return bandOfferService.getAllBandOffers().stream().map(bandOfferMapper::toDto).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<BandOfferDto> getBandOffersByBandId(Long bandId){
         return bandOfferService.getBandOffersByBandId(bandId).stream().map(bandOfferMapper::toDto).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<BandOfferDto> getBandOffersByInvitedMusicianId(Long invitedMusicianId){
         return bandOfferService.getBandOfferByInvitedMusicianId(invitedMusicianId).stream().map(bandOfferMapper::toDto).collect(Collectors.toList());
     }
-
-
 }
