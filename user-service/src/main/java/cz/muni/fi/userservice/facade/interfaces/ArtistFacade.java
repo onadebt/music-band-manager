@@ -23,7 +23,7 @@ public interface ArtistFacade {
 
     ArtistDto update(Long id, ArtistUpdateDto artistUpdateDto);
 
-    ArtistDto linkArtistToBand(Long artistId, Long bandId);
+    ArtistDto linkArtistToBand(Long bandId, Long artistId);
 
-    ArtistDto unlinkArtistFromBand(Long artistId, Long bandId);
+    ArtistDto unlinkArtistFromBand(Long bandId, Long artistId);
 }

@@ -1,5 +1,7 @@
 package cz.muni.fi.userservice.service;
 
+import cz.muni.fi.userservice.exception.ArtistAlreadyInBandException;
+import cz.muni.fi.userservice.exception.ArtistNotInBandException;
 import cz.muni.fi.userservice.exception.UserAlreadyExistsException;
 import cz.muni.fi.userservice.exception.UserNotFoundException;
 import cz.muni.fi.userservice.model.Artist;
@@ -88,16 +90,24 @@ public class ArtistServiceImpl implements ArtistService {
         return artistRepository.save(existingArtist);
     }
 
-    public Artist linkArtistToBand(Long artistId, Long bandId) {
+    public Artist linkArtistToBand(Long bandId, Long artistId) {
         Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new UserNotFoundException(artistId));
+        if (artist.getBandIds().contains(bandId)) {
+            throw new ArtistAlreadyInBandException(bandId, artistId);
+        }
+
         Set<Long> bandIds = artist.getBandIds();
         bandIds.add(bandId);
         artist.setBandIds(bandIds);
         return artistRepository.save(artist);
     }
 
-    public Artist unlinkArtistFromBand(Long artistId, Long bandId) {
+    public Artist unlinkArtistFromBand(Long bandId, Long artistId) {
         Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new UserNotFoundException(artistId));
+        if (!artist.getBandIds().contains(bandId)) {
+            throw new ArtistNotInBandException(bandId, artistId);
+        }
+
         Set<Long> bandIds = artist.getBandIds();
         bandIds.remove(bandId);
         artist.setBandIds(bandIds);

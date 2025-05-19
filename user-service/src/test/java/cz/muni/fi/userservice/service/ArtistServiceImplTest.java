@@ -223,7 +223,7 @@ public class ArtistServiceImplTest {
         Mockito.when(artistRepository.findById(invalidId)).thenReturn(Optional.empty());
 
         // Act / Assert
-        assertThrows(UserNotFoundException.class, () -> artistServiceImpl.linkArtistToBand(invalidId, bandId));
+        assertThrows(UserNotFoundException.class, () -> artistServiceImpl.linkArtistToBand(bandId, invalidId));
     }
 
     @Test
@@ -234,6 +234,6 @@ public class ArtistServiceImplTest {
         Mockito.when(artistRepository.findById(invalidId)).thenReturn(Optional.empty());
 
         // Act / Assert
-        assertThrows(UserNotFoundException.class, () -> artistServiceImpl.unlinkArtistFromBand(invalidId, bandId));
+        assertThrows(UserNotFoundException.class, () -> artistServiceImpl.unlinkArtistFromBand(bandId, invalidId));
     }
 }

@@ -112,21 +112,21 @@ public class ArtistFacadeImpl implements ArtistFacade {
         return artistMapper.toDto(updatedArtist);
     }
 
-    public ArtistDto linkArtistToBand(Long artistId, Long bandId) {
+    public ArtistDto linkArtistToBand(Long bandId, Long artistId) {
         if (artistId == null || bandId == null) {
             throw new IllegalArgumentException("Artist ID and Band ID cannot be null");
         }
 
-        artistService.linkArtistToBand(artistId, bandId);
+        artistService.linkArtistToBand(bandId, artistId);
         return findById(artistId);
     }
 
-    public ArtistDto unlinkArtistFromBand(Long artistId, Long bandId) {
+    public ArtistDto unlinkArtistFromBand(Long bandId, Long artistId) {
         if (artistId == null || bandId == null) {
             throw new IllegalArgumentException("Artist ID and Band ID cannot be null");
         }
 
-        artistService.unlinkArtistFromBand(artistId, bandId);
+        artistService.unlinkArtistFromBand(bandId, artistId);
         return findById(artistId);
     }
 }

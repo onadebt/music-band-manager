@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +48,7 @@ public class ArtistController {
             @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json")),
     })
-    public ResponseEntity<ArtistDto> register(@Valid @RequestBody ArtistDto artistDTO) {
+    public ResponseEntity<ArtistDto> register(@NotNull @Valid @RequestBody ArtistDto artistDTO) {
         return ResponseEntity.ok(artistFacade.register(artistDTO));
     }
 
@@ -65,7 +66,7 @@ public class ArtistController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
 
     })
-    public ResponseEntity<ArtistDto> update(@PathVariable Long id, @RequestBody ArtistUpdateDto artistUpdateDto) {
+    public ResponseEntity<ArtistDto> update(@NotNull @PathVariable Long id, @NotNull @RequestBody ArtistUpdateDto artistUpdateDto) {
         return ResponseEntity.ok(artistFacade.update(id, artistUpdateDto));
     }
 
@@ -95,7 +96,7 @@ public class ArtistController {
             @ApiResponse(responseCode = "200", description = "Artist found"),
             @ApiResponse(responseCode = "404", description = "Artist not found", content = @Content(mediaType = "application/problem+json"))
     })
-    public ResponseEntity<ArtistDto> getArtistById(@PathVariable Long id) {
+    public ResponseEntity<ArtistDto> getArtistById(@NotNull @PathVariable Long id) {
         return ResponseEntity.ok(artistFacade.findById(id));
     }
 
@@ -109,7 +110,7 @@ public class ArtistController {
             @ApiResponse(responseCode = "204", description = "Artist deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Artist not found", content = @Content(mediaType = "application/problem+json"))
     })
-    public ResponseEntity<Void> deleteArtist(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteArtist(@NotNull @PathVariable Long id) {
         artistFacade.deleteById(id);
         return ResponseEntity.noContent().build();
     }
@@ -124,7 +125,7 @@ public class ArtistController {
             @ApiResponse(responseCode = "200", description = "Artist found"),
             @ApiResponse(responseCode = "404", description = "Artist not found", content = @Content(mediaType = "application/problem+json"))
     })
-    public ResponseEntity<ArtistDto> getArtistByUsername(@PathVariable String username) {
+    public ResponseEntity<ArtistDto> getArtistByUsername(@NotNull @PathVariable String username) {
         return ResponseEntity.ok(artistFacade.findByUsername(username));
     }
 
@@ -140,7 +141,7 @@ public class ArtistController {
             @ApiResponse(responseCode = "404", description = "Artist not found", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<ArtistDto> updateBands(@PathVariable Long artistId, @RequestBody Set<Long> bandIds) {
+    public ResponseEntity<ArtistDto> updateBands(@NotNull @PathVariable Long artistId, @NotNull @RequestBody Set<Long> bandIds) {
         return ResponseEntity.ok(artistFacade.updateBandIds(artistId, bandIds));
     }
 
@@ -156,8 +157,8 @@ public class ArtistController {
             @ApiResponse(responseCode = "404", description = "Artist or band not found", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<ArtistDto> linkArtistToBand(@PathVariable Long artistId, @PathVariable Long bandId) {
-        ArtistDto artistDto = artistFacade.linkArtistToBand(artistId, bandId);
+    public ResponseEntity<ArtistDto> linkArtistToBand(@NotNull @PathVariable Long artistId, @NotNull @PathVariable Long bandId) {
+        ArtistDto artistDto = artistFacade.linkArtistToBand(bandId, artistId);
         return ResponseEntity.ok(artistDto);
     }
 
@@ -173,8 +174,8 @@ public class ArtistController {
             @ApiResponse(responseCode = "404", description = "Artist or band not found", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<ArtistDto> unlinkArtistFromBand(@PathVariable Long artistId, @PathVariable Long bandId) {
-        ArtistDto artistDto = artistFacade.unlinkArtistFromBand(artistId, bandId);
+    public ResponseEntity<ArtistDto> unlinkArtistFromBand(@NotNull @PathVariable Long artistId, @NotNull @PathVariable Long bandId) {
+        ArtistDto artistDto = artistFacade.unlinkArtistFromBand(bandId, artistId);
         return ResponseEntity.ok(artistDto);
     }
 
@@ -189,7 +190,7 @@ public class ArtistController {
             @ApiResponse(responseCode = "400", description = "Invalid band IDs provided", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json"))
     })
-    public ResponseEntity<List<ArtistDto>> getArtistsByBandIds(@RequestParam Set<Long> bandIds) {
+    public ResponseEntity<List<ArtistDto>> getArtistsByBandIds(@NotNull @RequestParam Set<Long> bandIds) {
         return ResponseEntity.ok(artistFacade.findByBandIds(bandIds));
     }
 }

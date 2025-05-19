@@ -22,7 +22,7 @@ public interface ArtistService {
 
     Artist updateArtist(Long id, Artist artist);
 
-    Artist linkArtistToBand(Long artistId, Long bandId);
+    Artist linkArtistToBand(Long bandId, Long artistId);
 
-    Artist unlinkArtistFromBand(Long artistId, Long bandId);
+    Artist unlinkArtistFromBand(Long bandId, Long artistId);
 }
