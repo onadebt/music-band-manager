@@ -59,7 +59,6 @@ public class BandOfferService {
         if (pendingOfferExists(invitedMusicianId, bandId)) {
             throw new InvalidOperationException("There is already a pending band offer for given musician and band");
         }
-        // TODO verify manager and musician
         BandOffer newOffer = new BandOffer(null, bandId, invitedMusicianId, offeringManagerId);
         return bandOfferRepository.save(newOffer);
     }
