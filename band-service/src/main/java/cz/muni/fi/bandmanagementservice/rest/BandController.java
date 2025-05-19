@@ -3,7 +3,7 @@ package cz.muni.fi.bandmanagementservice.rest;
 import cz.muni.fi.bandmanagementservice.config.OpenAPIConfig;
 import cz.muni.fi.bandmanagementservice.facade.BandFacade;
 import cz.muni.fi.bandmanagementservice.dto.BandDto;
-import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
+import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -79,8 +79,8 @@ public class BandController {
             @ApiResponse(responseCode = "404", description = "Updated band not found", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "400", description = "Band could not be updated", content = @Content(mediaType = "application/problem+json"))
     })
-    public ResponseEntity<BandDto> updateBand(@RequestBody @Valid BandInfoUpdateRequest bandInfoUpdateRequest) {
-        return new ResponseEntity<>(bandFacade.updateBand(bandInfoUpdateRequest), HttpStatus.OK);
+    public ResponseEntity<BandDto> updateBand(@RequestBody @Valid BandInfoUpdateDto bandInfoUpdateDto) {
+        return new ResponseEntity<>(bandFacade.updateBand(bandInfoUpdateDto), HttpStatus.OK);
     }
 
     @GetMapping

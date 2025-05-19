@@ -2,7 +2,7 @@ package cz.muni.fi.bandmanagementservice.rest.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.muni.fi.bandmanagementservice.artemis.BandEventProducer;
-import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
+import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import cz.muni.fi.bandmanagementservice.rest.it.config.DisableSecurityTestConfig;
@@ -87,7 +87,7 @@ class BandControllerIT {
                 .managerId(42L)
                 .build());
 
-        BandInfoUpdateRequest request = new BandInfoUpdateRequest();
+        BandInfoUpdateDto request = new BandInfoUpdateDto();
         request.setId(band.getId());
         request.setName("Updated Band");
         request.setMusicalStyle("Mongolian rap");
@@ -101,7 +101,7 @@ class BandControllerIT {
 
     @Test
     void updateBand_notFound() throws Exception {
-        BandInfoUpdateRequest request = new BandInfoUpdateRequest();
+        BandInfoUpdateDto request = new BandInfoUpdateDto();
         request.setId(999L);
         request.setName("Updated Band");
         request.setMusicalStyle("POP");

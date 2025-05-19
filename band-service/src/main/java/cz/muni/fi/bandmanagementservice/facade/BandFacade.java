@@ -6,7 +6,7 @@ import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.mappers.BandMapper;
 import cz.muni.fi.bandmanagementservice.service.BandService;
 import cz.muni.fi.bandmanagementservice.dto.BandDto;
-import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
+import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +41,7 @@ public class BandFacade {
         return bandMapper.toDto(bandService.getBand(id));
     }
 
-    public BandDto updateBand(BandInfoUpdateRequest request){
+    public BandDto updateBand(BandInfoUpdateDto request){
         BandInfoUpdate bandInfoUpdate = bandInfoUpdateMapper.toEntity(request);
         return bandMapper.toDto(bandService.updateBand(bandInfoUpdate));
     }

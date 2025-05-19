@@ -1,7 +1,7 @@
 package cz.muni.fi.bandmanagementservice.rest;
 
 import cz.muni.fi.bandmanagementservice.dto.BandDto;
-import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
+import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
 import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
 import cz.muni.fi.bandmanagementservice.facade.BandFacade;
 import org.junit.jupiter.api.Test;
@@ -65,7 +65,7 @@ public class BandControllerTest {
     @Test
     void testUpdateBand_Success() {
         BandDto updatedBand = new BandDto();
-        BandInfoUpdateRequest updateRequest = new BandInfoUpdateRequest();
+        BandInfoUpdateDto updateRequest = new BandInfoUpdateDto();
         when(bandFacade.updateBand(updateRequest)).thenReturn(updatedBand);
 
         ResponseEntity<BandDto> response = controller.updateBand(updateRequest);
@@ -76,7 +76,7 @@ public class BandControllerTest {
 
     @Test
     void testUpdateBand_NotFound() {
-        BandInfoUpdateRequest updateRequest = new BandInfoUpdateRequest();
+        BandInfoUpdateDto updateRequest = new BandInfoUpdateDto();
         when(bandFacade.updateBand(updateRequest)).thenThrow(new BandNotFoundException(null));
 
         assertThrows(BandNotFoundException.class, () -> controller.updateBand(updateRequest));

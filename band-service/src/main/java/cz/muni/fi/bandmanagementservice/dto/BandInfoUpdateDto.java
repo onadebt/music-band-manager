@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Schema(title = "Request for change of band information", description = "Object containing newly updated band info, except members which are updated through dedicated api")
-public class BandInfoUpdateRequest {
+public class BandInfoUpdateDto {
     @Schema(description = "band id")
     @NotNull
     private Long id;

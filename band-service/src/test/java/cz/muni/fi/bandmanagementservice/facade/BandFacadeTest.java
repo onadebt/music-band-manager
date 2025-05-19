@@ -1,25 +1,21 @@
 package cz.muni.fi.bandmanagementservice.facade;
 
 import cz.muni.fi.bandmanagementservice.TestDataFactory;
+import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
 import cz.muni.fi.bandmanagementservice.mappers.BandInfoUpdateMapper;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.mappers.BandMapper;
 import cz.muni.fi.bandmanagementservice.dto.BandDto;
-import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
 import cz.muni.fi.bandmanagementservice.service.BandService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -68,7 +64,7 @@ public class BandFacadeTest {
 
     @Test
     public void testUpdateBand() {
-        BandInfoUpdateRequest request = new BandInfoUpdateRequest();
+        BandInfoUpdateDto request = new BandInfoUpdateDto();
         request.setId(1L);
         request.setName("Updated Band");
         request.setMusicalStyle("Jazz");
