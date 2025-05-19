@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.UUID;
 
 @Builder
 @Getter
@@ -11,10 +12,11 @@ import java.io.Serializable;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class BandAddMemberEvent implements Serializable {
+public class ArtistLinkFailedEvent implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     private Long bandId;
-    private Long memberId;
+    private Long artistId;
+    private UUID sagaId;
 }
