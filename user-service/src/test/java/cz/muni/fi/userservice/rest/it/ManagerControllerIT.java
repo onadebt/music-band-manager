@@ -99,7 +99,7 @@ class ManagerControllerIT {
     }
 
     @Test
-    void getAllManagers_noArtists_returnsEmptyList() throws Exception {
+    void getAllManagers_noManagers_returnsEmptyList() throws Exception {
         // Act
         mockMvc.perform(get("/api/managers"))
                 .andExpect(status().isOk())
@@ -220,7 +220,7 @@ class ManagerControllerIT {
 
 
     @Test
-    void getManagersByBandIds_fitsAllArtist_returnOkAndAllArtists() throws Exception {
+    void getManagersByBandIds_fitsAllManagers_returnOkAndAllManagers() throws Exception {
         // Arrange
         Manager manager1 = TestDataFactory.setUpTestManager1();
         Manager manager2 = TestDataFactory.setUpTestManager2();
