@@ -1,8 +1,10 @@
 package cz.muni.fi.bandmanagementservice;
 
 import cz.muni.fi.bandmanagementservice.dto.BandDto;
+import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
 import cz.muni.fi.bandmanagementservice.dto.BandOfferDto;
 import cz.muni.fi.bandmanagementservice.model.Band;
+import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.model.BandOffer;
 
 import java.util.Set;
@@ -53,6 +55,14 @@ public class TestDataFactory {
         bandDto.setManagerId(2L);
         bandDto.setMembers(Set.of(4L, 5L, 6L));
         return bandDto;
+    }
+
+    public static BandInfoUpdateDto setUpBandInfoUpdateDto1() {
+        BandInfoUpdateDto bandInfoUpdateDto = new BandInfoUpdateDto();
+        bandInfoUpdateDto.setName("Updated Band 1");
+        bandInfoUpdateDto.setMusicalStyle("Updated Rock");
+        bandInfoUpdateDto.setLogoUrl("http://example.com/updated_logo1.png");
+        return bandInfoUpdateDto;
     }
 
 
