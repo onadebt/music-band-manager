@@ -1,12 +1,11 @@
 package cz.muni.fi.bandmanagementservice.facade;
 
 import cz.muni.fi.bandmanagementservice.TestDataFactory;
-import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
-import cz.muni.fi.bandmanagementservice.mappers.BandInfoUpdateMapper;
-import cz.muni.fi.bandmanagementservice.model.Band;
-import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
-import cz.muni.fi.bandmanagementservice.mappers.BandMapper;
 import cz.muni.fi.bandmanagementservice.dto.BandDto;
+import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
+import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
+import cz.muni.fi.bandmanagementservice.mappers.BandMapper;
+import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.service.BandService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,16 +16,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class BandFacadeTest {
-    @Mock
-    private BandMapper bandMapper;
 
     @Mock
-    private BandInfoUpdateMapper bandInfoUpdateMapper;
+    private BandMapper bandMapper;
 
     @Mock
     private BandService bandService;
@@ -34,98 +32,150 @@ public class BandFacadeTest {
     @InjectMocks
     private BandFacade bandFacade;
 
-
-
     @Test
-    public void testCreateBand() {
+    void createBand_validData_returnsCreatedBandDto() {
         Band band = TestDataFactory.setUpBand1();
         BandDto dto = TestDataFactory.setUpBandDto1();
+
+        when(bandService.createBand(band.getName(), band.getMusicalStyle(), band.getManagerId())).thenReturn(band);
         when(bandMapper.toDto(band)).thenReturn(dto);
-        when(bandService.createBand("Band 1", "Rock", 1L)).thenReturn(band);
 
-        BandDto bandDto = bandFacade.createBand("Band 1", "Rock", 1L);
+        BandDto result = bandFacade.createBand(band.getName(), band.getMusicalStyle(), band.getManagerId());
 
-        assertEquals("Band 1", bandDto.getName());
-        verify(bandService, times(1)).createBand("Band 1", "Rock", 1L);
+        assertEquals(band.getName(), result.getName());
+        verify(bandService).createBand(band.getName(), band.getMusicalStyle(), band.getManagerId());
+        verify(bandMapper).toDto(band);
     }
 
     @Test
-    public void testGetBand() {
+    void getBand_existingId_returnsBandDto() {
         Band band = TestDataFactory.setUpBand1();
         BandDto dto = TestDataFactory.setUpBandDto1();
-        when(bandService.getBand(1L)).thenReturn(band);
+
+        when(bandService.getBand(band.getId())).thenReturn(band);
         when(bandMapper.toDto(band)).thenReturn(dto);
 
-        BandDto bandDto = bandFacade.getBand(1L);
+        BandDto result = bandFacade.getBand(band.getId());
 
-        assertEquals("Band 1", bandDto.getName());
-        verify(bandService, times(1)).getBand(1L);
+        assertEquals(dto.getName(), result.getName());
+        verify(bandService).getBand(band.getId());
+        verify(bandMapper).toDto(band);
     }
 
     @Test
-    public void testUpdateBand() {
-        BandInfoUpdateDto request = new BandInfoUpdateDto();
-        request.setId(1L);
-        request.setName("Updated Band");
-        request.setMusicalStyle("Jazz");
-        request.setLogoUrl(null);
-        request.setManagerId(2L);
+    void updateBand_validIdAndRequest_returnsUpdatedBandDto() {
+        Long id = 1L;
+        BandInfoUpdateDto request = TestDataFactory.setUpBandInfoUpdateDto1();
+        Band bandEntity = TestDataFactory.setUpBand1();
+        BandDto updatedDto = TestDataFactory.setUpBandDto1();
 
-        BandInfoUpdate infoUpdate = new BandInfoUpdate(1L, "Updated Band", "Jazz", 2L, null);
+        when(bandMapper.toEntity(request)).thenReturn(bandEntity);
+        when(bandService.updateBand(id, bandEntity)).thenReturn(bandEntity);
+        when(bandMapper.toDto(bandEntity)).thenReturn(updatedDto);
 
-        Band updatedBand = new Band(1L, "Updated Band", "Jazz", 2L);
-        BandDto updatedBandDto = new BandDto();
-        updatedBandDto.setId(1L);
-        updatedBandDto.setName("Updated Band");
-        updatedBandDto.setMusicalStyle("Jazz");
-        updatedBandDto.setLogo(null);
+        BandDto result = bandFacade.updateBand(id, request);
 
-        when(bandMapper.toDto(updatedBand)).thenReturn(updatedBandDto);
-        when(bandInfoUpdateMapper.toEntity(request)).thenReturn(infoUpdate);
-        when(bandService.updateBand(infoUpdate)).thenReturn(updatedBand);
-
-        BandDto bandDto = bandFacade.updateBand(request);
-
-        assertEquals("Updated Band", bandDto.getName());
-        verify(bandService, times(1)).updateBand(infoUpdate);
+        assertEquals(updatedDto.getName(), result.getName());
+        verify(bandService).updateBand(id, bandEntity);
+        verify(bandMapper).toDto(bandEntity);
     }
 
     @Test
-    public void testGetAllBands() {
-        Band band = new Band(1L, "Band Name", "Rock", 1L);
-        when(bandService.getAllBands()).thenReturn(Collections.singletonList(band));
+    void getAllBands_bandsExist_returnsListOfBandDtos() {
+        Band band = TestDataFactory.setUpBand1();
+        BandDto dto = TestDataFactory.setUpBandDto1();
 
-        List<BandDto> bands = bandFacade.getAllBands();
+        when(bandService.getAllBands()).thenReturn(List.of(band));
+        when(bandMapper.toDto(band)).thenReturn(dto);
 
-        assertEquals(1, bands.size());
-        verify(bandService, times(1)).getAllBands();
+        List<BandDto> result = bandFacade.getAllBands();
+
+        assertEquals(1, result.size());
+        assertEquals(band.getName(), result.getFirst().getName());
+        verify(bandService).getAllBands();
     }
 
     @Test
-    public void testAddMember() {
+    void addMember_validBandAndMember_returnsUpdatedBandDto() {
         Band band = TestDataFactory.setUpBand1();
         BandDto dto = TestDataFactory.setUpBandDto1();
 
         when(bandService.addMember(1L, 2L)).thenReturn(band);
         when(bandMapper.toDto(band)).thenReturn(dto);
 
-        BandDto bandDto = bandFacade.addMember(1L, 2L);
+        BandDto result = bandFacade.addMember(1L, 2L);
 
-        assertEquals("Band 1", bandDto.getName());
-        verify(bandService, times(1)).addMember(1L, 2L);
+        assertEquals(band.getName(), result.getName());
+        verify(bandService).addMember(1L, 2L);
     }
 
     @Test
-    public void testRemoveMember() {
+    void removeMember_validBandAndMember_returnsUpdatedBandDto() {
         Band band = TestDataFactory.setUpBand1();
         BandDto dto = TestDataFactory.setUpBandDto1();
 
-        when(bandMapper.toDto(band)).thenReturn(dto);
         when(bandService.removeMember(1L, 2L)).thenReturn(band);
+        when(bandMapper.toDto(band)).thenReturn(dto);
 
-        BandDto bandDto = bandFacade.removeMember(1L, 2L);
+        BandDto result = bandFacade.removeMember(1L, 2L);
 
-        assertEquals("Band 1", bandDto.getName());
-        verify(bandService, times(1)).removeMember(1L, 2L);
+        assertEquals(band.getName(), result.getName());
+        verify(bandService).removeMember(1L, 2L);
+    }
+
+    @Test
+    void getBand_bandNotFound_throwsException() {
+        Long invalidId = 999L;
+
+        when(bandService.getBand(invalidId)).thenThrow(new BandNotFoundException(invalidId));
+
+        assertThrows(BandNotFoundException.class, () -> bandFacade.getBand(invalidId));
+        verify(bandService).getBand(invalidId);
+    }
+
+    @Test
+    void updateBand_bandDoesNotExist_throwsException() {
+        Long invalidId = 99L;
+        BandInfoUpdateDto request = TestDataFactory.setUpBandInfoUpdateDto1();
+        Band bandEntity = TestDataFactory.setUpBand1();
+
+        when(bandMapper.toEntity(request)).thenReturn(bandEntity);
+        when(bandService.updateBand(invalidId, bandEntity)).thenThrow(new BandNotFoundException(invalidId));
+
+        assertThrows(BandNotFoundException.class, () -> bandFacade.updateBand(invalidId, request));
+        verify(bandService).updateBand(invalidId, bandEntity);
+    }
+
+    @Test
+    void getAllBands_noBandsExist_returnsEmptyList() {
+        when(bandService.getAllBands()).thenReturn(Collections.emptyList());
+
+        List<BandDto> result = bandFacade.getAllBands();
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(bandService).getAllBands();
+    }
+
+    @Test
+    void addMember_bandDoesNotExist_throwsException() {
+        Long invalidId = 999L;
+        Long memberId = 1L;
+
+        when(bandService.addMember(invalidId, memberId)).thenThrow(new BandNotFoundException(invalidId));
+
+        assertThrows(BandNotFoundException.class, () -> bandFacade.addMember(invalidId, memberId));
+        verify(bandService).addMember(invalidId, memberId);
+    }
+
+    @Test
+    void removeMember_memberNotInBand_throwsException() {
+        Long bandId = 1L;
+        Long memberId = 999L;
+
+        when(bandService.removeMember(bandId, memberId)).thenThrow(new BandNotFoundException(memberId));
+
+        assertThrows(BandNotFoundException.class, () -> bandFacade.removeMember(bandId, memberId));
+        verify(bandService).removeMember(bandId, memberId);
     }
 }

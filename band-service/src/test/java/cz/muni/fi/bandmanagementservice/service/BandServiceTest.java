@@ -1,124 +1,172 @@
 package cz.muni.fi.bandmanagementservice.service;
 
 import cz.muni.fi.bandmanagementservice.TestDataFactory;
-import cz.muni.fi.bandmanagementservice.artemis.BandEventProducer;
 import cz.muni.fi.bandmanagementservice.exceptions.BandAlreadyExistsException;
+import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
+import cz.muni.fi.bandmanagementservice.exceptions.MusicianAlreadyInBandException;
+import cz.muni.fi.bandmanagementservice.exceptions.MusicianNotInBandException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class BandServiceTest {
 
     @Mock
     private BandRepository bandRepository;
 
-    @Mock
-    private BandEventProducer bandEventProducer;
-
     @InjectMocks
     private BandService bandService;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
-    public void testCreateBand() {
-        Band band = new Band(1L, "Band Name", "Rock", 1L);
+    void createBand_uniqueName_savesAndReturnsBand() {
+        Band band = TestDataFactory.setUpBand1();
+        when(bandRepository.findByName(band.getName())).thenReturn(Optional.empty());
         when(bandRepository.save(any(Band.class))).thenReturn(band);
 
-        Band createdBand = bandService.createBand("Band Name", "Rock", 1L);
+        Band result = bandService.createBand(band.getName(), band.getMusicalStyle(), band.getManagerId());
 
-        assertEquals("Band Name", createdBand.getName());
-        verify(bandRepository, times(1)).save(any(Band.class));
+        assertEquals(band.getName(), result.getName());
+        verify(bandRepository).findByName(band.getName());
+        verify(bandRepository).save(any(Band.class));
     }
 
     @Test
-    void testCreateBand_namedAlreadyUsed_throwsException() {
-        Band presentBand = TestDataFactory.setUpBand1();
-        String usedName = presentBand.getName();
-        when(bandRepository.findByName(usedName)).thenReturn(Optional.of(presentBand));
+    void createBand_nameAlreadyExists_throwsBandAlreadyExistsException() {
+        Band existingBand = TestDataFactory.setUpBand1();
+        when(bandRepository.findByName(existingBand.getName())).thenReturn(Optional.of(existingBand));
 
-        assertThrows(BandAlreadyExistsException.class, () -> bandService.createBand(usedName, "New Style", 1L));
-        verify(bandRepository, times(0)).save(any());
+        assertThrows(BandAlreadyExistsException.class, () ->
+                bandService.createBand(existingBand.getName(), "Other style", 2L));
+
+        verify(bandRepository).findByName(existingBand.getName());
+        verify(bandRepository, never()).save(any());
     }
 
     @Test
-    public void testGetBand() {
-        Band band = new Band(1L, "Band Name", "Rock", 1L);
+    void getBand_existingId_returnsBand() {
+        Band band = TestDataFactory.setUpBand1();
         when(bandRepository.findById(1L)).thenReturn(Optional.of(band));
 
-        Band foundBand = bandService.getBand(1L);
+        Band result = bandService.getBand(1L);
 
-        assertEquals("Band Name", foundBand.getName());
-        verify(bandRepository, times(1)).findById(1L);
+        assertEquals(band.getName(), result.getName());
+        verify(bandRepository).findById(1L);
     }
 
     @Test
-    public void testUpdateBand() {
-        Band band = new Band(1L, "Updated Band", "Jazz", 1L);
-        when(bandRepository.save(any(Band.class))).thenReturn(band);
+    void getBand_nonExistentId_throwsBandNotFoundException() {
+        when(bandRepository.findById(99L)).thenReturn(Optional.empty());
 
-        BandInfoUpdate bandInfoUpdate = new BandInfoUpdate(1L, "Updated Band", "Jazz", 1L, "logoUrl");
-        when(bandRepository.findById(1L)).thenReturn(Optional.of(band));
-        when(bandRepository.save(any(Band.class))).thenReturn(band);
-        Band updatedBand = bandService.updateBand(bandInfoUpdate);
-
-        assertEquals("Updated Band", updatedBand.getName());
-        verify(bandRepository, times(1)).save(any(Band.class));
+        assertThrows(BandNotFoundException.class, () -> bandService.getBand(99L));
+        verify(bandRepository).findById(99L);
     }
 
     @Test
-    public void testGetAllBands() {
-        Band band = new Band(1L, "Band Name", "Rock", 1L);
-        when(bandRepository.findAll()).thenReturn(Collections.singletonList(band));
+    void getAllBands_someBandsExist_returnsList() {
+        Band band = TestDataFactory.setUpBand1();
+        when(bandRepository.findAll()).thenReturn(List.of(band));
 
-        List<Band> bands = bandService.getAllBands();
+        List<Band> result = bandService.getAllBands();
 
-        assertEquals(1, bands.size());
-        verify(bandRepository, times(1)).findAll();
+        assertEquals(1, result.size());
+        assertEquals("Band 1", result.get(0).getName());
+        verify(bandRepository).findAll();
     }
 
     @Test
-    public void testAddMember() {
-        Band band = new Band(1L, "Band Name", "Rock", 1L);
-        when(bandRepository.findById(1L)).thenReturn(Optional.of(band));
-        when(bandRepository.save(any(Band.class))).thenReturn(band);
+    void updateBand_existingId_updatesFields() {
+        Band existingBand = TestDataFactory.setUpBand1();
+        Band updatedBand = TestDataFactory.setUpBand2();
 
-        Band updatedBand = bandService.addMember(1L, 2L);
+        when(bandRepository.findById(1L)).thenReturn(Optional.of(existingBand));
+        when(bandRepository.save(any(Band.class))).thenReturn(updatedBand);
 
-        assertEquals("Band Name", updatedBand.getName());
-        verify(bandRepository, times(1)).findById(1L);
-        verify(bandRepository, times(1)).save(any(Band.class));
-        verify(bandEventProducer, times(1)).sendBandAddMemberEvent(any());
+        Band bandToUpdate = new Band(1L, "Band 2", "Pop", 2L);
+        bandToUpdate.setLogoUrl("http://example.com/logo2.png");
+        bandToUpdate.setMembers(Set.of(4L, 5L, 6L));
+
+        Band result = bandService.updateBand(1L, bandToUpdate);
+
+        assertEquals("Band 2", result.getName());
+        assertEquals("Pop", result.getMusicalStyle());
+        verify(bandRepository).findById(1L);
+        verify(bandRepository).save(any(Band.class));
     }
 
     @Test
-    public void testRemoveMember() {
-        Band band = new Band(1L, "Band Name", "Rock", 1L);
-        band.addMember(2L);
-        when(bandRepository.findById(1L)).thenReturn(Optional.of(band));
+    void updateBand_nonExistentId_throwsBandNotFoundException() {
+        Band bandToUpdate = TestDataFactory.setUpBand2();
+        when(bandRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(BandNotFoundException.class, () -> bandService.updateBand(99L, bandToUpdate));
+        verify(bandRepository).findById(99L);
+    }
+
+    @Test
+    void addMember_notPresent_addsMemberSuccessfully() {
+        Band band = TestDataFactory.setUpBand1();
+        Long newMemberId = 99L;
+
+        when(bandRepository.findById(band.getId())).thenReturn(Optional.of(band));
         when(bandRepository.save(any(Band.class))).thenReturn(band);
 
-        Band updatedBand = bandService.removeMember(1L, 2L);
+        Band result = bandService.addMember(band.getId(), newMemberId);
 
-        assertEquals("Band Name", updatedBand.getName());
-        verify(bandRepository, times(1)).findById(1L);
-        verify(bandRepository, times(1)).save(any(Band.class));
-        verify(bandEventProducer, times(1)).sendBandRemoveMemberEvent(any());
+        assertTrue(result.getMembers().contains(newMemberId));
+        verify(bandRepository).findById(band.getId());
+        verify(bandRepository).save(any(Band.class));
+    }
+
+    @Test
+    void addMember_alreadyPresent_throwsMusicianAlreadyInBandException() {
+        Band band = TestDataFactory.setUpBand1();
+        Long existingMember = 1L;
+
+        when(bandRepository.findById(band.getId())).thenReturn(Optional.of(band));
+
+        assertThrows(MusicianAlreadyInBandException.class, () -> bandService.addMember(band.getId(), existingMember));
+        verify(bandRepository).findById(band.getId());
+    }
+
+    @Test
+    void removeMember_present_removesMemberSuccessfully() {
+        Band band = TestDataFactory.setUpBand1();
+        Long memberId = 2L;
+
+        when(bandRepository.findById(band.getId())).thenReturn(Optional.of(band));
+        when(bandRepository.save(any(Band.class))).thenReturn(band);
+
+        Band result = bandService.removeMember(band.getId(), memberId);
+
+        assertFalse(result.getMembers().contains(memberId));
+        verify(bandRepository).findById(band.getId());
+        verify(bandRepository).save(any(Band.class));
+    }
+
+    @Test
+    void removeMember_notInBand_throwsMusicianNotInBandException() {
+        Band band = TestDataFactory.setUpBand1();
+        Long notAMember = 999L;
+
+        when(bandRepository.findById(band.getId())).thenReturn(Optional.of(band));
+
+        assertThrows(MusicianNotInBandException.class, () -> bandService.removeMember(band.getId(), notAMember));
+        verify(bandRepository).findById(band.getId());
     }
 }

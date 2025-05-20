@@ -2,10 +2,10 @@ package cz.muni.fi.userservice.facade;
 
 import cz.muni.fi.userservice.dto.ArtistDto;
 import cz.muni.fi.userservice.dto.ArtistUpdateDto;
-import cz.muni.fi.userservice.facade.interfaces.IArtistFacade;
+import cz.muni.fi.userservice.facade.interfaces.ArtistFacade;
 import cz.muni.fi.userservice.mappers.ArtistMapper;
 import cz.muni.fi.userservice.model.Artist;
-import cz.muni.fi.userservice.service.interfaces.IArtistService;
+import cz.muni.fi.userservice.service.interfaces.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
 
 @Transactional
 @Service
-public class ArtistFacade implements IArtistFacade {
+public class ArtistFacadeImpl implements ArtistFacade {
 
-    private final IArtistService artistService;
+    private final ArtistService artistService;
     private final ArtistMapper artistMapper;
 
     @Autowired
-    public ArtistFacade(IArtistService artistService, ArtistMapper artistMapper) {
+    public ArtistFacadeImpl(ArtistService artistService, ArtistMapper artistMapper) {
         this.artistService = artistService;
         this.artistMapper = artistMapper;
     }
@@ -112,21 +112,21 @@ public class ArtistFacade implements IArtistFacade {
         return artistMapper.toDto(updatedArtist);
     }
 
-    public ArtistDto linkArtistToBand(Long artistId, Long bandId) {
+    public ArtistDto linkArtistToBand(Long bandId, Long artistId) {
         if (artistId == null || bandId == null) {
             throw new IllegalArgumentException("Artist ID and Band ID cannot be null");
         }
 
-        artistService.linkArtistToBand(artistId, bandId);
+        artistService.linkArtistToBand(bandId, artistId);
         return findById(artistId);
     }
 
-    public ArtistDto unlinkArtistFromBand(Long artistId, Long bandId) {
+    public ArtistDto unlinkArtistFromBand(Long bandId, Long artistId) {
         if (artistId == null || bandId == null) {
             throw new IllegalArgumentException("Artist ID and Band ID cannot be null");
         }
 
-        artistService.unlinkArtistFromBand(artistId, bandId);
+        artistService.unlinkArtistFromBand(bandId, artistId);
         return findById(artistId);
     }
 }

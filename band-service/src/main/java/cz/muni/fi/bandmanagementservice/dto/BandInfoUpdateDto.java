@@ -1,10 +1,11 @@
 package cz.muni.fi.bandmanagementservice.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Set;
 
 /**
  * @author Tomáš MAREK
@@ -14,10 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Schema(title = "Request for change of band information", description = "Object containing newly updated band info, except members which are updated through dedicated api")
 public class BandInfoUpdateDto {
-    @Schema(description = "band id")
-    @NotNull
-    private Long id;
-
     @Schema(description = "name of the band", example = "Rammstein")
     private String name;
 
@@ -29,4 +26,7 @@ public class BandInfoUpdateDto {
 
     @Schema(description = "id of the band manager")
     private Long managerId;
+
+    @Schema(description = "ids of the band members")
+    private Set<Long> members;
 }

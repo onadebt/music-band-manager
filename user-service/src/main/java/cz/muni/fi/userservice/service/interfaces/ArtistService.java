@@ -5,7 +5,7 @@ import cz.muni.fi.userservice.model.Artist;
 import java.util.List;
 import java.util.Set;
 
-public interface IArtistService {
+public interface ArtistService {
     Artist save(Artist artist);
 
     Artist findById(Long id);
@@ -22,7 +22,7 @@ public interface IArtistService {
 
     Artist updateArtist(Long id, Artist artist);
 
-    Artist linkArtistToBand(Long artistId, Long bandId);
+    Artist linkArtistToBand(Long bandId, Long artistId);
 
-    Artist unlinkArtistFromBand(Long artistId, Long bandId);
+    Artist unlinkArtistFromBand(Long bandId, Long artistId);
 }

@@ -1,6 +1,5 @@
 package cz.muni.fi.bandmanagementservice.facade;
 
-import cz.muni.fi.bandmanagementservice.mappers.BandInfoUpdateMapper;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.mappers.BandMapper;
@@ -22,13 +21,12 @@ import java.util.stream.Collectors;
 public class BandFacade {
     private final BandService bandService;
     private final BandMapper bandMapper;
-    private final BandInfoUpdateMapper bandInfoUpdateMapper;
+
 
     @Autowired
-    public BandFacade(BandService bandService, BandMapper bandMapper, BandInfoUpdateMapper bandInfoUpdateMapper) {
+    public BandFacade(BandService bandService, BandMapper bandMapper) {
         this.bandService = bandService;
         this.bandMapper = bandMapper;
-        this.bandInfoUpdateMapper = bandInfoUpdateMapper;
     }
 
     public BandDto createBand(String name, String musicalStyle, Long managerId) {
@@ -41,9 +39,9 @@ public class BandFacade {
         return bandMapper.toDto(bandService.getBand(id));
     }
 
-    public BandDto updateBand(BandInfoUpdateDto request){
-        BandInfoUpdate bandInfoUpdate = bandInfoUpdateMapper.toEntity(request);
-        return bandMapper.toDto(bandService.updateBand(bandInfoUpdate));
+    public BandDto updateBand(Long id, BandInfoUpdateDto request){
+        Band band = bandMapper.toEntity(request);
+        return bandMapper.toDto(bandService.updateBand(id, band));
     }
 
     @Transactional(readOnly = true)

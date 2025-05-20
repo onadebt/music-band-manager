@@ -5,7 +5,7 @@ import cz.muni.fi.userservice.model.Manager;
 import java.util.List;
 import java.util.Set;
 
-public interface IManagerService {
+public interface ManagerService {
     Manager save(Manager manager);
 
     void deleteById(Long id);

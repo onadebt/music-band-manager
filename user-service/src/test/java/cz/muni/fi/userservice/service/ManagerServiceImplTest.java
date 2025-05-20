@@ -21,12 +21,12 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Tomáš MAREK
  */
 @ExtendWith(MockitoExtension.class)
-public class ManagerServiceTest {
+public class ManagerServiceImplTest {
     @Mock
     ManagerRepository managerRepository;
 
     @InjectMocks
-    ManagerService managerService;
+    ManagerServiceImpl managerServiceImpl;
 
     @Test
     void save_managerSaved_returnsSavedManager() {
@@ -36,7 +36,7 @@ public class ManagerServiceTest {
         Mockito.when(managerRepository.save(manager)).thenReturn(manager);
 
         // Act
-        Manager saved = managerService.save(manager);
+        Manager saved = managerServiceImpl.save(manager);
 
         // Assert
         assertEquals(manager, saved);
@@ -49,7 +49,7 @@ public class ManagerServiceTest {
         Mockito.when(managerRepository.findById(manager.getId())).thenReturn(Optional.of(manager));
 
         // Act
-        Manager found = managerService.findById(manager.getId());
+        Manager found = managerServiceImpl.findById(manager.getId());
 
         // Assert
         assertEquals(manager, found);
@@ -61,7 +61,7 @@ public class ManagerServiceTest {
         Long invalidId = 42L;
 
         // Act & Assert
-        assertThrows(UserNotFoundException.class, () -> managerService.findById(invalidId));
+        assertThrows(UserNotFoundException.class, () -> managerServiceImpl.findById(invalidId));
     }
 
 
@@ -71,7 +71,7 @@ public class ManagerServiceTest {
         Mockito.when(managerRepository.findAll()).thenReturn(List.of());
 
         // Act
-        List<Manager> found = managerService.findAll();
+        List<Manager> found = managerServiceImpl.findAll();
 
         // Assert
         assertEquals(0, found.size());
@@ -85,7 +85,7 @@ public class ManagerServiceTest {
         Mockito.when(managerRepository.findAll()).thenReturn(List.of(manager, manager2));
 
         // Act
-        List<Manager> found = managerService.findAll();
+        List<Manager> found = managerServiceImpl.findAll();
 
         // Assert
         assertEquals(2, found.size());
@@ -100,7 +100,7 @@ public class ManagerServiceTest {
         Mockito.when(managerRepository.findById(manager.getId())).thenReturn(Optional.of(manager));
 
         // Act
-        managerService.deleteById(manager.getId());
+        managerServiceImpl.deleteById(manager.getId());
 
         // Assert
         Mockito.verify(managerRepository, Mockito.times(1)).deleteById(manager.getId());
@@ -113,7 +113,7 @@ public class ManagerServiceTest {
         Mockito.when(managerRepository.findByManagedBandIds(emptyBandIds)).thenReturn(List.of());
 
         // Act
-        List<Manager> found = managerService.findByManagedBandIds(emptyBandIds);
+        List<Manager> found = managerServiceImpl.findByManagedBandIds(emptyBandIds);
 
         // Assert
         assertEquals(0, found.size());
@@ -128,7 +128,7 @@ public class ManagerServiceTest {
         Mockito.when(managerRepository.findByManagedBandIds(bands)).thenReturn(List.of(manager, manager2));
 
         // Act
-        List<Manager> found = managerService.findByManagedBandIds(bands);
+        List<Manager> found = managerServiceImpl.findByManagedBandIds(bands);
 
         // Assert
         assertEquals(2, found.size());
@@ -143,7 +143,7 @@ public class ManagerServiceTest {
         Mockito.when(managerRepository.findByManagedBandIds(idsOfEmptyBands)).thenReturn(List.of());
 
         // Act
-        List<Manager> found = managerService.findByManagedBandIds(idsOfEmptyBands);
+        List<Manager> found = managerServiceImpl.findByManagedBandIds(idsOfEmptyBands);
 
         // Assert
         assertEquals(0, found.size());
@@ -156,7 +156,7 @@ public class ManagerServiceTest {
         Mockito.when(managerRepository.findByManagedBandIds(emptyBandIds)).thenReturn(List.of());
 
         // Act
-        List<Manager> found = managerService.findByManagedBandIds(emptyBandIds);
+        List<Manager> found = managerServiceImpl.findByManagedBandIds(emptyBandIds);
 
         // Assert
         assertEquals(0, found.size());
@@ -172,7 +172,7 @@ public class ManagerServiceTest {
         Set<Long> newBandIds = Set.of(1L, 2L, 3L, 4L);
 
         // Act
-        Manager updated = managerService.updateManagerBandIds(manager.getId(), newBandIds);
+        Manager updated = managerServiceImpl.updateManagerBandIds(manager.getId(), newBandIds);
 
         // Assert
         assertEquals(manager, updated);
@@ -188,7 +188,7 @@ public class ManagerServiceTest {
         Set<Long> emptyBands = Set.of();
 
         // Act
-        Manager updated = managerService.updateManagerBandIds(manager.getId(), emptyBands);
+        Manager updated = managerServiceImpl.updateManagerBandIds(manager.getId(), emptyBands);
 
         // Assert
         assertEquals(manager, updated);
@@ -202,6 +202,6 @@ public class ManagerServiceTest {
         Mockito.when(managerRepository.findById(invalidId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(UserNotFoundException.class, () -> managerService.updateManagerBandIds(invalidId, Set.of(1L, 2L, 3L)));
+        assertThrows(UserNotFoundException.class, () -> managerServiceImpl.updateManagerBandIds(invalidId, Set.of(1L, 2L, 3L)));
     }
 }

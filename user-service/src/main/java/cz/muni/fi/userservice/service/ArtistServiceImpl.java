@@ -1,10 +1,12 @@
 package cz.muni.fi.userservice.service;
 
+import cz.muni.fi.userservice.exception.ArtistAlreadyInBandException;
+import cz.muni.fi.userservice.exception.ArtistNotInBandException;
 import cz.muni.fi.userservice.exception.UserAlreadyExistsException;
 import cz.muni.fi.userservice.exception.UserNotFoundException;
 import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.repository.ArtistRepository;
-import cz.muni.fi.userservice.service.interfaces.IArtistService;
+import cz.muni.fi.userservice.service.interfaces.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,14 +18,15 @@ import java.util.Set;
 
 @Transactional
 @Service
-public class ArtistService implements IArtistService {
+public class ArtistServiceImpl implements ArtistService {
 
     private final ArtistRepository artistRepository;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ArtistService(ArtistRepository artistRepository) {
+    public ArtistServiceImpl(ArtistRepository artistRepository) {
         this.artistRepository = artistRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     public Artist save(Artist artist) {
@@ -87,16 +90,24 @@ public class ArtistService implements IArtistService {
         return artistRepository.save(existingArtist);
     }
 
-    public Artist linkArtistToBand(Long artistId, Long bandId) {
+    public Artist linkArtistToBand(Long bandId, Long artistId) {
         Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new UserNotFoundException(artistId));
+        if (artist.getBandIds().contains(bandId)) {
+            throw new ArtistAlreadyInBandException(bandId, artistId);
+        }
+
         Set<Long> bandIds = artist.getBandIds();
         bandIds.add(bandId);
         artist.setBandIds(bandIds);
         return artistRepository.save(artist);
     }
 
-    public Artist unlinkArtistFromBand(Long artistId, Long bandId) {
+    public Artist unlinkArtistFromBand(Long bandId, Long artistId) {
         Artist artist = artistRepository.findById(artistId).orElseThrow(() -> new UserNotFoundException(artistId));
+        if (!artist.getBandIds().contains(bandId)) {
+            throw new ArtistNotInBandException(bandId, artistId);
+        }
+
         Set<Long> bandIds = artist.getBandIds();
         bandIds.remove(bandId);
         artist.setBandIds(bandIds);

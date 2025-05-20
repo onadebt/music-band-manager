@@ -2,10 +2,10 @@ package cz.muni.fi.userservice.facade;
 
 import cz.muni.fi.userservice.dto.ManagerDto;
 import cz.muni.fi.userservice.dto.ManagerUpdateDto;
-import cz.muni.fi.userservice.facade.interfaces.IManagerFacade;
+import cz.muni.fi.userservice.facade.interfaces.ManagerFacade;
 import cz.muni.fi.userservice.mappers.ManagerMapper;
 import cz.muni.fi.userservice.model.Manager;
-import cz.muni.fi.userservice.service.interfaces.IManagerService;
+import cz.muni.fi.userservice.service.interfaces.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +14,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class ManagerFacade implements IManagerFacade {
+public class ManagerFacadeImpl implements ManagerFacade {
 
-    private final IManagerService managerService;
+    private final ManagerService managerService;
     private final ManagerMapper managerMapper;
 
     @Autowired
-    public ManagerFacade(IManagerService managerService, ManagerMapper managerMapper) {
+    public ManagerFacadeImpl(ManagerService managerService, ManagerMapper managerMapper) {
         this.managerService = managerService;
         this.managerMapper = managerMapper;
     }
