@@ -1,16 +1,17 @@
 package cz.muni.fi.musiccatalogservice.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Album {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

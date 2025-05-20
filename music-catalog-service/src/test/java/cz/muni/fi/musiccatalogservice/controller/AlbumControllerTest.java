@@ -1,8 +1,9 @@
 package cz.muni.fi.musiccatalogservice.controller;
 
 import cz.muni.fi.musiccatalogservice.TestDataFactory;
-import cz.muni.fi.musiccatalogservice.dto.AlbumDTO;
+import cz.muni.fi.musiccatalogservice.dto.AlbumDto;
 import cz.muni.fi.musiccatalogservice.facade.AlbumFacade;
+import cz.muni.fi.musiccatalogservice.rest.AlbumController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,7 +36,7 @@ public class AlbumControllerTest {
         // Arrange
         Mockito.when(albumFacade.createAlbum(TestDataFactory.TEST_ALBUM_1_DTO)).thenReturn(TestDataFactory.TEST_ALBUM_1_DTO);
         // Act
-        ResponseEntity<AlbumDTO> response = albumController.createAlbum(TestDataFactory.TEST_ALBUM_1_DTO);
+        ResponseEntity<AlbumDto> response = albumController.createAlbum(TestDataFactory.TEST_ALBUM_1_DTO);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(201);  // todo was 200
@@ -50,7 +51,7 @@ public class AlbumControllerTest {
         Mockito.when(albumFacade.getAllAlbums()).thenReturn(List.of(TestDataFactory.TEST_ALBUM_1_DTO, TestDataFactory.TEST_ALBUM_2_DTO));
 
         // Act
-        ResponseEntity<List<AlbumDTO>> response = albumController.getAllAlbums();
+        ResponseEntity<List<AlbumDto>> response = albumController.getAllAlbums();
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -65,7 +66,7 @@ public class AlbumControllerTest {
         Mockito.when(albumFacade.getAlbumById(TestDataFactory.TEST_ALBUM_1.getId())).thenReturn(TestDataFactory.TEST_ALBUM_1_DTO);
 
         // Act
-        ResponseEntity<AlbumDTO> response = albumController.getAlbumById(TestDataFactory.TEST_ALBUM_1.getId());
+        ResponseEntity<AlbumDto> response = albumController.getAlbumById(TestDataFactory.TEST_ALBUM_1.getId());
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -91,7 +92,7 @@ public class AlbumControllerTest {
                 .thenReturn(TestDataFactory.TEST_ALBUM_1_DTO);
 
         // Act
-        ResponseEntity<AlbumDTO> response = albumController.updateAlbum(TestDataFactory.TEST_ALBUM_1_DTO.getId(), TestDataFactory.TEST_ALBUM_1_DTO);
+        ResponseEntity<AlbumDto> response = albumController.updateAlbum(TestDataFactory.TEST_ALBUM_1_DTO.getId(), TestDataFactory.TEST_ALBUM_1_DTO);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -106,7 +107,7 @@ public class AlbumControllerTest {
         Mockito.when(albumFacade.getAlbumsByBand(bandId)).thenReturn(List.of(TestDataFactory.TEST_ALBUM_1_DTO, TestDataFactory.TEST_ALBUM_2_DTO));
 
         // Act
-        ResponseEntity<List<AlbumDTO>> response = albumController.getAlbumsByBand(bandId);
+        ResponseEntity<List<AlbumDto>> response = albumController.getAlbumsByBand(bandId);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);

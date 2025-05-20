@@ -19,10 +19,12 @@ public class SongService {
         this.songRepository = songRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Song> getAllSongs() {
         return songRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<Song> getSongsByAlbum(Long albumId) {
         if (albumId == null) {
             throw new IllegalArgumentException("Album ID cannot be null");
@@ -35,6 +37,7 @@ public class SongService {
         return songRepository.findByAlbumId(albumId);
     }
 
+    @Transactional(readOnly = true)
     public List<Song> getSongsByBand(Long bandId) {
         if (bandId == null) {
             throw new IllegalArgumentException("Band ID cannot be null");
@@ -47,6 +50,7 @@ public class SongService {
         return songRepository.findByBandId(bandId);
     }
 
+    @Transactional(readOnly = true)
     public Song getSongById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Song ID cannot be null");

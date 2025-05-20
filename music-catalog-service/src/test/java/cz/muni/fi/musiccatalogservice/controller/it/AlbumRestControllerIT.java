@@ -4,7 +4,7 @@ package cz.muni.fi.musiccatalogservice.controller.it;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import cz.muni.fi.musiccatalogservice.controller.it.config.DisableSecurityTestConfig;
-import cz.muni.fi.musiccatalogservice.dto.AlbumDTO;
+import cz.muni.fi.musiccatalogservice.dto.AlbumDto;
 import cz.muni.fi.musiccatalogservice.model.Album;
 import cz.muni.fi.musiccatalogservice.model.Song;
 import cz.muni.fi.musiccatalogservice.repository.AlbumRepository;
@@ -109,7 +109,7 @@ class AlbumRestControllerIT {
 
     @Test
     void testCreateAlbum() throws Exception {
-        AlbumDTO albumDTO = new AlbumDTO();
+        AlbumDto albumDTO = new AlbumDto();
         albumDTO.setTitle("New Album");
         albumDTO.setReleaseDate(LocalDateTime.now().minusDays(60));
         albumDTO.setBandId(1L);
@@ -126,7 +126,7 @@ class AlbumRestControllerIT {
 
     @Test
     void testCreateInvalidAlbum() throws Exception {
-        AlbumDTO albumDTO = new AlbumDTO();
+        AlbumDto albumDTO = new AlbumDto();
         // Empty title and null releaseDate
 
         mockMvc.perform(post("/api/albums")
@@ -139,7 +139,7 @@ class AlbumRestControllerIT {
 
     @Test
     void testUpdateAlbum() throws Exception {
-        AlbumDTO albumDTO = new AlbumDTO();
+        AlbumDto albumDTO = new AlbumDto();
         albumDTO.setTitle("Updated Album");
         albumDTO.setReleaseDate(LocalDateTime.now().minusDays(60));
         albumDTO.setBandId(1L);
@@ -153,7 +153,7 @@ class AlbumRestControllerIT {
 
     @Test
     void testUpdateInvalidAlbum() throws Exception {
-        AlbumDTO albumDTO = new AlbumDTO();
+        AlbumDto albumDTO = new AlbumDto();
         albumDTO.setTitle("Updated Album");
         albumDTO.setReleaseDate(LocalDateTime.now().plusDays(90));
 

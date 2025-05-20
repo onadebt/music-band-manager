@@ -19,10 +19,12 @@ public class AlbumService {
         this.albumRepository = albumRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Album> getAllAlbums() {
         return albumRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<Album> getAlbumsByBand(Long bandId) {
         if (bandId == null) {
             throw new IllegalArgumentException("Band ID cannot be null");
@@ -35,6 +37,7 @@ public class AlbumService {
         return albumRepository.findByBandId(bandId);
     }
 
+    @Transactional(readOnly = true)
     public Album getAlbumById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Album ID cannot be null");

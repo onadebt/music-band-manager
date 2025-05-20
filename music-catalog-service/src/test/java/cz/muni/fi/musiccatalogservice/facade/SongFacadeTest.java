@@ -1,7 +1,7 @@
 package cz.muni.fi.musiccatalogservice.facade;
 
 import cz.muni.fi.musiccatalogservice.TestDataFactory;
-import cz.muni.fi.musiccatalogservice.dto.SongDTO;
+import cz.muni.fi.musiccatalogservice.dto.SongDto;
 import cz.muni.fi.musiccatalogservice.mapper.SongMapper;
 import cz.muni.fi.musiccatalogservice.service.SongService;
 import cz.muni.fi.musiccatalogservice.service.AlbumService;
@@ -46,10 +46,10 @@ public class SongFacadeTest {
         // Arrange
         Mockito.when(songService.createSong(TestDataFactory.TEST_SONG_1)).thenReturn(TestDataFactory.TEST_SONG_1);
         Mockito.when(songMapper.toEntity(TestDataFactory.TEST_SONG_1_DTO)).thenReturn(TestDataFactory.TEST_SONG_1);
-        Mockito.when(songMapper.toDTO(TestDataFactory.TEST_SONG_1)).thenReturn(TestDataFactory.TEST_SONG_1_DTO);
+        Mockito.when(songMapper.toDto(TestDataFactory.TEST_SONG_1)).thenReturn(TestDataFactory.TEST_SONG_1_DTO);
 
         // Act
-        SongDTO created = songFacade.createSong(TestDataFactory.TEST_SONG_1_DTO);
+        SongDto created = songFacade.createSong(TestDataFactory.TEST_SONG_1_DTO);
 
         // Assert
         verify(songService, times(1)).createSong(TestDataFactory.TEST_SONG_1);
@@ -79,10 +79,10 @@ public class SongFacadeTest {
     void findById_validId_returnsFoundSong() {
         // Arrange
         Mockito.when(songService.getSongById(TestDataFactory.TEST_SONG_1.getId())).thenReturn(TestDataFactory.TEST_SONG_1);
-        Mockito.when(songMapper.toDTO(TestDataFactory.TEST_SONG_1)).thenReturn(TestDataFactory.TEST_SONG_1_DTO);
+        Mockito.when(songMapper.toDto(TestDataFactory.TEST_SONG_1)).thenReturn(TestDataFactory.TEST_SONG_1_DTO);
 
         // Act
-        SongDTO found = songFacade.getSongById(TestDataFactory.TEST_SONG_1.getId());
+        SongDto found = songFacade.getSongById(TestDataFactory.TEST_SONG_1.getId());
 
         // Assert
         assertEquals(TestDataFactory.TEST_SONG_1_DTO, found);
@@ -114,7 +114,7 @@ public class SongFacadeTest {
         Mockito.when(songService.getAllSongs()).thenReturn(List.of());
 
         // Act
-        List<SongDTO> found = songFacade.getAllSongs();
+        List<SongDto> found = songFacade.getAllSongs();
 
         // Assert
         assertEquals(0, found.size());
@@ -125,11 +125,11 @@ public class SongFacadeTest {
     void findAll_twoSongsStored_returnsList() {
         // Arrange
         Mockito.when(songService.getAllSongs()).thenReturn(List.of(TestDataFactory.TEST_SONG_1, TestDataFactory.TEST_SONG_2));
-        Mockito.when(songMapper.toDTO(TestDataFactory.TEST_SONG_1)).thenReturn(TestDataFactory.TEST_SONG_1_DTO);
-        Mockito.when(songMapper.toDTO(TestDataFactory.TEST_SONG_2)).thenReturn(TestDataFactory.TEST_SONG_2_DTO);
+        Mockito.when(songMapper.toDto(TestDataFactory.TEST_SONG_1)).thenReturn(TestDataFactory.TEST_SONG_1_DTO);
+        Mockito.when(songMapper.toDto(TestDataFactory.TEST_SONG_2)).thenReturn(TestDataFactory.TEST_SONG_2_DTO);
 
         // Act
-        List<SongDTO> found = songFacade.getAllSongs();
+        List<SongDto> found = songFacade.getAllSongs();
 
         // Assert
         assertEquals(2, found.size());
@@ -150,11 +150,11 @@ public class SongFacadeTest {
         // Arrange
         Long bandId = 1L;
         Mockito.when(songService.getSongsByBand(bandId)).thenReturn(List.of(TestDataFactory.TEST_SONG_1, TestDataFactory.TEST_SONG_2));
-        Mockito.when(songMapper.toDTO(TestDataFactory.TEST_SONG_1)).thenReturn(TestDataFactory.TEST_SONG_1_DTO);
-        Mockito.when(songMapper.toDTO(TestDataFactory.TEST_SONG_2)).thenReturn(TestDataFactory.TEST_SONG_2_DTO);
+        Mockito.when(songMapper.toDto(TestDataFactory.TEST_SONG_1)).thenReturn(TestDataFactory.TEST_SONG_1_DTO);
+        Mockito.when(songMapper.toDto(TestDataFactory.TEST_SONG_2)).thenReturn(TestDataFactory.TEST_SONG_2_DTO);
 
         // Act
-        List<SongDTO> found = songFacade.getSongsByBand(bandId);
+        List<SongDto> found = songFacade.getSongsByBand(bandId);
 
         // Assert
         verify(songService, times(1)).getSongsByBand(bandId);
@@ -206,7 +206,7 @@ public class SongFacadeTest {
     @Test
     void updateSong_nullArtisId_throwsIllegalArgumentException() {
         // Arrange
-        SongDTO validSong = TestDataFactory.TEST_SONG_1_DTO;
+        SongDto validSong = TestDataFactory.TEST_SONG_1_DTO;
 
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> songFacade.updateSong(null, validSong));

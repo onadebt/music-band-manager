@@ -3,13 +3,16 @@ package cz.muni.fi.musiccatalogservice.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
-public class AlbumDTO {
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class AlbumDto {
     private Long id;
 
     @NotBlank(message = "Album title cannot be blank")
@@ -22,5 +25,5 @@ public class AlbumDTO {
     @NotNull(message = "Band ID cannot be null")
     private Long bandId;
 
-    private List<SongDTO> songs;
+    private List<SongDto> songs;
 }

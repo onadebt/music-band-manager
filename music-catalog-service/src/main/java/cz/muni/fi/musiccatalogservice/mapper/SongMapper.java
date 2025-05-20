@@ -1,6 +1,6 @@
 package cz.muni.fi.musiccatalogservice.mapper;
 
-import cz.muni.fi.musiccatalogservice.dto.SongDTO;
+import cz.muni.fi.musiccatalogservice.dto.SongDto;
 import cz.muni.fi.musiccatalogservice.model.Album;
 import cz.muni.fi.musiccatalogservice.model.Song;
 import org.mapstruct.Mapper;
@@ -12,14 +12,14 @@ import org.mapstruct.Named;
 public interface SongMapper {
 
     @Mapping(source = "album", target = "albumId", qualifiedByName = "albumToAlbumId")
-    SongDTO toDTO(Song song);
+    SongDto toDto(Song song);
 
     @Mapping(target = "album", ignore = true)
-    Song toEntity(SongDTO songDTO);
+    Song toEntity(SongDto songDTO);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "album", ignore = true)
-    void updateEntityFromDto(SongDTO dto, @MappingTarget Song entity);
+    void updateEntityFromDto(SongDto dto, @MappingTarget Song entity);
 
     @Named("albumToAlbumId")
     default Long albumToAlbumId(Album album) {

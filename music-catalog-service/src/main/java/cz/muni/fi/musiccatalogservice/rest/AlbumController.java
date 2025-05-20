@@ -1,9 +1,9 @@
-package cz.muni.fi.musiccatalogservice.controller;
+package cz.muni.fi.musiccatalogservice.rest;
 
 import cz.muni.fi.musiccatalogservice.MusicCatalogServiceApplication;
 import cz.muni.fi.musiccatalogservice.config.OpenApiConfig;
 import cz.muni.fi.musiccatalogservice.config.SecurityConfig;
-import cz.muni.fi.musiccatalogservice.dto.AlbumDTO;
+import cz.muni.fi.musiccatalogservice.dto.AlbumDto;
 import cz.muni.fi.musiccatalogservice.facade.AlbumFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,28 +39,28 @@ public class AlbumController {
     @Operation(summary = "Get all albums", description = "Returns a list of all albums in the catalog")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved albums",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AlbumDTO.class)))
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AlbumDto.class)))
     })
     @SecurityRequirement(
             name = OpenApiConfig.SECURITY_SCHEME_NAME,
             scopes = {GENERAL_SCOPE}
     )
     @GetMapping
-    public ResponseEntity<List<AlbumDTO>> getAllAlbums() {
+    public ResponseEntity<List<AlbumDto>> getAllAlbums() {
         return ResponseEntity.ok(albumFacade.getAllAlbums());
     }
 
     @Operation(summary = "Get albums by band", description = "Returns albums for a specific band")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved albums",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AlbumDTO.class)))
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AlbumDto.class)))
     })
     @SecurityRequirement(
             name = OpenApiConfig.SECURITY_SCHEME_NAME,
             scopes = {GENERAL_SCOPE}
     )
     @GetMapping("/band/{bandId}")
-    public ResponseEntity<List<AlbumDTO>> getAlbumsByBand(
+    public ResponseEntity<List<AlbumDto>> getAlbumsByBand(
             @Parameter(description = "Band ID", required = true) @PathVariable Long bandId) {
         return ResponseEntity.ok(albumFacade.getAlbumsByBand(bandId));
     }
@@ -68,7 +68,7 @@ public class AlbumController {
     @Operation(summary = "Get album by ID", description = "Returns an album by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved album",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AlbumDTO.class))),
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AlbumDto.class))),
             @ApiResponse(responseCode = "404", description = "Album not found")
     })
     @SecurityRequirement(
@@ -76,7 +76,7 @@ public class AlbumController {
             scopes = {GENERAL_SCOPE}
     )
     @GetMapping("/{id}")
-    public ResponseEntity<AlbumDTO> getAlbumById(
+    public ResponseEntity<AlbumDto> getAlbumById(
             @Parameter(description = "Album ID", required = true) @PathVariable Long id) {
         return ResponseEntity.ok(albumFacade.getAlbumById(id));
     }
@@ -84,7 +84,7 @@ public class AlbumController {
     @Operation(summary = "Create a new album", description = "Creates a new album")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Album created successfully",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AlbumDTO.class))),
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AlbumDto.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     @SecurityRequirement(
@@ -92,16 +92,16 @@ public class AlbumController {
             scopes = {MANAGER_SCOPE}
     )
     @PostMapping
-    public ResponseEntity<AlbumDTO> createAlbum(
-            @Parameter(description = "Album to create", required = true) @Valid @RequestBody AlbumDTO albumDTO) {
-        AlbumDTO createdAlbum = albumFacade.createAlbum(albumDTO);
+    public ResponseEntity<AlbumDto> createAlbum(
+            @Parameter(description = "Album to create", required = true) @Valid @RequestBody AlbumDto albumDTO) {
+        AlbumDto createdAlbum = albumFacade.createAlbum(albumDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAlbum);
     }
 
     @Operation(summary = "Update an album", description = "Updates an existing album")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Album updated successfully",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AlbumDTO.class))),
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AlbumDto.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "404", description = "Album not found")
     })
@@ -110,10 +110,10 @@ public class AlbumController {
             scopes = {MANAGER_SCOPE}
     )
     @PutMapping("/{id}")
-    public ResponseEntity<AlbumDTO> updateAlbum(
+    public ResponseEntity<AlbumDto> updateAlbum(
             @Parameter(description = "Album ID", required = true) @PathVariable Long id,
-            @Parameter(description = "Updated album details", required = true) @Valid @RequestBody AlbumDTO albumDTO) {
-        AlbumDTO updatedAlbum = albumFacade.updateAlbum(id, albumDTO);
+            @Parameter(description = "Updated album details", required = true) @Valid @RequestBody AlbumDto albumDto) {
+        AlbumDto updatedAlbum = albumFacade.updateAlbum(id, albumDto);
         return ResponseEntity.ok(updatedAlbum);
     }
 
