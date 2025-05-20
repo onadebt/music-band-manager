@@ -1,6 +1,8 @@
 package cz.muni.fi.bandmanagementservice.service;
 
+import cz.muni.fi.bandmanagementservice.TestDataFactory;
 import cz.muni.fi.bandmanagementservice.artemis.BandEventProducer;
+import cz.muni.fi.bandmanagementservice.exceptions.BandAlreadyExistsException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class BandServiceTest {
@@ -42,6 +45,16 @@ public class BandServiceTest {
 
         assertEquals("Band Name", createdBand.getName());
         verify(bandRepository, times(1)).save(any(Band.class));
+    }
+
+    @Test
+    void testCreateBand_namedAlreadyUsed_throwsException() {
+        Band presentBand = TestDataFactory.setUpBand1();
+        String usedName = presentBand.getName();
+        when(bandRepository.findByName(usedName)).thenReturn(Optional.of(presentBand));
+
+        assertThrows(BandAlreadyExistsException.class, () -> bandService.createBand(usedName, "New Style", 1L));
+        verify(bandRepository, times(0)).save(any());
     }
 
     @Test

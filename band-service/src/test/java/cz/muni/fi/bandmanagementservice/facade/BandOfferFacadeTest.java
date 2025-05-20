@@ -6,6 +6,7 @@ import cz.muni.fi.bandmanagementservice.mappers.BandOfferMapper;
 import cz.muni.fi.bandmanagementservice.service.BandOfferService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.MockedStatic;
 
 import java.util.Arrays;
@@ -17,7 +18,11 @@ import static org.mockito.Mockito.*;
 class BandOfferFacadeTest {
 
     private BandOfferService bandOfferService;
+
     private BandOfferFacade bandOfferFacade;
+
+    @Mock
+    private BandOfferMapper bandOfferMapper;
 
     private BandOffer bandOffer;
     private BandOfferDto bandOfferDto;
@@ -25,7 +30,8 @@ class BandOfferFacadeTest {
     @BeforeEach
     void setUp() {
         bandOfferService = mock(BandOfferService.class);
-        bandOfferFacade = new BandOfferFacade(bandOfferService);
+        bandOfferMapper = mock(BandOfferMapper.class);
+        bandOfferFacade = new BandOfferFacade(bandOfferService, bandOfferMapper);
 
         bandOffer = new BandOffer();
         bandOfferDto = new BandOfferDto();
@@ -38,7 +44,7 @@ class BandOfferFacadeTest {
         when(bandOfferService.getBandOffer(offerId)).thenReturn(bandOffer);
 
         try (MockedStatic<BandOfferMapper> mocked = mockStatic(BandOfferMapper.class)) {
-            mocked.when(() -> BandOfferMapper.mapToDto(bandOffer)).thenReturn(bandOfferDto);
+            mocked.when(() -> bandOfferMapper.toDto(bandOffer)).thenReturn(bandOfferDto);
 
             BandOfferDto result = bandOfferFacade.getBandOffer(offerId);
 
@@ -54,7 +60,7 @@ class BandOfferFacadeTest {
         when(bandOfferService.createBandOffer(bandId, musicianId, managerId)).thenReturn(bandOffer);
 
         try (MockedStatic<BandOfferMapper> mocked = mockStatic(BandOfferMapper.class)) {
-            mocked.when(() -> BandOfferMapper.mapToDto(bandOffer)).thenReturn(bandOfferDto);
+            mocked.when(() -> bandOfferMapper.toDto(bandOffer)).thenReturn(bandOfferDto);
 
             BandOfferDto result = bandOfferFacade.postBandOffer(bandId, musicianId, managerId);
 
@@ -70,7 +76,7 @@ class BandOfferFacadeTest {
         when(bandOfferService.acceptOffer(offerId)).thenReturn(bandOffer);
 
         try (MockedStatic<BandOfferMapper> mocked = mockStatic(BandOfferMapper.class)) {
-            mocked.when(() -> BandOfferMapper.mapToDto(bandOffer)).thenReturn(bandOfferDto);
+            mocked.when(() -> bandOfferMapper.toDto(bandOffer)).thenReturn(bandOfferDto);
 
             BandOfferDto result = bandOfferFacade.acceptBandOffer(offerId);
 
@@ -86,7 +92,7 @@ class BandOfferFacadeTest {
         when(bandOfferService.rejectOffer(offerId)).thenReturn(bandOffer);
 
         try (MockedStatic<BandOfferMapper> mocked = mockStatic(BandOfferMapper.class)) {
-            mocked.when(() -> BandOfferMapper.mapToDto(bandOffer)).thenReturn(bandOfferDto);
+            mocked.when(() -> bandOfferMapper.toDto(bandOffer)).thenReturn(bandOfferDto);
 
             BandOfferDto result = bandOfferFacade.rejectBandOffer(offerId);
 
@@ -112,7 +118,7 @@ class BandOfferFacadeTest {
         when(bandOfferService.getAllBandOffers()).thenReturn(offers);
 
         try (MockedStatic<BandOfferMapper> mocked = mockStatic(BandOfferMapper.class)) {
-            mocked.when(() -> BandOfferMapper.mapToDto(any(BandOffer.class))).thenReturn(bandOfferDto);
+            mocked.when(() -> bandOfferMapper.toDto(any(BandOffer.class))).thenReturn(bandOfferDto);
 
             List<BandOfferDto> result = bandOfferFacade.getAllBandOffers();
 
@@ -127,7 +133,7 @@ class BandOfferFacadeTest {
         when(bandOfferService.getBandOffersByBandId(bandId)).thenReturn(List.of(bandOffer));
 
         try (MockedStatic<BandOfferMapper> mocked = mockStatic(BandOfferMapper.class)) {
-            mocked.when(() -> BandOfferMapper.mapToDto(bandOffer)).thenReturn(bandOfferDto);
+            mocked.when(() -> bandOfferMapper.toDto(bandOffer)).thenReturn(bandOfferDto);
 
             List<BandOfferDto> result = bandOfferFacade.getBandOffersByBandId(bandId);
 
@@ -142,7 +148,7 @@ class BandOfferFacadeTest {
         when(bandOfferService.getBandOfferByInvitedMusicianId(musicianId)).thenReturn(List.of(bandOffer));
 
         try (MockedStatic<BandOfferMapper> mocked = mockStatic(BandOfferMapper.class)) {
-            mocked.when(() -> BandOfferMapper.mapToDto(bandOffer)).thenReturn(bandOfferDto);
+            mocked.when(() -> bandOfferMapper.toDto(bandOffer)).thenReturn(bandOfferDto);
 
             List<BandOfferDto> result = bandOfferFacade.getBandOffersByInvitedMusicianId(musicianId);
 

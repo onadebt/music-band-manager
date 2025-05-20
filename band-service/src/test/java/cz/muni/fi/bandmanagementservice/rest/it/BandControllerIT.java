@@ -2,7 +2,7 @@ package cz.muni.fi.bandmanagementservice.rest.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.muni.fi.bandmanagementservice.artemis.BandEventProducer;
-import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
+import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import cz.muni.fi.bandmanagementservice.rest.it.config.DisableSecurityTestConfig;
@@ -23,7 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(DisableSecurityTestConfig.class)
 @Transactional
 @ActiveProfiles("test")
-class BandRestControllerIT {
+class BandControllerIT {
 
     @Autowired
     MockMvc mockMvc;
@@ -58,6 +61,21 @@ class BandRestControllerIT {
                 .andExpect(jsonPath("$.name").value("Band"));
 
         assertThat(bandRepository.findByName("Band")).isPresent();
+    }
+
+    @Test
+    void testCreateBand_namedAlreadyUsed_badRequest() throws Exception {
+        String usedName = "Used Name";
+        bandRepository.save(new Band(null, usedName, "Rock", 1L));
+        long before = bandRepository.count();
+
+        mockMvc.perform(post("/api/bands")
+                        .param("name", usedName)
+                        .param("musicalStyle", "ROCK")
+                        .param("managerId", "42"))
+                .andExpect(status().isBadRequest());
+
+        assertThat(before).isEqualTo(bandRepository.count());
     }
 
     @Test
@@ -87,7 +105,7 @@ class BandRestControllerIT {
                 .managerId(42L)
                 .build());
 
-        BandInfoUpdateRequest request = new BandInfoUpdateRequest();
+        BandInfoUpdateDto request = new BandInfoUpdateDto();
         request.setId(band.getId());
         request.setName("Updated Band");
         request.setMusicalStyle("Mongolian rap");
@@ -101,7 +119,7 @@ class BandRestControllerIT {
 
     @Test
     void updateBand_notFound() throws Exception {
-        BandInfoUpdateRequest request = new BandInfoUpdateRequest();
+        BandInfoUpdateDto request = new BandInfoUpdateDto();
         request.setId(999L);
         request.setName("Updated Band");
         request.setMusicalStyle("POP");

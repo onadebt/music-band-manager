@@ -1,12 +1,9 @@
 package cz.muni.fi.bandmanagementservice.rest;
 
-import cz.muni.fi.bandmanagementservice.BandServiceApplication;
 import cz.muni.fi.bandmanagementservice.config.OpenAPIConfig;
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
-import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
 import cz.muni.fi.bandmanagementservice.facade.BandFacade;
 import cz.muni.fi.bandmanagementservice.dto.BandDto;
-import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
+import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,7 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/bands")
 @Tag(name = "Band API", description = "API for managing bands")
-public class BandRestController {
+public class BandController {
     private static final String GENERAL_SCOPE = "test_1";
     private static final String MANAGER_SCOPE = "test_2";
     private static final String MUSICIAN_SCOPE = "test_3";
@@ -37,7 +34,7 @@ public class BandRestController {
     private final BandFacade bandFacade;
 
     @Autowired
-    BandRestController(BandFacade facade) {
+    BandController(BandFacade facade) {
         this.bandFacade = facade;
     }
 
@@ -68,11 +65,7 @@ public class BandRestController {
             @ApiResponse(responseCode = "404", description = "Band not found")
     })
     public ResponseEntity<BandDto> getBand(@PathVariable Long id) {
-        try {
-            return new ResponseEntity<>(bandFacade.getBand(id), HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(bandFacade.getBand(id), HttpStatus.OK);
     }
 
     @PatchMapping
@@ -86,12 +79,8 @@ public class BandRestController {
             @ApiResponse(responseCode = "404", description = "Updated band not found", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "400", description = "Band could not be updated", content = @Content(mediaType = "application/problem+json"))
     })
-    public ResponseEntity<BandDto> updateBand(@RequestBody @Valid BandInfoUpdateRequest bandInfoUpdateRequest) {
-        try {
-            return new ResponseEntity<>(bandFacade.updateBand(bandInfoUpdateRequest), HttpStatus.OK);
-        } catch (ResourceNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<BandDto> updateBand(@RequestBody @Valid BandInfoUpdateDto bandInfoUpdateDto) {
+        return new ResponseEntity<>(bandFacade.updateBand(bandInfoUpdateDto), HttpStatus.OK);
     }
 
     @GetMapping
@@ -119,13 +108,7 @@ public class BandRestController {
             @ApiResponse(responseCode = "404", description = "Band doest not exist", content = @Content(mediaType = "application/problem+json"))
     })
     public ResponseEntity<BandDto> removeMember(@PathVariable Long bandId, @PathVariable Long memberId) {
-        try {
-            return new ResponseEntity<>(bandFacade.removeMember(bandId, memberId), HttpStatus.NO_CONTENT);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (InvalidOperationException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(bandFacade.removeMember(bandId, memberId), HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{bandId}/members/{memberId}")
@@ -140,12 +123,6 @@ public class BandRestController {
             @ApiResponse(responseCode = "404", description = "Band does not exist", content = @Content(mediaType = "application/problem+json"))
     })
     public ResponseEntity<BandDto> addMember(@PathVariable Long bandId, @PathVariable Long memberId) {
-        try {
-            return new ResponseEntity<>(bandFacade.addMember(bandId, memberId), HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (InvalidOperationException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(bandFacade.addMember(bandId, memberId), HttpStatus.OK);
     }
 }

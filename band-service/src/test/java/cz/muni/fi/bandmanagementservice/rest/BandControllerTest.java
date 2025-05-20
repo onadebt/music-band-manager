@@ -1,8 +1,8 @@
 package cz.muni.fi.bandmanagementservice.rest;
 
 import cz.muni.fi.bandmanagementservice.dto.BandDto;
-import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
-import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
+import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
+import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
 import cz.muni.fi.bandmanagementservice.facade.BandFacade;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 
@@ -23,12 +24,12 @@ import static org.mockito.Mockito.when;
  * Created by Ivan Yatskiv, changed during refactor by Tomáš Marek
  */
 @ExtendWith(MockitoExtension.class)
-public class BandRestControllerTest {
+public class BandControllerTest {
     @Mock
     private BandFacade bandFacade;
 
     @InjectMocks
-    private BandRestController controller;
+    private BandController controller;
 
 
     @Test
@@ -55,17 +56,16 @@ public class BandRestControllerTest {
 
     @Test
     void testGetBand_NotFound() {
-        when(bandFacade.getBand(1L)).thenThrow(new ResourceNotFoundException("Not found"));
+        when(bandFacade.getBand(1L)).thenThrow(new BandNotFoundException(1L));
 
-        ResponseEntity<BandDto> response = controller.getBand(1L);
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(BandNotFoundException.class, () -> controller.getBand(1L));
     }
 
     @Test
     void testUpdateBand_Success() {
         BandDto updatedBand = new BandDto();
-        BandInfoUpdateRequest updateRequest = new BandInfoUpdateRequest();
+        BandInfoUpdateDto updateRequest = new BandInfoUpdateDto();
         when(bandFacade.updateBand(updateRequest)).thenReturn(updatedBand);
 
         ResponseEntity<BandDto> response = controller.updateBand(updateRequest);
@@ -76,12 +76,10 @@ public class BandRestControllerTest {
 
     @Test
     void testUpdateBand_NotFound() {
-        BandInfoUpdateRequest updateRequest = new BandInfoUpdateRequest();
-        when(bandFacade.updateBand(updateRequest)).thenThrow(new ResourceNotFoundException("Not found"));
+        BandInfoUpdateDto updateRequest = new BandInfoUpdateDto();
+        when(bandFacade.updateBand(updateRequest)).thenThrow(new BandNotFoundException(null));
 
-        ResponseEntity<BandDto> response = controller.updateBand(updateRequest);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(BandNotFoundException.class, () -> controller.updateBand(updateRequest));
     }
 
     @Test
@@ -108,11 +106,9 @@ public class BandRestControllerTest {
 
     @Test
     void testRemoveMember_NotFound() {
-        when(bandFacade.removeMember(1L, 2L)).thenThrow(new ResourceNotFoundException("Not found"));
+        when(bandFacade.removeMember(1L, 2L)).thenThrow(new BandNotFoundException(1L));
 
-        ResponseEntity<BandDto> response = controller.removeMember(1L, 2L);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(BandNotFoundException.class, () -> controller.removeMember(1L, 2L));
     }
 
     @Test
@@ -128,10 +124,8 @@ public class BandRestControllerTest {
 
     @Test
     void testAddMember_NotFound() {
-        when(bandFacade.addMember(1L, 2L)).thenThrow(new ResourceNotFoundException("Not found"));
+        when(bandFacade.addMember(1L, 2L)).thenThrow(new BandNotFoundException(1L));
 
-        ResponseEntity<BandDto> response = controller.addMember(1L, 2L);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertThrows(BandNotFoundException.class, () -> controller.addMember(1L, 2L));
     }
 }

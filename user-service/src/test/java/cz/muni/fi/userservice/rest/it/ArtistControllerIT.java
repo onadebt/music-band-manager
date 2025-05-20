@@ -50,12 +50,6 @@ class ArtistControllerIT {
     ArtistRepository artistRepository;
 
     @Autowired
-    ArtistMapper artistMapper;
-
-    @MockitoBean
-    BandOfferEventListener bandOfferEventListener;
-
-    @Autowired
     ObjectMapper objectMapper;
 
     @BeforeEach
