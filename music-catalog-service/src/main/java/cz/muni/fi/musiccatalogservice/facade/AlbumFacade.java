@@ -56,12 +56,12 @@ public class AlbumFacade {
         return enrichAlbumWithSongs(album);
     }
 
-    public AlbumDto createAlbum(AlbumDto albumDTO) {
-        if (albumDTO == null) {
+    public AlbumDto createAlbum(AlbumDto albumDto) {
+        if (albumDto == null) {
             throw new IllegalArgumentException("Album data cannot be null");
         }
 
-        Album album = albumMapper.toEntity(albumDTO);
+        Album album = albumMapper.toEntity(albumDto);
         Album savedAlbum = albumService.createAlbum(album);
         return enrichAlbumWithSongs(savedAlbum);
     }
@@ -88,9 +88,9 @@ public class AlbumFacade {
     }
 
     private AlbumDto enrichAlbumWithSongs(Album album) {
-        AlbumDto albumDTO = albumMapper.toDto(album);
+        AlbumDto albumDto = albumMapper.toDto(album);
         List<SongDto> songs = songFacade.getSongsByAlbum(album.getId());
-        albumDTO.setSongs(songs);
-        return albumDTO;
+        albumDto.setSongs(songs);
+        return albumDto;
     }
 }

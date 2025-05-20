@@ -15,7 +15,7 @@ public interface SongMapper {
     SongDto toDto(Song song);
 
     @Mapping(target = "album", ignore = true)
-    Song toEntity(SongDto songDTO);
+    Song toEntity(SongDto songDto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "album", ignore = true)

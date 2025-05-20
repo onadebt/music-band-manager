@@ -13,7 +13,7 @@ public interface AlbumMapper {
     AlbumDto toDto(Album album);
 
     @Mapping(target = "songs", ignore = true)
-    Album toEntity(AlbumDto albumDTO);
+    Album toEntity(AlbumDto albumDto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "songs", ignore = true)

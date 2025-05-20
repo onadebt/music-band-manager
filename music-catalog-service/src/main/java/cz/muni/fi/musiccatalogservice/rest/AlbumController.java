@@ -93,8 +93,8 @@ public class AlbumController {
     )
     @PostMapping
     public ResponseEntity<AlbumDto> createAlbum(
-            @Parameter(description = "Album to create", required = true) @Valid @RequestBody AlbumDto albumDTO) {
-        AlbumDto createdAlbum = albumFacade.createAlbum(albumDTO);
+            @Parameter(description = "Album to create", required = true) @Valid @RequestBody AlbumDto albumDto) {
+        AlbumDto createdAlbum = albumFacade.createAlbum(albumDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAlbum);
     }
 

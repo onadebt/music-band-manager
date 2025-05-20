@@ -79,20 +79,20 @@ public class SongFacade {
         return songMapper.toDto(savedSong);
     }
 
-    public SongDto updateSong(Long id, SongDto songDTO) {
+    public SongDto updateSong(Long id, SongDto songDto) {
         if (id == null) {
             throw new IllegalArgumentException("Song ID cannot be null");
         }
 
-        if (songDTO == null) {
+        if (songDto == null) {
             throw new IllegalArgumentException("Song data cannot be null");
         }
 
         Song song = songService.getSongById(id);
-        songMapper.updateEntityFromDto(songDTO, song);
+        songMapper.updateEntityFromDto(songDto, song);
 
-        if (songDTO.getAlbumId() != null) {
-            Album album = albumService.getAlbumById(songDTO.getAlbumId());
+        if (songDto.getAlbumId() != null) {
+            Album album = albumService.getAlbumById(songDto.getAlbumId());
             song.setAlbum(album);
         } else {
             song.setAlbum(null);
