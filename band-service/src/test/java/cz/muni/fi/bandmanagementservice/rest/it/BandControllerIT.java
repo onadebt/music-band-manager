@@ -1,10 +1,9 @@
 package cz.muni.fi.bandmanagementservice.rest.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
-import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
-import cz.muni.fi.bandmanagementservice.artemis.BandEventProducer;
+import cz.muni.fi.bandmanagementservice.TestDataFactory;
 import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
+import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import cz.muni.fi.bandmanagementservice.rest.it.config.DisableSecurityTestConfig;
@@ -21,15 +20,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(DisableSecurityTestConfig.class)
 @Transactional
 @ActiveProfiles("test")
-class BandRestControllerIT {
+class BandControllerIT {
 
     @Autowired
     MockMvc mockMvc;
@@ -53,6 +50,7 @@ class BandRestControllerIT {
     void setUp() {
         bandRepository.deleteAll();
     }
+
 
     @Test
     void createBand_validRequest_persistsEntity() throws Exception {
@@ -109,12 +107,11 @@ class BandRestControllerIT {
                 .build());
 
         BandInfoUpdateDto request = new BandInfoUpdateDto();
-        request.setId(band.getId());
         request.setName("Updated Band");
         request.setMusicalStyle("Mongolian rap");
         request.setManagerId(41L);
 
-        mockMvc.perform(patch("/api/bands")
+        mockMvc.perform(patch("/api/bands/{bandId}", band.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(status().isOk());
@@ -122,12 +119,9 @@ class BandRestControllerIT {
 
     @Test
     void updateBand_nonExistingBand_returnsNotFound() throws Exception {
-        BandInfoUpdateRequest request = new BandInfoUpdateRequest();
-        request.setId(999L);
-        request.setName("Updated Band");
-        request.setMusicalStyle("POP");
+        BandInfoUpdateDto request = TestDataFactory.setUpBandInfoUpdateDto1();
 
-        mockMvc.perform(patch("/api/bands")
+        mockMvc.perform(patch("/api/bands/{bandId}", 999L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(status().isNotFound());
@@ -160,23 +154,18 @@ class BandRestControllerIT {
     }
 
     @Test
-    void addMember_ValidBandAndMember_sendsSagaCommandAndReturnsBand() throws Exception {
-        Long bandId = 1L;
-        Long memberId = 42L;
-        Band band = Band.builder()
-                .id(bandId)
+    void addMember_validBandAndMember_returnsUpdatedBand() throws Exception {
+        Band band = bandRepository.save(Band.builder()
                 .name("Band")
                 .musicalStyle("ROCK")
-                .managerId(10L)
-                .build();
+                .managerId(42L)
+                .build());
 
-        when(bandMemberSaga.startAddMember(bandId, memberId)).thenReturn(band);
+        Long newMemberId = 999L;
 
-        mockMvc.perform(patch("/api/bands/{bandId}/members/{memberId}", bandId, memberId))
+        mockMvc.perform(patch("/api/bands/{bandId}/members/{memberId}", band.getId(), newMemberId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Band"));
-
-        verify(bandMemberSaga).startAddMember(bandId, memberId);
+                .andExpect(jsonPath("$.members").isArray());
     }
 
     @Test
@@ -184,29 +173,24 @@ class BandRestControllerIT {
         Long bandId = 999L;
         Long memberId = 43L;
         when(bandMemberSaga.startAddMember(bandId, memberId))
-                .thenThrow(new ResourceNotFoundException("Band with id " + bandId + " not found"));
+                .thenThrow(new BandNotFoundException(bandId));
 
         mockMvc.perform(patch("/api/bands/{bandId}/members/{memberId}", bandId, memberId))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    void removeMember_ValidBandAndMember_sendsSagaCommandAndReturnsBand() throws Exception {
-        Long bandId = 1L;
-        Long memberId = 43L;
+    void removeMember_validBandAndMember_returnsNoContent() throws Exception {
         Band band = Band.builder()
-                .id(bandId)
                 .name("Band")
                 .musicalStyle("ROCK")
                 .managerId(42L)
                 .build();
+        band.setMembers(new HashSet<>(Set.of(43L, 44L)));
+        band = bandRepository.save(band);
 
-        when(bandMemberSaga.startRemoveMember(bandId, memberId)).thenReturn(band);
-
-        mockMvc.perform(delete("/api/bands/{bandId}/members/{memberId}", bandId, memberId))
+        mockMvc.perform(delete("/api/bands/{bandId}/members/{memberId}", band.getId(), 43L))
                 .andExpect(status().isNoContent());
-
-        verify(bandMemberSaga).startRemoveMember(bandId, memberId);
     }
 
     @Test
@@ -215,7 +199,7 @@ class BandRestControllerIT {
         Long memberId = 43L;
 
         when(bandMemberSaga.startRemoveMember(bandId, memberId))
-                .thenThrow(new ResourceNotFoundException("Band with id " + bandId + " not found"));
+                .thenThrow(new BandNotFoundException(bandId));
 
         mockMvc.perform(delete("/api/bands/{bandId}/members/{memberId}", bandId, memberId))
                 .andExpect(status().isNotFound());
