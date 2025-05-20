@@ -30,6 +30,10 @@ public class BandService {
     }
 
     public Band createBand(String name, String musicalStyle, Long managerId){
+        Optional<Band> sameNameBand = bandRepository.findByName(name);
+        if (sameNameBand.isPresent()){
+            throw new InvalidOperationException("Band " + name + " already exists");
+        }
         Band newBand = new Band(null, name, musicalStyle, managerId);
         return bandRepository.save(newBand);
     }

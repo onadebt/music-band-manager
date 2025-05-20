@@ -1,8 +1,10 @@
 package cz.muni.fi.bandmanagementservice.rest.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.muni.fi.bandmanagementservice.TestDataFactory;
 import cz.muni.fi.bandmanagementservice.artemis.BandEventProducer;
 import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
+import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import cz.muni.fi.bandmanagementservice.rest.it.config.DisableSecurityTestConfig;
@@ -20,9 +22,14 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -58,6 +65,21 @@ class BandControllerIT {
                 .andExpect(jsonPath("$.name").value("Band"));
 
         assertThat(bandRepository.findByName("Band")).isPresent();
+    }
+
+    @Test
+    void testCreateBand_namedAlreadyUsed_throwsException() throws Exception {
+        String usedName = "Used Name";
+        bandRepository.save(new Band(null, usedName, "Rock", 1L));
+        long before = bandRepository.count();
+
+        mockMvc.perform(post("/api/bands")
+                        .param("name", usedName)
+                        .param("musicalStyle", "ROCK")
+                        .param("managerId", "42"))
+                .andExpect(status().isBadRequest());
+
+        assertThat(before).isEqualTo(bandRepository.count());
     }
 
     @Test
