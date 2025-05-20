@@ -3,7 +3,8 @@ package cz.muni.fi.bandmanagementservice.service;
 import cz.muni.fi.bandmanagementservice.artemis.BandOfferEventProducer;
 import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
 import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
+import cz.muni.fi.bandmanagementservice.exceptions.CannotManipulateOfferException;
+import cz.muni.fi.bandmanagementservice.exceptions.InvalidManagerException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandOffer;
 import cz.muni.fi.events.bandoffer.BandOfferAcceptedEvent;
@@ -83,7 +84,7 @@ class BandOfferServiceTest {
         Band band = new Band(1L, "Test Band", "Jazz", 4L);
         when(bandRepository.findById(1L)).thenReturn(Optional.of(band));
 
-        assertThrows(InvalidOperationException.class, () -> bandOfferService.createBandOffer(1L, 2L, 3L));
+        assertThrows(InvalidManagerException.class, () -> bandOfferService.createBandOffer(1L, 2L, 3L));
         verify(bandRepository).findById(1L);
     }
 
@@ -151,7 +152,7 @@ class BandOfferServiceTest {
 
         when(bandOfferRepository.findById(1L)).thenReturn(Optional.of(bandOffer));
 
-        assertThrows(InvalidOperationException.class, () -> bandOfferService.revokeOffer(1L));
+        assertThrows(CannotManipulateOfferException.class, () -> bandOfferService.revokeOffer(1L));
         verify(bandOfferRepository).findById(1L);
     }
 }

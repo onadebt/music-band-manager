@@ -1,9 +1,11 @@
 package cz.muni.fi.bandmanagementservice.service;
 
 import cz.muni.fi.bandmanagementservice.artemis.BandEventProducer;
+import cz.muni.fi.bandmanagementservice.exceptions.BandAlreadyExistsException;
 import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
+import cz.muni.fi.bandmanagementservice.exceptions.MusicianAlreadyInBandException;
+import cz.muni.fi.bandmanagementservice.exceptions.MusicianNotInBandException;
 import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import cz.muni.fi.events.band.BandRemoveMemberEvent;
@@ -32,7 +34,7 @@ public class BandService {
     public Band createBand(String name, String musicalStyle, Long managerId){
         Optional<Band> sameNameBand = bandRepository.findByName(name);
         if (sameNameBand.isPresent()){
-            throw new InvalidOperationException("Band " + name + " already exists");
+            throw new BandAlreadyExistsException("Band with name \"" + name + "\" already exists");
         }
         Band newBand = new Band(null, name, musicalStyle, managerId);
         return bandRepository.save(newBand);
@@ -66,7 +68,7 @@ public class BandService {
     public Band removeMember(Long bandId, Long memberId){
         Band band = getBand(bandId);
         if (!band.getMembers().contains(memberId)){
-            throw new InvalidOperationException("Member with id %d is not part of band %d".formatted(memberId, bandId));
+            throw new MusicianNotInBandException(bandId, memberId);
         }
         band.removeMember(memberId);
         var updatedBand = bandRepository.save(band);
@@ -84,7 +86,7 @@ public class BandService {
     public Band addMember(Long bandId, Long memberId){
         Band band = getBand(bandId);
         if (band.getMembers().contains(memberId)){
-            throw new InvalidOperationException("Member with id %d is already part of band %d".formatted(memberId, bandId));
+            throw new MusicianAlreadyInBandException(bandId, memberId);
         }
         band.addMember(memberId);
         var updatedBand = bandRepository.save(band);

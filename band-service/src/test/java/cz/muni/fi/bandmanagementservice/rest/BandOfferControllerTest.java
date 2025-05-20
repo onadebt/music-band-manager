@@ -2,8 +2,9 @@ package cz.muni.fi.bandmanagementservice.rest;
 
 import cz.muni.fi.bandmanagementservice.dto.BandOfferDto;
 import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
+import cz.muni.fi.bandmanagementservice.exceptions.CannotManipulateOfferException;
 import cz.muni.fi.bandmanagementservice.facade.BandOfferFacade;
+import cz.muni.fi.shared.enm.BandOfferStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -72,9 +73,9 @@ public class BandOfferControllerTest {
 
     @Test
     void testAcceptBandOffer_InvalidOperation() {
-        when(bandOfferFacade.acceptBandOffer(1L)).thenThrow(new InvalidOperationException("Invalid operation"));
+        when(bandOfferFacade.acceptBandOffer(1L)).thenThrow(new CannotManipulateOfferException(BandOfferStatus.ACCEPTED));
 
-        assertThrows(InvalidOperationException.class, () -> controller.acceptBandOffer(1L));
+        assertThrows(CannotManipulateOfferException.class, () -> controller.acceptBandOffer(1L));
     }
 
     @Test
@@ -103,10 +104,10 @@ public class BandOfferControllerTest {
 
     @Test
     void testRevokeBandOffer_InvalidOperation() {
-        doThrow(new InvalidOperationException("Invalid operation"))
+        doThrow(new CannotManipulateOfferException(BandOfferStatus.REJECTED))
                 .when(bandOfferFacade).revokeOffer(1L);
 
-        assertThrows(InvalidOperationException.class, () -> controller.revokeBandOffer(1L));
+        assertThrows(CannotManipulateOfferException.class, () -> controller.revokeBandOffer(1L));
     }
 }
 

@@ -1,8 +1,13 @@
 package cz.muni.fi.bandmanagementservice.rest.exceptionhandling;
 
+import cz.muni.fi.bandmanagementservice.exceptions.BandAlreadyExistsException;
 import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
+import cz.muni.fi.bandmanagementservice.exceptions.BandOfferAlreadyExistsException;
 import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
+import cz.muni.fi.bandmanagementservice.exceptions.CannotManipulateOfferException;
+import cz.muni.fi.bandmanagementservice.exceptions.InvalidManagerException;
+import cz.muni.fi.bandmanagementservice.exceptions.MusicianAlreadyInBandException;
+import cz.muni.fi.bandmanagementservice.exceptions.MusicianNotInBandException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +35,51 @@ public class BandExceptionHandler {
         return new ResponseEntity<>(pd, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(InvalidOperationException.class)
-    public ResponseEntity<?> handleBandNotFoundException(InvalidOperationException ex){
+    @ExceptionHandler(BandAlreadyExistsException.class)
+    public ResponseEntity<?> handleBandAlreadyExistsException(BandAlreadyExistsException ex){
         ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        pd.setTitle("Invalid operation");
+        pd.setTitle("Band already exists");
         pd.setDetail(ex.getMessage());
         return new ResponseEntity<>(pd, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(MusicianNotInBandException.class)
+    public ResponseEntity<?> handleMusicianNotInBandException(MusicianNotInBandException ex){
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        pd.setTitle("Member is not part of band");
+        pd.setDetail(ex.getMessage());
+        return new ResponseEntity<>(pd, HttpStatus.BAD_REQUEST);
+    }
 
+    @ExceptionHandler(MusicianAlreadyInBandException.class)
+    public ResponseEntity<?> handleMusicianAlreadyInBandException(MusicianAlreadyInBandException ex){
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        pd.setTitle("Member is already part of band");
+        pd.setDetail(ex.getMessage());
+        return new ResponseEntity<>(pd, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BandOfferAlreadyExistsException.class)
+    public ResponseEntity<?> handleBandOfferAlreadyExistsException(BandOfferAlreadyExistsException ex){
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        pd.setTitle("Band offer already exists");
+        pd.setDetail(ex.getMessage());
+        return new ResponseEntity<>(pd, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CannotManipulateOfferException.class)
+    public ResponseEntity<?> handleCannotManipulateOfferException(CannotManipulateOfferException ex){
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        pd.setTitle("Band Offer can no longer be manipulated");
+        pd.setDetail(ex.getMessage());
+        return new ResponseEntity<>(pd, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidManagerException.class)
+    public ResponseEntity<?> handleInvalidManagerException(InvalidManagerException ex){
+        ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        pd.setTitle("Invalid manager");
+        pd.setDetail(ex.getMessage());
+        return new ResponseEntity<>(pd, HttpStatus.BAD_REQUEST);
+    }
 }

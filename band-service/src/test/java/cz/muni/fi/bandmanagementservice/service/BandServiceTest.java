@@ -2,7 +2,7 @@ package cz.muni.fi.bandmanagementservice.service;
 
 import cz.muni.fi.bandmanagementservice.TestDataFactory;
 import cz.muni.fi.bandmanagementservice.artemis.BandEventProducer;
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
+import cz.muni.fi.bandmanagementservice.exceptions.BandAlreadyExistsException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
@@ -53,7 +53,7 @@ public class BandServiceTest {
         String usedName = presentBand.getName();
         when(bandRepository.findByName(usedName)).thenReturn(Optional.of(presentBand));
 
-        assertThrows(InvalidOperationException.class, () -> bandService.createBand(usedName, "New Style", 1L));
+        assertThrows(BandAlreadyExistsException.class, () -> bandService.createBand(usedName, "New Style", 1L));
         verify(bandRepository, times(0)).save(any());
     }
 

@@ -1,6 +1,6 @@
 package cz.muni.fi.bandmanagementservice.model;
 
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
+import cz.muni.fi.bandmanagementservice.exceptions.CannotManipulateOfferException;
 import cz.muni.fi.shared.enm.BandOfferStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,14 +47,14 @@ public class BandOffer {
 
     public void acceptOffer(){
         if (status != BandOfferStatus.PENDING){
-            throw new InvalidOperationException("The offer has already been accepted or rejected");
+            throw new CannotManipulateOfferException(status);
         }
         status = BandOfferStatus.ACCEPTED;
     }
 
     public void rejectOffer(){
         if (status != BandOfferStatus.PENDING){
-            throw new InvalidOperationException("The offer has already been accepted or rejected");
+            throw new CannotManipulateOfferException(status);
         }
         status = BandOfferStatus.REJECTED;
     }

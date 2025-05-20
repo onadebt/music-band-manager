@@ -2,8 +2,11 @@ package cz.muni.fi.bandmanagementservice.service;
 
 import cz.muni.fi.bandmanagementservice.artemis.BandOfferEventProducer;
 import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
+import cz.muni.fi.bandmanagementservice.exceptions.BandOfferAlreadyExistsException;
 import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
+import cz.muni.fi.bandmanagementservice.exceptions.CannotManipulateOfferException;
+import cz.muni.fi.bandmanagementservice.exceptions.InvalidManagerException;
+import cz.muni.fi.bandmanagementservice.exceptions.MusicianAlreadyInBandException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandOffer;
 import cz.muni.fi.bandmanagementservice.repository.BandOfferRepository;
@@ -51,13 +54,13 @@ public class BandOfferService {
         }
         Band offeredBand = maybeOfferedBand.get();
         if (!offeredBand.getManagerId().equals(offeringManagerId)) {
-            throw new InvalidOperationException("Offer can be created only by manager of the band");
+            throw new InvalidManagerException(bandId, offeringManagerId);
         }
         if (offeredBand.getMembers().contains(invitedMusicianId)) {
-            throw new InvalidOperationException("Musician is already member of the band");
+            throw new MusicianAlreadyInBandException(bandId, invitedMusicianId);
         }
         if (pendingOfferExists(invitedMusicianId, bandId)) {
-            throw new InvalidOperationException("There is already a pending band offer for given musician and band");
+            throw new BandOfferAlreadyExistsException(bandId, invitedMusicianId);
         }
         BandOffer newOffer = new BandOffer(null, bandId, invitedMusicianId, offeringManagerId);
         return bandOfferRepository.save(newOffer);
@@ -65,16 +68,17 @@ public class BandOfferService {
 
     public BandOffer acceptOffer(Long bandOfferId) {
         BandOffer bandOffer = getBandOffer(bandOfferId);
+        verifyOfferIsPending(bandOffer);
+
         bandOffer.acceptOffer();
         BandOffer accepted = bandOfferRepository.save(bandOffer);
 
         Optional<Band> newBand = bandRepository.findById(bandOffer.getBandId());
         if (newBand.isEmpty()) {
-            throw new IllegalStateException("Band with id %d not found".formatted(bandOffer.getBandId()));
+            throw new IllegalStateException("Band with id %d does not exist, cannot accept offer".formatted(bandOffer.getBandId()));
         }
         newBand.get().addMember(bandOffer.getInvitedMusicianId());
         bandRepository.save(newBand.get());
-
 
         bandOfferEventProducer.sendOfferAcceptedEvent(
                 BandOfferAcceptedEvent.builder()
@@ -90,15 +94,14 @@ public class BandOfferService {
 
     public BandOffer rejectOffer(Long bandOfferId) {
         BandOffer bandOffer = getBandOffer(bandOfferId);
+        verifyOfferIsPending(bandOffer);
         bandOffer.rejectOffer();
         return bandOfferRepository.save(bandOffer);
     }
 
     public void revokeOffer(Long bandOfferId) {
         BandOffer bandOffer = getBandOffer(bandOfferId);
-        if (bandOffer.getStatus() != BandOfferStatus.PENDING) {
-            throw new InvalidOperationException("BandOffer was already accepted or rejected and cannot be revoked");
-        }
+        verifyOfferIsPending(bandOffer);
         bandOfferRepository.delete(bandOffer);
     }
 
@@ -120,5 +123,11 @@ public class BandOfferService {
     private boolean pendingOfferExists(Long invitedMusicianId, Long bandId) {
         Optional<BandOffer> found = bandOfferRepository.findByBandIdAndInvitedMusicianId(invitedMusicianId, bandId);
         return found.filter(bandOffer -> bandOffer.getStatus() == BandOfferStatus.PENDING).isPresent();
+    }
+
+    private void verifyOfferIsPending(BandOffer offer) {
+        if (!offer.getStatus().equals(BandOfferStatus.PENDING)) {
+            throw new CannotManipulateOfferException(offer.getStatus());
+        }
     }
 }
