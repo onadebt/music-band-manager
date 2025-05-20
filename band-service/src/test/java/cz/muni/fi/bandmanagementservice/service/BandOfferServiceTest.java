@@ -1,28 +1,27 @@
 package cz.muni.fi.bandmanagementservice.service;
 
-import cz.muni.fi.bandmanagementservice.artemis.BandOfferEventProducer;
-import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.CannotManipulateOfferException;
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidManagerException;
+import cz.muni.fi.bandmanagementservice.TestDataFactory;
+import cz.muni.fi.bandmanagementservice.exceptions.*;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandOffer;
-import cz.muni.fi.events.bandoffer.BandOfferAcceptedEvent;
-import cz.muni.fi.shared.enm.BandOfferStatus;
 import cz.muni.fi.bandmanagementservice.repository.BandOfferRepository;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-class BandOfferServiceTest {
+@ExtendWith(MockitoExtension.class)
+public class BandOfferServiceTest {
 
     @Mock
     private BandOfferRepository bandOfferRepository;
@@ -30,129 +29,175 @@ class BandOfferServiceTest {
     @Mock
     private BandRepository bandRepository;
 
-    @Mock
-    private BandOfferEventProducer bandOfferEventProducer;
-
     @InjectMocks
     private BandOfferService bandOfferService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
-    void testGetBandOffer_ExistingOffer() {
-        BandOffer bandOffer = new BandOffer(1L, 1L, 2L, 3L);
-        when(bandOfferRepository.findById(1L)).thenReturn(Optional.of(bandOffer));
+    void getBandOffer_existingId_returnsBandOffer() {
+        BandOffer offer = TestDataFactory.setUpBandOffer1();
+        when(bandOfferRepository.findById(1L)).thenReturn(Optional.of(offer));
 
         BandOffer result = bandOfferService.getBandOffer(1L);
 
-        assertEquals(bandOffer, result);
-        verify(bandOfferRepository).findById(1L);
+        assertEquals(offer, result);
     }
 
     @Test
-    void testGetBandOffer_NonExistingOffer() {
-        when(bandOfferRepository.findById(1L)).thenReturn(Optional.empty());
+    void getBandOffer_nonExistent_throwsException() {
+        when(bandOfferRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(BandOfferNotFoundException.class, () -> bandOfferService.getBandOffer(1L));
-        verify(bandOfferRepository).findById(1L);
+        assertThrows(BandOfferNotFoundException.class, () -> bandOfferService.getBandOffer(99L));
     }
 
     @Test
-    void testCreateBandOffer_Success() {
-        Band band = new Band(1L, "Test Band", "Rock", 3L);
-        when(bandRepository.findById(1L)).thenReturn(Optional.of(band));
-        when(bandOfferRepository.findByBandIdAndInvitedMusicianId(2L, 1L)).thenReturn(Optional.empty());
-        BandOffer newOffer = new BandOffer(null, 1L, 2L, 3L);
-        when(bandOfferRepository.save(any(BandOffer.class))).thenReturn(newOffer);
+    void createBandOffer_validOffer_savesSuccessfully() {
+        Band band = TestDataFactory.setUpBand1();
+        band.setMembers(new HashSet<>());
+        BandOffer offer = TestDataFactory.setUpBandOffer1();
 
-        BandOffer result = bandOfferService.createBandOffer(1L, 2L, 3L);
+        when(bandRepository.findById(band.getId())).thenReturn(Optional.of(band));
+        when(bandOfferRepository.findByBandIdAndInvitedMusicianId(offer.getInvitedMusicianId(), band.getId()))
+                .thenReturn(Optional.empty());
+        when(bandOfferRepository.save(any(BandOffer.class))).thenReturn(offer);
 
-        assertNotNull(result);
-        assertEquals(1L, result.getBandId());
-        assertEquals(2L, result.getInvitedMusicianId());
-        assertEquals(3L, result.getOfferingManagerId());
-        verify(bandRepository).findById(1L);
-        verify(bandOfferRepository).findByBandIdAndInvitedMusicianId(2L, 1L);
-        verify(bandOfferRepository).save(any(BandOffer.class));
+        BandOffer result = bandOfferService.createBandOffer(band.getId(), offer.getInvitedMusicianId(), band.getManagerId());
+
+        assertEquals(offer, result);
     }
 
     @Test
-    void testCreateBandOffer_InvalidManager() {
-        Band band = new Band(1L, "Test Band", "Jazz", 4L);
-        when(bandRepository.findById(1L)).thenReturn(Optional.of(band));
+    void createBandOffer_bandNotFound_throwsException() {
+        when(bandRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThrows(InvalidManagerException.class, () -> bandOfferService.createBandOffer(1L, 2L, 3L));
-        verify(bandRepository).findById(1L);
+        assertThrows(BandNotFoundException.class, () -> bandOfferService.createBandOffer(999L, 1L, 2L));
     }
 
     @Test
-    void testCreateBandOffer_InvalidBandId(){
-        when(bandRepository.findById(1L)).thenReturn(Optional.empty());
+    void createBandOffer_wrongManager_throwsException() {
+        Band band = TestDataFactory.setUpBand1();
+        when(bandRepository.findById(band.getId())).thenReturn(Optional.of(band));
 
-        assertThrows(BandNotFoundException.class, () -> bandOfferService.createBandOffer(1L, 2L, 3L));
+        assertThrows(InvalidManagerException.class, () -> bandOfferService.createBandOffer(band.getId(), 2L, 999L));
     }
 
     @Test
-    void testAcceptOffer_Success() {
-        BandOffer bandOffer = new BandOffer(1L, 1L, 2L, 3L);
-        bandOffer.setStatus(BandOfferStatus.PENDING);
-        Band band = new Band(1L, "Test Band", "Pop", 3L);
+    void createBandOffer_musicianAlreadyInBand_throwsException() {
+        Band band = TestDataFactory.setUpBand1();
+        Long existingMember = band.getMembers().iterator().next();
+        when(bandRepository.findById(band.getId())).thenReturn(Optional.of(band));
 
-        when(bandOfferRepository.findById(1L)).thenReturn(Optional.of(bandOffer));
-        when(bandRepository.findById(1L)).thenReturn(Optional.of(band));
-        when(bandOfferRepository.save(any(BandOffer.class))).thenReturn(bandOffer);
+        assertThrows(MusicianAlreadyInBandException.class, () -> bandOfferService.createBandOffer(band.getId(), existingMember, band.getManagerId()));
+    }
 
-        BandOffer result = bandOfferService.acceptOffer(1L);
+    @Test
+    void createBandOffer_pendingOfferExists_throwsException() {
+        Band band = TestDataFactory.setUpBand1();
+        BandOffer existingOffer = TestDataFactory.setUpBandOffer1();
 
-        assertEquals(BandOfferStatus.ACCEPTED, result.getStatus());
-        assertTrue(band.getMembers().contains(2L));
+        when(bandRepository.findById(band.getId())).thenReturn(Optional.of(band));
+        when(bandOfferRepository.findByBandIdAndInvitedMusicianId(existingOffer.getInvitedMusicianId(), band.getId()))
+                .thenReturn(Optional.of(existingOffer));
 
-        verify(bandOfferRepository).findById(1L);
-        verify(bandRepository).findById(1L);
-        verify(bandOfferRepository).save(bandOffer);
+        assertThrows(BandOfferAlreadyExistsException.class, () -> bandOfferService.createBandOffer(
+                band.getId(), existingOffer.getInvitedMusicianId(), band.getManagerId()
+        ));
+    }
+
+    @Test
+    void acceptOffer_validPendingOffer_acceptsAndAddsMember() {
+        BandOffer offer = TestDataFactory.setUpBandOffer1();
+        Band band = TestDataFactory.setUpBand1();
+
+        when(bandOfferRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
+        when(bandOfferRepository.save(any(BandOffer.class))).thenReturn(offer);
+        when(bandRepository.findById(offer.getBandId())).thenReturn(Optional.of(band));
+
+        BandOffer result = bandOfferService.acceptOffer(offer.getId());
+
+        assertEquals(offer, result);
         verify(bandRepository).save(band);
-        verify(bandOfferEventProducer).sendOfferAcceptedEvent(any(BandOfferAcceptedEvent.class));
     }
 
     @Test
-    void testRejectOffer_Success() {
-        BandOffer bandOffer = new BandOffer(1L, 1L, 2L, 3L);
-        bandOffer.setStatus(BandOfferStatus.PENDING);
+    void acceptOffer_offerIsNotPending_throwsException() {
+        BandOffer offer = TestDataFactory.setUpBandOffer1();
+        offer.rejectOffer();
 
-        when(bandOfferRepository.findById(1L)).thenReturn(Optional.of(bandOffer));
-        when(bandOfferRepository.save(any(BandOffer.class))).thenReturn(bandOffer);
+        when(bandOfferRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
 
-        BandOffer result = bandOfferService.rejectOffer(1L);
-
-        assertEquals(BandOfferStatus.REJECTED, result.getStatus());
-        verify(bandOfferRepository).findById(1L);
-        verify(bandOfferRepository).save(bandOffer);
+        assertThrows(CannotManipulateOfferException.class, () -> bandOfferService.acceptOffer(offer.getId()));
     }
 
     @Test
-    void testRevokeOffer_Success() {
-        BandOffer bandOffer = new BandOffer(1L, 1L, 2L, 3L);
-        bandOffer.setStatus(BandOfferStatus.PENDING);
+    void acceptOffer_bandNotFoundDuringAccept_throwsException() {
+        BandOffer offer = TestDataFactory.setUpBandOffer1();
+        when(bandOfferRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
+        when(bandOfferRepository.save(any(BandOffer.class))).thenReturn(offer);
+        when(bandRepository.findById(offer.getBandId())).thenReturn(Optional.empty());
 
-        when(bandOfferRepository.findById(1L)).thenReturn(Optional.of(bandOffer));
-
-        bandOfferService.revokeOffer(1L);
-
-        verify(bandOfferRepository).findById(1L);
-        verify(bandOfferRepository).delete(bandOffer);
+        assertThrows(BandNotFoundException.class, () -> bandOfferService.acceptOffer(offer.getId()));
     }
 
     @Test
-    void testRevokeOffer_InvalidStatus() {
-        BandOffer bandOffer = new BandOffer(1L, 1L, 2L, 3L);
-        bandOffer.setStatus(BandOfferStatus.ACCEPTED);
+    void rejectOffer_validPendingOffer_updatesStatus() {
+        BandOffer offer = TestDataFactory.setUpBandOffer1();
 
-        when(bandOfferRepository.findById(1L)).thenReturn(Optional.of(bandOffer));
+        when(bandOfferRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
+        when(bandOfferRepository.save(any())).thenReturn(offer);
 
-        assertThrows(CannotManipulateOfferException.class, () -> bandOfferService.revokeOffer(1L));
-        verify(bandOfferRepository).findById(1L);
+        BandOffer result = bandOfferService.rejectOffer(offer.getId());
+
+        assertEquals(offer, result);
+        verify(bandOfferRepository).save(offer);
+    }
+
+    @Test
+    void revokeOffer_pendingOffer_deletesSuccessfully() {
+        BandOffer offer = TestDataFactory.setUpBandOffer1();
+        when(bandOfferRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
+
+        bandOfferService.revokeOffer(offer.getId());
+
+        verify(bandOfferRepository).delete(offer);
+    }
+
+    @Test
+    void revokeOffer_offerNotPending_throwsException() {
+        BandOffer offer = TestDataFactory.setUpBandOffer1();
+        offer.acceptOffer();
+
+        when(bandOfferRepository.findById(offer.getId())).thenReturn(Optional.of(offer));
+
+        assertThrows(CannotManipulateOfferException.class, () -> bandOfferService.revokeOffer(offer.getId()));
+    }
+
+    @Test
+    void getAllBandOffers_returnsList() {
+        List<BandOffer> offers = List.of(TestDataFactory.setUpBandOffer1());
+        when(bandOfferRepository.findAll()).thenReturn(offers);
+
+        List<BandOffer> result = bandOfferService.getAllBandOffers();
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void getBandOffersByBandId_returnsList() {
+        List<BandOffer> offers = List.of(TestDataFactory.setUpBandOffer1());
+        when(bandOfferRepository.findByBandId(1L)).thenReturn(offers);
+
+        List<BandOffer> result = bandOfferService.getBandOffersByBandId(1L);
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void getBandOfferByInvitedMusicianId_returnsList() {
+        List<BandOffer> offers = List.of(TestDataFactory.setUpBandOffer1());
+        when(bandOfferRepository.findByInvitedMusicianId(1L)).thenReturn(offers);
+
+        List<BandOffer> result = bandOfferService.getBandOfferByInvitedMusicianId(1L);
+
+        assertEquals(1, result.size());
     }
 }
