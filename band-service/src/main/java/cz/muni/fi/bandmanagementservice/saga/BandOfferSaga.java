@@ -5,8 +5,7 @@ import cz.muni.fi.bandmanagementservice.exceptions.CannotManipulateOfferExceptio
 import cz.muni.fi.bandmanagementservice.model.BandOffer;
 import cz.muni.fi.bandmanagementservice.repository.BandOfferRepository;
 import cz.muni.fi.bandmanagementservice.service.BandOfferService;
-import cz.muni.fi.events.band.ArtistLinkedOkEvent;
-import cz.muni.fi.events.band.LinkArtistToBandCommand;
+import cz.muni.fi.events.bandoffer.BandOfferAcceptCommand;
 import cz.muni.fi.events.bandoffer.BandOfferAcceptFailedEvent;
 import cz.muni.fi.events.bandoffer.BandOfferAcceptOkEvent;
 import cz.muni.fi.shared.enm.BandOfferStatus;
@@ -20,8 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.UUID;
 
-import static cz.muni.fi.events.bandoffer.BandOfferEvents.BAND_OFFER_ACCEPT_FAILED_EVENT;
-import static cz.muni.fi.events.bandoffer.BandOfferEvents.BAND_OFFER_ACCEPT_OK_EVENT;
+import static cz.muni.fi.events.bandoffer.BandOfferEvents.*;
 
 @Slf4j
 @Service
@@ -42,10 +40,12 @@ public class BandOfferSaga {
         }
 
         UUID sagaId = UUID.randomUUID();
-        jmsTemplate.convertAndSend(BAND_OFFER_ACCEPT_OK_EVENT,
-                new LinkArtistToBandCommand(
+        jmsTemplate.convertAndSend(BAND_OFFER_ACCEPT_CMD,
+                new BandOfferAcceptCommand(
+                        bandOfferId,
                         optionalBandOffer.get().getBandId(),
                         optionalBandOffer.get().getInvitedMusicianId(),
+                        optionalBandOffer.get().getOfferingManagerId(),
                         sagaId
                 ),
                 message -> {
