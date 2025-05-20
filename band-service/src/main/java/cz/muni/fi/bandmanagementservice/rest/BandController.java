@@ -68,7 +68,7 @@ public class BandController {
         return new ResponseEntity<>(bandFacade.getBand(id), HttpStatus.OK);
     }
 
-    @PatchMapping
+    @PatchMapping("/{id}")
     @SecurityRequirement(
             name = OpenAPIConfig.SECURITY_SCHEME_NAME,
             scopes = {MANAGER_SCOPE}
@@ -79,8 +79,8 @@ public class BandController {
             @ApiResponse(responseCode = "404", description = "Updated band not found", content = @Content(mediaType = "application/problem+json")),
             @ApiResponse(responseCode = "400", description = "Band could not be updated", content = @Content(mediaType = "application/problem+json"))
     })
-    public ResponseEntity<BandDto> updateBand(@RequestBody @Valid BandInfoUpdateDto bandInfoUpdateDto) {
-        return new ResponseEntity<>(bandFacade.updateBand(bandInfoUpdateDto), HttpStatus.OK);
+    public ResponseEntity<BandDto> updateBand(@NotNull @PathVariable Long id, @RequestBody @Valid BandInfoUpdateDto bandInfoUpdateDto) {
+        return new ResponseEntity<>(bandFacade.updateBand(id, bandInfoUpdateDto), HttpStatus.OK);
     }
 
     @GetMapping
