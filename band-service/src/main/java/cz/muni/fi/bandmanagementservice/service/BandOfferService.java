@@ -5,7 +5,7 @@ import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandOffer;
 import cz.muni.fi.bandmanagementservice.repository.BandOfferRepository;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
-import cz.muni.fi.shared.enm.BandOfferStatus;
+import cz.muni.fi.shared.enums.BandOfferStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

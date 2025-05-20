@@ -1,7 +1,7 @@
 package cz.muni.fi.userservice.dto;
 
 
-import cz.muni.fi.shared.enm.Role;
+import cz.muni.fi.shared.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

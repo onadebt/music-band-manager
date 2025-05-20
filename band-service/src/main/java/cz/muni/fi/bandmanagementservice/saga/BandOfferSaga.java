@@ -8,7 +8,7 @@ import cz.muni.fi.bandmanagementservice.service.BandOfferService;
 import cz.muni.fi.events.bandoffer.BandOfferAcceptCommand;
 import cz.muni.fi.events.bandoffer.BandOfferAcceptFailedEvent;
 import cz.muni.fi.events.bandoffer.BandOfferAcceptOkEvent;
-import cz.muni.fi.shared.enm.BandOfferStatus;
+import cz.muni.fi.shared.enums.BandOfferStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package cz.muni.fi.userservice.dto;
 
-import cz.muni.fi.shared.enm.Role;
+import cz.muni.fi.shared.enums.Role;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

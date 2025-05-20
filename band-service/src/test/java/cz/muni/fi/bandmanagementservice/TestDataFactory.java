@@ -4,12 +4,11 @@ import cz.muni.fi.bandmanagementservice.dto.BandDto;
 import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
 import cz.muni.fi.bandmanagementservice.dto.BandOfferDto;
 import cz.muni.fi.bandmanagementservice.model.Band;
-import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.model.BandOffer;
 
 import java.util.Set;
 
-import static cz.muni.fi.shared.enm.BandOfferStatus.PENDING;
+import static cz.muni.fi.shared.enums.BandOfferStatus.PENDING;
 
 public class TestDataFactory {
 
