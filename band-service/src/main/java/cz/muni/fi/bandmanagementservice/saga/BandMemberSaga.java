@@ -1,6 +1,6 @@
 package cz.muni.fi.bandmanagementservice.saga;
 
-import cz.muni.fi.bandmanagementservice.exceptions.ResourceNotFoundException;
+import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import cz.muni.fi.bandmanagementservice.service.BandService;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
+
 import static cz.muni.fi.events.band.BandEvents.*;
 
 @Slf4j
@@ -28,7 +29,7 @@ public class BandMemberSaga {
     public Band startAddMember(Long bandId, Long memberId) {
         Optional<Band> optionalBand = bandRepository.findById(bandId);
         if (optionalBand.isEmpty()) {
-            throw new ResourceNotFoundException("Band with id " + bandId + " not found");
+            throw new BandNotFoundException(bandId);
         }
 
         UUID sagaId = UUID.randomUUID();
@@ -59,7 +60,7 @@ public class BandMemberSaga {
     public Band startRemoveMember(Long bandId, Long memberId) {
         Optional<Band> optionalBand = bandRepository.findById(bandId);
         if (optionalBand.isEmpty()) {
-            throw new ResourceNotFoundException("Band with id " + bandId + " not found");
+            throw new BandNotFoundException(bandId);
         }
 
         UUID sagaId = UUID.randomUUID();
