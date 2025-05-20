@@ -68,7 +68,7 @@ class BandControllerIT {
     }
 
     @Test
-    void testCreateBand_namedAlreadyUsed_throwsException() throws Exception {
+    void testCreateBand_namedAlreadyUsed_badRequest() throws Exception {
         String usedName = "Used Name";
         bandRepository.save(new Band(null, usedName, "Rock", 1L));
         long before = bandRepository.count();
