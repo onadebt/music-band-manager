@@ -56,7 +56,7 @@ public class TourControllerTest {
     }
 
     @Test
-    public void testGetAllTours() {
+    public void getAllTours_containsTwoTours_returnsListWithTwoTours() {
         when(tourFacade.getAllTours()).thenReturn(tourDtoList);
 
         ResponseEntity<List<TourDto>> response = tourController.getAllTours();
@@ -67,7 +67,7 @@ public class TourControllerTest {
     }
 
     @Test
-    public void testGetToursByBand() {
+    public void getToursByBand_twoToursMatch_returnsListWithTwoTours() {
         when(tourFacade.getToursByBand(anyLong())).thenReturn(tourDtoList);
 
         ResponseEntity<List<TourDto>> response = tourController.getToursByBand(1L);
@@ -78,7 +78,7 @@ public class TourControllerTest {
     }
 
     @Test
-    public void testGetTourById() {
+    public void getTourById_validId_returnsWantedTour() {
         when(tourFacade.getTourById(anyLong())).thenReturn(tourDTO);
 
         ResponseEntity<TourDto> response = tourController.getTourById(1L);
@@ -89,7 +89,7 @@ public class TourControllerTest {
     }
 
     @Test
-    public void testCreateTour() {
+    public void createTour_validData_returnsCreatedTour() {
         when(tourFacade.createTour(any(TourDto.class))).thenReturn(tourDTO);
 
         ResponseEntity<TourDto> response = tourController.createTour(tourDTO);
@@ -100,7 +100,7 @@ public class TourControllerTest {
     }
 
     @Test
-    public void testUpdateTour() {
+    public void updateTour_validData_returnsUpdatedTour() {
         when(tourFacade.updateTour(anyLong(), any(TourDto.class))).thenReturn(tourDTO);
 
         ResponseEntity<TourDto> response = tourController.updateTour(1L, tourDTO);
@@ -111,7 +111,7 @@ public class TourControllerTest {
     }
 
     @Test
-    public void testDeleteTour() {
+    public void deleteTour_validId_verifiesDeleteOnFacadeCalled() {
         doNothing().when(tourFacade).deleteTour(anyLong());
 
         ResponseEntity<Void> response = tourController.deleteTour(1L);
@@ -121,7 +121,7 @@ public class TourControllerTest {
     }
 
     @Test
-    public void testAddCityVisitToTour() {
+    public void addCityVisitToTour_validInput_verifiesAddCityVisitOnFacadeCalled() {
         CityVisitDto cityVisitDTO = new CityVisitDto();
         cityVisitDTO.setCityName("Berlin");
         doNothing().when(tourFacade).addCityVisitToTour(anyLong(), any(CityVisitDto.class));
@@ -133,7 +133,7 @@ public class TourControllerTest {
     }
 
     @Test
-    public void testRemoveCityVisitFromTour() {
+    public void removeCityVisitFromTour_visitAndTourExist_verifiesRemoveOnFacadeCalled() {
         doNothing().when(tourFacade).removeCityVisitFromTour(anyLong(), anyLong());
 
         ResponseEntity<Void> response = tourController.removeCityVisitFromTour(1L, 1L);
