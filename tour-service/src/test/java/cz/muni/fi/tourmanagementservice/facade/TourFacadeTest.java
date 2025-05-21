@@ -82,7 +82,7 @@ public class TourFacadeTest {
     }
 
     @Test
-    public void testGetAllTours() {
+    public void getAllTours_twoToursPresent_returnsListWithTwoTours() {
         when(tourService.getAllTours()).thenReturn(tourList);
         when(tourMapper.toDTO(any(Tour.class))).thenReturn(tourDTO);
 
@@ -94,7 +94,7 @@ public class TourFacadeTest {
     }
 
     @Test
-    public void testGetToursByBand() {
+    public void getToursByBand_twoAreMatched_returnsListWithTwoTours() {
         when(tourService.getToursByBand(anyLong())).thenReturn(tourList);
         when(tourMapper.toDTO(any(Tour.class))).thenReturn(tourDTO);
 
@@ -106,7 +106,7 @@ public class TourFacadeTest {
     }
 
     @Test
-    public void testGetTourById() {
+    public void getTourById_tourExists_returnsTour() {
         when(tourService.getTourById(anyLong())).thenReturn(tour);
         when(tourMapper.toDTO(any(Tour.class))).thenReturn(tourDTO);
 
@@ -119,7 +119,7 @@ public class TourFacadeTest {
     }
 
     @Test
-    public void testCreateTour() {
+    public void createTour_validData_callServiceAndReturnsNewTour() {
         when(tourMapper.toEntity(any(TourDto.class))).thenReturn(tour);
         when(tourService.createTour(any(Tour.class))).thenReturn(tour);
         when(tourMapper.toDTO(any(Tour.class))).thenReturn(tourDTO);
@@ -134,7 +134,7 @@ public class TourFacadeTest {
     }
 
     @Test
-    public void testUpdateTour() {
+    public void updateTour_validData_callServiceAndReturnsUpdatedTour() {
         when(tourMapper.toEntity(any(TourDto.class))).thenReturn(tour);
         when(tourService.updateTour(anyLong(), any(Tour.class))).thenReturn(tour);
         when(tourMapper.toDTO(any(Tour.class))).thenReturn(tourDTO);
@@ -149,7 +149,7 @@ public class TourFacadeTest {
     }
 
     @Test
-    public void testDeleteTour() {
+    public void deleteTour_tourExists_callsDeleteOnService() {
         doNothing().when(tourService).deleteTour(anyLong());
 
         tourFacade.deleteTour(1L);
@@ -158,7 +158,7 @@ public class TourFacadeTest {
     }
 
     @Test
-    public void testAddCityVisitToTour() {
+    public void addCityVisitToTour_tourExistsVisitValid_callsService() {
         when(cityVisitMapper.toEntity(any(CityVisitDto.class))).thenReturn(cityVisit);
         doNothing().when(tourService).addCityVisitToTour(anyLong(), any(CityVisit.class));
 
@@ -169,7 +169,7 @@ public class TourFacadeTest {
     }
 
     @Test
-    public void testRemoveCityVisitFromTour() {
+    public void removeCityVisitFromTour_tourAndVisitExist_callsRemoveOnService() {
         doNothing().when(tourService).removeCityVisitFromTour(anyLong(), anyLong());
 
         tourFacade.removeCityVisitFromTour(1L, 1L);
