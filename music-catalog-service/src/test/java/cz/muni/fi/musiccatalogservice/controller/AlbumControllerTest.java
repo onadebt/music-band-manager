@@ -33,7 +33,7 @@ public class AlbumControllerTest {
     private AlbumFacade albumFacade;
 
     @Test
-    void create_validRequest_returnsCreatedAlbumWithOkStatus() {
+    void createAlbum_validRequest_returnsCreatedAlbumWithCreatedStatus() {
         // Arrange
         Mockito.when(albumFacade.createAlbum(TestDataFactory.TEST_ALBUM_1_DTO)).thenReturn(TestDataFactory.TEST_ALBUM_1_DTO);
         // Act
@@ -76,7 +76,7 @@ public class AlbumControllerTest {
     }
 
     @Test
-    void deleteAlbum_validId_returnsEmptyEntityWithOkStatus() {
+    void deleteAlbum_validId_returnsEmptyEntityWithNoContentStatus() {
         // Act
         ResponseEntity<Void> response = albumController.deleteAlbum(TestDataFactory.TEST_ALBUM_1.getId());
 
@@ -102,7 +102,7 @@ public class AlbumControllerTest {
     }
 
     @Test
-    void getAlbumsByBandIds_twoAlbumsMatch_returnsListWithOkStatus() {
+    void getAlbumsByBand_twoAlbumsMatch_returnsListWithOkStatus() {
         // Arrange
         Long bandId = 2L;
         Mockito.when(albumFacade.getAlbumsByBand(bandId)).thenReturn(List.of(TestDataFactory.TEST_ALBUM_1_DTO, TestDataFactory.TEST_ALBUM_2_DTO));
@@ -119,7 +119,7 @@ public class AlbumControllerTest {
     }
 
     @Test
-    void addSongToAlbum_validRequest_returnsCreatedSongWithOkStatus() {
+    void addSongToAlbum_validRequest_returnsCreatedSongWithCreatedStatus() {
         // Arrange
         Long albumId = 1L;
         SongDto songDto = TestDataFactory.TEST_SONG_1_DTO;

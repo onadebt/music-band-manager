@@ -83,7 +83,7 @@ class AlbumRestControllerIT {
 
 
     @Test
-    void testGetAllAlbums() throws Exception {
+    void getAllAlbums_albumsExist_returnsCorrectList() throws Exception {
         mockMvc.perform(get("/api/albums"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -93,7 +93,7 @@ class AlbumRestControllerIT {
     }
 
     @Test
-    void testGetAlbumById() throws Exception {
+    void getAlbumById_validId_returnsCorrectAlbum() throws Exception {
         mockMvc.perform(get("/api/albums/{id}", testAlbum.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -103,14 +103,14 @@ class AlbumRestControllerIT {
     }
 
     @Test
-    void testGetAlbumByInvalidId() throws Exception {
+    void getAlbumById_invalidId_returnsNotFound() throws Exception {
         mockMvc.perform(get("/api/albums/{id}", 999L))
                 .andExpect(status().isNotFound());
     }
 
 
     @Test
-    void testCreateAlbum() throws Exception {
+    void createAlbum_validAlbumDto_returnsSavedAlbum() throws Exception {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setTitle("New Album");
         albumDto.setReleaseDate(LocalDateTime.now().minusDays(60));
@@ -127,7 +127,7 @@ class AlbumRestControllerIT {
 
 
     @Test
-    void testCreateInvalidAlbum() throws Exception {
+    void createAlbum_invalidData_returnsBadRequest() throws Exception {
         AlbumDto albumDto = new AlbumDto();
         // Empty title and null releaseDate
 
@@ -140,7 +140,7 @@ class AlbumRestControllerIT {
 
 
     @Test
-    void testUpdateAlbum() throws Exception {
+    void updateAlbum_validAlbumDto_returnsUpdatedAlbum() throws Exception {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setTitle("Updated Album");
         albumDto.setReleaseDate(LocalDateTime.now().minusDays(60));
@@ -154,7 +154,7 @@ class AlbumRestControllerIT {
     }
 
     @Test
-    void testUpdateInvalidAlbum() throws Exception {
+    void updateAlbum_nonExistentId_returnsBadRequest() throws Exception {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setTitle("Updated Album");
         albumDto.setReleaseDate(LocalDateTime.now().plusDays(90));
@@ -167,7 +167,7 @@ class AlbumRestControllerIT {
 
 
     @Test
-    void testDeleteAlbum() throws Exception {
+    void deleteAlbum_existingAlbum_removesFromDatabase() throws Exception {
         mockMvc.perform(delete("/api/albums/{id}", testAlbum.getId()))
                 .andExpect(status().isNoContent());
 
@@ -177,14 +177,14 @@ class AlbumRestControllerIT {
     }
 
     @Test
-    void testDeleteInvalidAlbum() throws Exception {
+    void deleteAlbum_nonExistentId_returnsNotFound() throws Exception {
         mockMvc.perform(delete("/api/albums/{id}", 999L))
                 .andExpect(status().isNotFound());
     }
 
 
     @Test
-    void testGetAlbumByBand() throws Exception {
+    void getAlbumsByBand_validBandId_returnsCorrectAlbums() throws Exception {
         mockMvc.perform(get("/api/albums/band/{bandId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -193,14 +193,14 @@ class AlbumRestControllerIT {
     }
 
     @Test
-    void testGetEmptyListForInvalidBand() throws Exception {
+    void getAlbumsByBand_nonExistentBandId_returnsEmptyList() throws Exception {
         mockMvc.perform(get("/api/albums/band/{bandId}", 999L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
     @Test
-    void testAddSongToAlbum() throws Exception {
+    void addSongToAlbum_validSongDto_returnsSavedSong() throws Exception {
         SongDto songDto = new SongDto();
         songDto.setName("New Album Song");
         songDto.setBandId(1L);
@@ -221,7 +221,7 @@ class AlbumRestControllerIT {
     }
 
     @Test
-    void testRemoveSongFromAlbum() throws Exception {
+    void removeSongFromAlbum_existingSong_removesFromAlbum() throws Exception {
         mockMvc.perform(get("/api/albums/{id}", testAlbum.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.songs", hasSize(1)))
@@ -241,7 +241,7 @@ class AlbumRestControllerIT {
     }
 
     @Test
-    void testAddSongToNonExistentAlbum() throws Exception {
+    void addSongToAlbum_nonExistentAlbumId_returnsNotFound() throws Exception {
         SongDto songDto = new SongDto();
         songDto.setName("Test Song");
         songDto.setBandId(1L);
@@ -254,7 +254,7 @@ class AlbumRestControllerIT {
     }
 
     @Test
-    void testRemoveSongThatIsNotInAlbum() throws Exception {
+    void removeSongFromAlbum_songNotInAlbum_returnsBadRequest() throws Exception {
         Song standaloneSong = new Song();
         standaloneSong.setName("Standalone Song");
         standaloneSong.setBandId(1L);
@@ -265,4 +265,3 @@ class AlbumRestControllerIT {
                 .andExpect(status().isBadRequest());
     }
 }
-

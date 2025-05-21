@@ -66,14 +66,14 @@ public class AlbumFacadeTest {
     }
 
     @Test
-    void findById_inputNull_throwsIllegalArgumentException() {
+    void getAlbumById_nullId_throwsIllegalArgumentException() {
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> albumFacade.getAlbumById(null));
         verify(albumService, Mockito.times(0)).getAlbumById(any());
     }
 
     @Test
-    void findById_invalidId_throwsIllegalArgumentException() {
+    void getAlbumById_invalidId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidId = -1L;
         Mockito.when(albumService.getAlbumById(invalidId))
@@ -85,7 +85,7 @@ public class AlbumFacadeTest {
     }
 
     @Test
-    void findById_validId_returnsFoundAlbum() {
+    void getAlbumById_validId_returnsFoundAlbum() {
         // Arrange
         Mockito.when(albumService.getAlbumById(TestDataFactory.TEST_ALBUM_1.getId())).thenReturn(TestDataFactory.TEST_ALBUM_1);
         Mockito.when(albumMapper.toDto(TestDataFactory.TEST_ALBUM_1)).thenReturn(TestDataFactory.TEST_ALBUM_1_DTO);
@@ -100,14 +100,14 @@ public class AlbumFacadeTest {
     }
 
     @Test
-    void findByBand_nullBandId_throwsIllegalArgumentException() {
+    void getAlbumsByBand_nullBandId_throwsIllegalArgumentException() {
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> albumFacade.getAlbumsByBand(null));
         verify(albumService, times(0)).getAlbumsByBand(any());
     }
 
     @Test
-    void findByUsername_invalidBandId_throwsIllegalArgumentException() {
+    void getAlbumsByBand_invalidBandId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidBandId = -1L;
         Mockito.when(albumService.getAlbumsByBand(invalidBandId))
@@ -119,7 +119,7 @@ public class AlbumFacadeTest {
     }
 
     @Test
-    void findAll_noAlbumStored_returnsEmptyList() {
+    void getAllAlbums_noAlbumsStored_returnsEmptyList() {
         // Arrange
         Mockito.when(albumService.getAllAlbums()).thenReturn(List.of());
 
@@ -132,7 +132,7 @@ public class AlbumFacadeTest {
     }
 
     @Test
-    void findAll_twoAlbumsStored_returnsList() {
+    void getAllAlbums_twoAlbumsStored_returnsList() {
         // Arrange
         Mockito.when(albumService.getAllAlbums()).thenReturn(List.of(TestDataFactory.TEST_ALBUM_1, TestDataFactory.TEST_ALBUM_2));
         Mockito.when(albumMapper.toDto(TestDataFactory.TEST_ALBUM_1)).thenReturn(TestDataFactory.TEST_ALBUM_1_DTO);

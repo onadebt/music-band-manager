@@ -32,7 +32,7 @@ public class SongControllerTest {
     private SongFacade songFacade;
 
     @Test
-    void create_validRequest_returnsCreatedSongWithOkStatus() {
+    void createSong_validRequest_returnsCreatedSongWithCreatedStatus() {
         // Arrange
         Mockito.when(songFacade.createSong(TestDataFactory.TEST_SONG_1_DTO)).thenReturn(TestDataFactory.TEST_SONG_1_DTO);
         // Act
@@ -75,7 +75,7 @@ public class SongControllerTest {
     }
 
     @Test
-    void deleteSong_validId_returnsEmptyEntityWithOkStatus() {
+    void deleteSong_validId_returnsEmptyEntityWithNoContentStatus() {
         // Act
         ResponseEntity<Void> response = songController.deleteSong(TestDataFactory.TEST_SONG_1.getId());
 
@@ -86,7 +86,7 @@ public class SongControllerTest {
     }
 
     @Test
-    void getSongsByBandIds_twoSongsMatch_returnsListWithOkStatus() {
+    void getSongsByBand_twoSongsMatch_returnsListWithOkStatus() {
         // Arrange
         Long bandId = 2L;
         Mockito.when(songFacade.getSongsByBand(bandId)).thenReturn(List.of(TestDataFactory.TEST_SONG_1_DTO, TestDataFactory.TEST_SONG_2_DTO));

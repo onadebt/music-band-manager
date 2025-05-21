@@ -57,14 +57,14 @@ public class SongFacadeTest {
     }
 
     @Test
-    void findById_inputNull_throwsIllegalArgumentException() {
+    void getSongById_nullId_throwsIllegalArgumentException() {
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> songFacade.getSongById(null));
         verify(songService, Mockito.times(0)).getSongById(any());
     }
 
     @Test
-    void findById_invalidId_throwsIllegalArgumentException() {
+    void getSongById_invalidId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidId = -1L;
         Mockito.when(songService.getSongById(invalidId))
@@ -76,7 +76,7 @@ public class SongFacadeTest {
     }
 
     @Test
-    void findById_validId_returnsFoundSong() {
+    void getSongById_validId_returnsFoundSong() {
         // Arrange
         Mockito.when(songService.getSongById(TestDataFactory.TEST_SONG_1.getId())).thenReturn(TestDataFactory.TEST_SONG_1);
         Mockito.when(songMapper.toDto(TestDataFactory.TEST_SONG_1)).thenReturn(TestDataFactory.TEST_SONG_1_DTO);
@@ -90,14 +90,14 @@ public class SongFacadeTest {
     }
 
     @Test
-    void findByBand_nullBandId_throwsIllegalArgumentException() {
+    void getSongsByBand_nullBandId_throwsIllegalArgumentException() {
         // Act / Assert
         assertThrows(IllegalArgumentException.class, () -> songFacade.getSongsByBand(null));
         verify(songService, times(0)).getSongsByBand(any());
     }
 
     @Test
-    void findByUsername_invalidBandId_throwsIllegalArgumentException() {
+    void getSongsByBand_invalidBandId_throwsIllegalArgumentException() {
         // Arrange
         Long invalidBandId = -1L;
         Mockito.when(songService.getSongsByBand(invalidBandId))
@@ -109,7 +109,7 @@ public class SongFacadeTest {
     }
 
     @Test
-    void findAll_noSongStored_returnsEmptyList() {
+    void getAllSongs_noSongsStored_returnsEmptyList() {
         // Arrange
         Mockito.when(songService.getAllSongs()).thenReturn(List.of());
 
@@ -122,7 +122,7 @@ public class SongFacadeTest {
     }
 
     @Test
-    void findAll_twoSongsStored_returnsList() {
+    void getAllSongs_twoSongsStored_returnsList() {
         // Arrange
         Mockito.when(songService.getAllSongs()).thenReturn(List.of(TestDataFactory.TEST_SONG_1, TestDataFactory.TEST_SONG_2));
         Mockito.when(songMapper.toDto(TestDataFactory.TEST_SONG_1)).thenReturn(TestDataFactory.TEST_SONG_1_DTO);
