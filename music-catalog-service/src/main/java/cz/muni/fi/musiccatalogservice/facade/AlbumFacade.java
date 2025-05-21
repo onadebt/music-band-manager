@@ -3,7 +3,9 @@ package cz.muni.fi.musiccatalogservice.facade;
 import cz.muni.fi.musiccatalogservice.dto.AlbumDto;
 import cz.muni.fi.musiccatalogservice.dto.SongDto;
 import cz.muni.fi.musiccatalogservice.mapper.AlbumMapper;
+import cz.muni.fi.musiccatalogservice.mapper.SongMapper;
 import cz.muni.fi.musiccatalogservice.model.Album;
+import cz.muni.fi.musiccatalogservice.model.Song;
 import cz.muni.fi.musiccatalogservice.service.AlbumService;
 import cz.muni.fi.musiccatalogservice.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +20,15 @@ public class AlbumFacade {
     private final AlbumService albumService;
     private final SongService songService;
     private final AlbumMapper albumMapper;
-    private final SongFacade songFacade;
+    private final SongMapper songMapper;
 
     @Autowired
     public AlbumFacade(AlbumService albumService, SongService songService,
-                       AlbumMapper albumMapper, SongFacade songFacade) {
+                       AlbumMapper albumMapper, SongMapper songMapper) {
         this.albumService = albumService;
         this.songService = songService;
         this.albumMapper = albumMapper;
-        this.songFacade = songFacade;
+        this.songMapper = songMapper;
     }
 
     public List<AlbumDto> getAllAlbums() {
@@ -89,8 +91,68 @@ public class AlbumFacade {
 
     private AlbumDto enrichAlbumWithSongs(Album album) {
         AlbumDto albumDto = albumMapper.toDto(album);
-        List<SongDto> songs = songFacade.getSongsByAlbum(album.getId());
+        List<SongDto> songs = songService.getSongsByAlbum(album.getId()).stream()
+                .map(songMapper::toDto)
+                .collect(Collectors.toList());
         albumDto.setSongs(songs);
         return albumDto;
+    }
+
+    public SongDto addSongToAlbum(Long albumId, SongDto songDto) {
+        if (albumId == null) {
+            throw new IllegalArgumentException("Album ID cannot be null");
+        }
+
+        if (songDto == null) {
+            throw new IllegalArgumentException("Song data cannot be null");
+        }
+
+        Album album = albumService.getAlbumById(albumId);
+        Song song;
+
+        if (songDto.getId() != null) {
+            song = songService.getSongById(songDto.getId());
+            song.setAlbum(album);
+        } else {
+            song = songMapper.toEntity(songDto);
+            song.setAlbum(album);
+        }
+
+        song.setBandId(album.getBandId());
+        album.addSong(song);
+
+        Album updatedAlbum = albumService.updateAlbum(albumId, album);
+        Song savedSong = updatedAlbum.getSongs().stream()
+                .filter(s -> s.getName().equals(song.getName()) && s.getDuration() == song.getDuration())
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Failed to retrieve saved song"));
+
+        return songMapper.toDto(savedSong);
+    }
+
+    public void removeSongFromAlbum(Long albumId, Long songId) {
+        if (albumId == null) {
+            throw new IllegalArgumentException("Album ID cannot be null");
+        }
+
+        if (songId == null) {
+            throw new IllegalArgumentException("Song ID cannot be null");
+        }
+
+        Album album = albumService.getAlbumById(albumId);
+        Song song = songService.getSongById(songId);
+
+        if (song.getAlbum() == null) {
+            throw new IllegalArgumentException("Song is not associated with any album");
+        }
+
+        if (!album.getId().equals(song.getAlbum().getId())) {
+            throw new IllegalArgumentException("Song does not belong to the specified album");
+        }
+
+        album.removeSong(song);
+
+        songService.updateSong(songId, song);
+        albumService.updateAlbum(albumId, album);
     }
 }

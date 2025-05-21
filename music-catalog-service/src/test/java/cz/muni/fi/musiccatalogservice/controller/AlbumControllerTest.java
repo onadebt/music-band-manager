@@ -2,6 +2,7 @@ package cz.muni.fi.musiccatalogservice.controller;
 
 import cz.muni.fi.musiccatalogservice.TestDataFactory;
 import cz.muni.fi.musiccatalogservice.dto.AlbumDto;
+import cz.muni.fi.musiccatalogservice.dto.SongDto;
 import cz.muni.fi.musiccatalogservice.facade.AlbumFacade;
 import cz.muni.fi.musiccatalogservice.rest.AlbumController;
 import org.junit.jupiter.api.Test;
@@ -115,5 +116,37 @@ public class AlbumControllerTest {
         assertEquals(2, Objects.requireNonNull(response.getBody()).size());
         assertThat(Objects.requireNonNull(response.getBody()).contains(TestDataFactory.TEST_ALBUM_1_DTO)).isTrue();
         assertThat(Objects.requireNonNull(response.getBody()).contains(TestDataFactory.TEST_ALBUM_2_DTO)).isTrue();
+    }
+
+    @Test
+    void addSongToAlbum_validRequest_returnsCreatedSongWithOkStatus() {
+        // Arrange
+        Long albumId = 1L;
+        SongDto songDto = TestDataFactory.TEST_SONG_1_DTO;
+        Mockito.when(albumFacade.addSongToAlbum(albumId, songDto)).thenReturn(songDto);
+
+        // Act
+        ResponseEntity<SongDto> response = albumController.addSongToAlbum(albumId, songDto);
+
+        // Assert
+        assertThat(response.getStatusCode().value()).isEqualTo(201);
+        assertThat(response.hasBody()).isTrue();
+        assertThat(response.getBody()).isEqualTo(songDto);
+        verify(albumFacade, times(1)).addSongToAlbum(albumId, songDto);
+    }
+
+    @Test
+    void removeSongFromAlbum_validRequest_returnsNoContentStatus() {
+        // Arrange
+        Long albumId = 1L;
+        Long songId = 1L;
+
+        // Act
+        ResponseEntity<Void> response = albumController.removeSongFromAlbum(albumId, songId);
+
+        // Assert
+        assertThat(response.getStatusCode().value()).isEqualTo(204);
+        assertThat(response.hasBody()).isFalse();
+        verify(albumFacade, times(1)).removeSongFromAlbum(albumId, songId);
     }
 }

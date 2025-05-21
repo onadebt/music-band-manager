@@ -66,13 +66,16 @@ public class SongRestControllerIT {
         // Create test album
         testAlbum = new Album();
         testAlbum.setTitle("Test Album");
-        testAlbum.setReleaseDate(LocalDateTime.now().plusDays(30));
+        testAlbum.setBandId(1L);
+        // Use minusDays instead of plusDays to make the date in the past
+        testAlbum.setReleaseDate(LocalDateTime.now().minusDays(30));
         testAlbum = albumRepository.save(testAlbum);
 
         // Create test song
         testSong = new Song();
         testSong.setName("Test Song");
         testSong.setBandId(1L);
+        testSong.setDuration(180);
         testSong.setAlbum(testAlbum);
         testSong = songRepository.save(testSong);
     }
