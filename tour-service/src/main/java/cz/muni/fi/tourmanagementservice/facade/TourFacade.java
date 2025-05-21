@@ -1,4 +1,4 @@
-package cz.muni.fi.tourmanagementservice.facades;
+package cz.muni.fi.tourmanagementservice.facade;
 
 
 import cz.muni.fi.tourmanagementservice.dto.CityVisitDto;

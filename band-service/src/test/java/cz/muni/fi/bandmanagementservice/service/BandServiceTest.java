@@ -1,22 +1,18 @@
 package cz.muni.fi.bandmanagementservice.service;
 
 import cz.muni.fi.bandmanagementservice.TestDataFactory;
-import cz.muni.fi.bandmanagementservice.exceptions.BandAlreadyExistsException;
-import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.MusicianAlreadyInBandException;
-import cz.muni.fi.bandmanagementservice.exceptions.MusicianNotInBandException;
+import cz.muni.fi.bandmanagementservice.exception.BandAlreadyExistsException;
+import cz.muni.fi.bandmanagementservice.exception.BandNotFoundException;
+import cz.muni.fi.bandmanagementservice.exception.MusicianAlreadyInBandException;
+import cz.muni.fi.bandmanagementservice.exception.MusicianNotInBandException;
 import cz.muni.fi.bandmanagementservice.model.Band;
-import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;

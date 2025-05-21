@@ -1,10 +1,10 @@
-package cz.muni.fi.tourmanagementservice.controller;
+package cz.muni.fi.tourmanagementservice.rest;
 
 
 import cz.muni.fi.tourmanagementservice.config.OpenApiConfig;
 import cz.muni.fi.tourmanagementservice.dto.CityVisitDto;
 import cz.muni.fi.tourmanagementservice.dto.TourDto;
-import cz.muni.fi.tourmanagementservice.facades.TourFacade;
+import cz.muni.fi.tourmanagementservice.facade.TourFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -1,13 +1,13 @@
 package cz.muni.fi.bandmanagementservice.rest.exceptionhandling;
 
-import cz.muni.fi.bandmanagementservice.exceptions.BandAlreadyExistsException;
-import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.BandOfferAlreadyExistsException;
-import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.CannotManipulateOfferException;
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidManagerException;
-import cz.muni.fi.bandmanagementservice.exceptions.MusicianAlreadyInBandException;
-import cz.muni.fi.bandmanagementservice.exceptions.MusicianNotInBandException;
+import cz.muni.fi.bandmanagementservice.exception.BandAlreadyExistsException;
+import cz.muni.fi.bandmanagementservice.exception.BandNotFoundException;
+import cz.muni.fi.bandmanagementservice.exception.BandOfferAlreadyExistsException;
+import cz.muni.fi.bandmanagementservice.exception.BandOfferNotFoundException;
+import cz.muni.fi.bandmanagementservice.exception.CannotManipulateOfferException;
+import cz.muni.fi.bandmanagementservice.exception.InvalidManagerException;
+import cz.muni.fi.bandmanagementservice.exception.MusicianAlreadyInBandException;
+import cz.muni.fi.bandmanagementservice.exception.MusicianNotInBandException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;

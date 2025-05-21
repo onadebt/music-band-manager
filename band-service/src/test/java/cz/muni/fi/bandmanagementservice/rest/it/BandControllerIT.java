@@ -3,7 +3,7 @@ package cz.muni.fi.bandmanagementservice.rest.it;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.muni.fi.bandmanagementservice.TestDataFactory;
 import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
-import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
+import cz.muni.fi.bandmanagementservice.exception.BandNotFoundException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import cz.muni.fi.bandmanagementservice.rest.it.config.DisableSecurityTestConfig;

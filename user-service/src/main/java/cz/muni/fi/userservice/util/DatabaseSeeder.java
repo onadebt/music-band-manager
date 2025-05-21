@@ -1,6 +1,6 @@
 package cz.muni.fi.userservice.util;
 
-import cz.muni.fi.shared.enm.Role;
+import cz.muni.fi.enums.Role;
 import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.model.Manager;
 import cz.muni.fi.userservice.repository.ArtistRepository;

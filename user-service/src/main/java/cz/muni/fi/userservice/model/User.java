@@ -1,6 +1,6 @@
 package cz.muni.fi.userservice.model;
 
-import cz.muni.fi.shared.enm.Role;
+import cz.muni.fi.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
