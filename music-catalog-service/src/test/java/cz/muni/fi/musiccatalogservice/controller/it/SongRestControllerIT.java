@@ -4,7 +4,7 @@ package cz.muni.fi.musiccatalogservice.controller.it;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import cz.muni.fi.musiccatalogservice.controller.it.config.DisableSecurityTestConfig;
-import cz.muni.fi.musiccatalogservice.dto.SongDTO;
+import cz.muni.fi.musiccatalogservice.dto.SongDto;
 import cz.muni.fi.musiccatalogservice.model.Album;
 import cz.muni.fi.musiccatalogservice.model.Song;
 import cz.muni.fi.musiccatalogservice.repository.AlbumRepository;
@@ -66,45 +66,48 @@ public class SongRestControllerIT {
         // Create test album
         testAlbum = new Album();
         testAlbum.setTitle("Test Album");
-        testAlbum.setReleaseDate(LocalDateTime.now().plusDays(30));
+        testAlbum.setBandId(1L);
+        // Use minusDays instead of plusDays to make the date in the past
+        testAlbum.setReleaseDate(LocalDateTime.now().minusDays(30));
         testAlbum = albumRepository.save(testAlbum);
 
         // Create test song
         testSong = new Song();
         testSong.setName("Test Song");
         testSong.setBandId(1L);
+        testSong.setDuration(180);
         testSong.setAlbum(testAlbum);
         testSong = songRepository.save(testSong);
     }
 
 
     @Test
-    void testGetAllSongs() throws Exception {
+    void getAllSongs_songsExist_returnsCorrectList() throws Exception {
         mockMvc.perform(get("/api/songs"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("Test Song")))
                 .andExpect(jsonPath("$[0].bandId", is(1)));
-                //.andExpect(jsonPath("$[0].album.title", is("Test Album")));
+        //.andExpect(jsonPath("$[0].album.title", is("Test Album")));
     }
 
 
     @Test
-    public void testGetSongById() throws Exception {
+    public void getSongById_validId_returnsCorrectSong() throws Exception {
         mockMvc.perform(get("/api/songs/{id}", testSong.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(testSong.getId().intValue())))
                 .andExpect(jsonPath("$.name", is("Test Song")))
                 .andExpect(jsonPath("$.bandId", is(1)));
-                //.andExpect(jsonPath("$.album.title", is("Test Album")));
+        //.andExpect(jsonPath("$.album.title", is("Test Album")));
 
     }
 
 
     @Test
-    public void testGetSongsByBand() throws Exception {
+    public void getSongsByBand_validBandId_returnsCorrectSongs() throws Exception {
         mockMvc.perform(get("/api/songs/band/{bandId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -115,15 +118,15 @@ public class SongRestControllerIT {
 
 
     @Test
-    public void testCreateSong() throws Exception {
-        SongDTO songDTO = new SongDTO();
-        songDTO.setName("New Song");
-        songDTO.setBandId(2L);
-        songDTO.setDuration(5);
+    public void createSong_validSongDto_returnsSavedSong() throws Exception {
+        SongDto songDto = new SongDto();
+        songDto.setName("New Song");
+        songDto.setBandId(2L);
+        songDto.setDuration(5);
 
         mockMvc.perform(post("/api/songs")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(songDTO)))
+                        .content(objectMapper.writeValueAsString(songDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", is("New Song")))
                 .andExpect(jsonPath("$.bandId", is(2)));
@@ -132,24 +135,24 @@ public class SongRestControllerIT {
 
 
     @Test
-    void testCreateInvalidSong() throws Exception {
-        SongDTO songDTO = new SongDTO();
+    void createSong_invalidData_returnsBadRequest() throws Exception {
+        SongDto songDto = new SongDto();
         // Empty name and null bandId
 
         mockMvc.perform(post("/api/songs")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(songDTO)))
+                        .content(objectMapper.writeValueAsString(songDto)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void testUpdateSong() throws Exception {
-        SongDTO songDTO = new SongDTO();
-        songDTO.setName("Updated Song Name");
-        songDTO.setBandId(testSong.getBandId());
-        songDTO.setDuration(5);
+    public void updateSong_validSongDto_returnsUpdatedSong() throws Exception {
+        SongDto songDto = new SongDto();
+        songDto.setName("Updated Song Name");
+        songDto.setBandId(testSong.getBandId());
+        songDto.setDuration(5);
 
-        String songJson = objectMapper.writeValueAsString(songDTO);
+        String songJson = objectMapper.writeValueAsString(songDto);
 
         mockMvc.perform(put("/api/songs/{id}", testSong.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -160,7 +163,7 @@ public class SongRestControllerIT {
 
 
     @Test
-    public void testDeleteSong() throws Exception {
+    public void deleteSong_existingSong_removesFromDatabase() throws Exception {
         mockMvc.perform(delete("/api/songs/{id}", testSong.getId()))
                 .andExpect(status().isNoContent());
 
@@ -172,12 +175,12 @@ public class SongRestControllerIT {
 
 
     @Test
-    public void testCreateSongWithInvalidData() throws Exception {
-        SongDTO songDTO = new SongDTO();
-        songDTO.setName("");
-        songDTO.setBandId(null);
+    public void createSong_emptyNameAndNullBandId_returnsBadRequest() throws Exception {
+        SongDto songDto = new SongDto();
+        songDto.setName("");
+        songDto.setBandId(null);
 
-        String songJson = objectMapper.writeValueAsString(songDTO);
+        String songJson = objectMapper.writeValueAsString(songDto);
 
         mockMvc.perform(post("/api/songs")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -186,9 +189,8 @@ public class SongRestControllerIT {
     }
 
     @Test
-    public void testGetNonExistingSong() throws Exception {
+    public void getSongById_nonExistentId_returnsNotFound() throws Exception {
         mockMvc.perform(get("/api/songs/{id}", 999L))
                 .andExpect(status().isNotFound());
     }
 }
-

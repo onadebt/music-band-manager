@@ -54,29 +54,24 @@ class ManagerControllerIT {
 
     @Test
     void register_persistsEntity() throws Exception {
-        // Arrange
         ManagerDto managerDto = TestDataFactory.setUpTestManager1Dto();
         managerDto.setId(null);
-        // Act
         mockMvc.perform(post("/api/managers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(managerDto)))
                 .andExpect(status().isCreated());
 
-        // Assert
         assertThat(managerRepository.count()).isEqualTo(1);
         assertThat(managerRepository.findByUsername(managerDto.getUsername())).isPresent();
     }
 
     @Test
     void register_nullDto_returnsBadRequest() throws Exception {
-        // Act
         mockMvc.perform(post("/api/managers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(null)))
                 .andExpect(status().isBadRequest());
 
-        // Assert
         System.out.println(managerRepository.count());
         assertThat(managerRepository.findAll().size()).isZero();
     }
@@ -84,23 +79,19 @@ class ManagerControllerIT {
 
     @Test
     void update_sourceDoesNotExists_returnNotFound() throws Exception {
-        // Arrange
         ManagerUpdateDto updateDto = new ManagerUpdateDto();
         Long emptyId = -123L;
 
-        // Act
         mockMvc.perform(put("/api/managers/{id}", emptyId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateDto)))
                 .andExpect(status().isNotFound());
 
-        // Assert
         assertThat(managerRepository.count()).isZero();
     }
 
     @Test
-    void getAllManagers_noArtists_returnsEmptyList() throws Exception {
-        // Act
+    void getAllManagers_noManagers_returnsEmptyList() throws Exception {
         mockMvc.perform(get("/api/managers"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
@@ -108,7 +99,6 @@ class ManagerControllerIT {
 
     @Test
     void getAllManagers_twoManagers_returnsList() throws Exception {
-        // Arrange
         Manager manager1 = TestDataFactory.setUpTestManager1();
         Manager manager2 = TestDataFactory.setUpTestManager2();
         manager1.setId(null);
@@ -116,7 +106,6 @@ class ManagerControllerIT {
 
         managerRepository.saveAll(List.of(manager1, manager2));
 
-        // Act
         mockMvc.perform(get("/api/managers"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[*].lastName",
@@ -125,10 +114,8 @@ class ManagerControllerIT {
 
     @Test
     void getById_validId_returnsEntityAndOk() throws Exception {
-        // Arrange
         Manager manager = saveManager(TestDataFactory.setUpTestManager1());
 
-        // Act
         mockMvc.perform(get("/api/managers/{id}", manager.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value(manager.getUsername()));
@@ -136,48 +123,38 @@ class ManagerControllerIT {
 
     @Test
     void getById_emptyId_returnsNotFound() throws Exception {
-        // Arrange
         Long emptyId = -123L;
-        // Act
         mockMvc.perform(get("/api/managers/{id}", emptyId))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void deleteById_entityExists_isRemoved() throws Exception {
-        // Arrange
         Manager manager = saveManager(TestDataFactory.setUpTestManager1());
 
-        // Act
         mockMvc.perform(delete("/api/managers/{id}", manager.getId()))
                 .andExpect(status().isNoContent());
 
-        // Assert
         assertThat(managerRepository.count()).isEqualTo(0);
     }
 
     @Test
     void deleteById_emptyId_returnsNotFound() throws Exception {
-        // Arrange
         Long emptyId = -123L;
-        // Act
         mockMvc.perform(delete("/api/managers/{id}", emptyId))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void updateBands_validSet_returnsOkAndUpdatesRepository() throws Exception {
-        // Arrange
         Manager manager = saveManager(TestDataFactory.setUpTestManager1());
         Set<Long> newBands = Set.of(4L, 5L, 6L, 7L);
 
-        // Act
         mockMvc.perform(patch("/api/managers/bands/{managerId}", manager.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newBands)))
                 .andExpect(status().isOk());
 
-        // Assert
         Optional<Manager> updated = managerRepository.findById(manager.getId());
         assert updated.isPresent();
         assertEquals(updated.get().getManagedBandIds().size(), newBands.size());
@@ -186,11 +163,8 @@ class ManagerControllerIT {
 
     @Test
     void updateBands_invalidBandId_returnsNotFound() throws Exception {
-        // Arrange
         Long emptyId = -123L;
         Set<Long> newBands = Set.of(4L, 5L, 6L, 7L);
-
-        // Act
         mockMvc.perform(patch("/api/managers/bands/{managerId}", emptyId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newBands)))
@@ -199,19 +173,16 @@ class ManagerControllerIT {
 
     @Test
     void update_sourceExists_replacesEntity() throws Exception {
-        // Arrange
         Manager manager = TestDataFactory.setUpTestManager1();
         manager = saveManager(manager);
         ManagerUpdateDto updateDto = toManagerUpdateDto(manager);
         updateDto.setLastName("New Name");
 
-        // Act
         mockMvc.perform(put("/api/managers/{id}", manager.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateDto)))
                 .andExpect(status().isOk());
 
-        // Assert
         assertThat(managerRepository.count()).isEqualTo(1);
         Optional<Manager> updated = managerRepository.findById(manager.getId());
         assertThat(updated).isPresent();
@@ -220,8 +191,7 @@ class ManagerControllerIT {
 
 
     @Test
-    void getManagersByBandIds_fitsAllArtist_returnOkAndAllArtists() throws Exception {
-        // Arrange
+    void getManagersByBandIds_fitsAllManagers_returnOkAndAllManagers() throws Exception {
         Manager manager1 = TestDataFactory.setUpTestManager1();
         Manager manager2 = TestDataFactory.setUpTestManager2();
         manager1.setId(null);
@@ -229,7 +199,6 @@ class ManagerControllerIT {
         manager1 = saveManager(manager1);
         manager2 = saveManager(manager2);
 
-        // Act
         mockMvc.perform(get("/api/managers/bands")
                         .param("bandIds", "2"))
                 .andExpect(status().isOk())
@@ -239,7 +208,6 @@ class ManagerControllerIT {
 
     @Test
     void getManagersByBandIds_fitsOneManager_returnOkAndManager() throws Exception{
-        // Arrange
         Manager manager1 = TestDataFactory.setUpTestManager1();
         Manager manager2 = TestDataFactory.setUpTestManager2();
         manager1.setId(null);
@@ -247,7 +215,6 @@ class ManagerControllerIT {
         saveManager(manager1);
         saveManager(manager2);
 
-        // Act
         mockMvc.perform(get("/api/managers/bands")
                         .param("bandIds", "1"))
                 .andExpect(status().isOk())
@@ -257,7 +224,6 @@ class ManagerControllerIT {
 
     @Test
     void getManagersByBandIds_findsNoManagers_returnEmptyList() throws Exception {
-        // Arrange
         Manager manager1 = TestDataFactory.setUpTestManager1();
         Manager manager2 = TestDataFactory.setUpTestManager2();
         manager1.setId(null);
@@ -265,7 +231,6 @@ class ManagerControllerIT {
         saveManager(manager1);
         saveManager(manager2);
 
-        // Act
         mockMvc.perform(get("/api/managers/bands")
                         .param("bandIds", "123"))
                 .andExpect(status().isOk())
@@ -295,4 +260,3 @@ class ManagerControllerIT {
         return managerUpdateDto;
     }
 }
-

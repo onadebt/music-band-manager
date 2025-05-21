@@ -7,14 +7,14 @@ import subprocess
 import argparse
 import json
 from datetime import datetime
-from config import AUTH_TOKEN, DEFAULT_TIMEOUT
+from infra.config import AUTH_TOKEN, DEFAULT_TIMEOUT
 
 def setup_args():
     parser = argparse.ArgumentParser(description='Run Band Manager showcase scenario')
-    parser.add_argument('--users', type=int, default=50, 
-                        help='Number of concurrent users (default: 50)')
-    parser.add_argument('--spawn-rate', type=int, default=10, 
-                        help='Users to spawn per second (default: 10)')
+    parser.add_argument('--users', type=int, default=25,
+                        help='Number of concurrent users (default: 25)')
+    parser.add_argument('--spawn-rate', type=int, default=5,
+                        help='Users to spawn per second (default: 5)')
     parser.add_argument('--run-time', type=int, default=20, 
                         help='Duration of the test in seconds (default: 300)')
     parser.add_argument('--output', type=str, default='showcase_results', 
@@ -52,7 +52,7 @@ def check_services_availability():
     
     print("Checking services availability...")
     all_available = True
-    
+
     for service_name, endpoint in services.items():
         try:
             headers = auth_headers

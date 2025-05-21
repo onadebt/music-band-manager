@@ -78,4 +78,50 @@ public class ArtistRepositoryTest {
         // Act & Assert
         assertTrue(found.isEmpty());
     }
+
+    @Test
+    void findByBandIds_emptyBandIdSet_returnsEmpty() {
+        // Arrange
+        List<Artist> found = artistRepository.findByBandIds(Set.of());
+
+        // Act & Assert
+        assertTrue(found.isEmpty());
+    }
+
+    @Test
+    void findByBandIds_nonExistentBandId_returnsEmpty() {
+        // Arrange
+        Artist artist = TestDataFactory.setUpTestArtist1();
+        artist.setId(null);
+        artist.setBandIds(Set.of(1L, 2L));
+        artistRepository.save(artist);
+
+        // Act
+        List<Artist> found = artistRepository.findByBandIds(Set.of(999L));
+
+        // Assert
+        assertTrue(found.isEmpty());
+    }
+
+    @Test
+    void findByBandIds_validBandIdSet_returnsArtists() {
+        // Arrange
+        Artist artist1 = TestDataFactory.setUpTestArtist1();
+        artist1.setId(null);
+        artist1.setBandIds(Set.of(1L, 2L));
+        artistRepository.save(artist1);
+
+        Artist artist2 = TestDataFactory.setUpTestArtist2();
+        artist2.setId(null);
+        artist2.setBandIds(Set.of(2L, 3L));
+        artistRepository.save(artist2);
+
+        // Act
+        List<Artist> found = artistRepository.findByBandIds(Set.of(1L, 3L));
+
+        // Assert
+        assertEquals(2, found.size());
+        assertTrue(found.contains(artist1));
+        assertTrue(found.contains(artist2));
+    }
 }

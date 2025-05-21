@@ -1,8 +1,9 @@
 package cz.muni.fi.musiccatalogservice.controller;
 
 import cz.muni.fi.musiccatalogservice.TestDataFactory;
-import cz.muni.fi.musiccatalogservice.dto.SongDTO;
+import cz.muni.fi.musiccatalogservice.dto.SongDto;
 import cz.muni.fi.musiccatalogservice.facade.SongFacade;
+import cz.muni.fi.musiccatalogservice.rest.SongController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,11 +32,11 @@ public class SongControllerTest {
     private SongFacade songFacade;
 
     @Test
-    void create_validRequest_returnsCreatedSongWithOkStatus() {
+    void createSong_validRequest_returnsCreatedSongWithCreatedStatus() {
         // Arrange
         Mockito.when(songFacade.createSong(TestDataFactory.TEST_SONG_1_DTO)).thenReturn(TestDataFactory.TEST_SONG_1_DTO);
         // Act
-        ResponseEntity<SongDTO> response = songController.createSong(TestDataFactory.TEST_SONG_1_DTO);
+        ResponseEntity<SongDto> response = songController.createSong(TestDataFactory.TEST_SONG_1_DTO);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(201);  // todo was 200
@@ -50,7 +51,7 @@ public class SongControllerTest {
         Mockito.when(songFacade.getAllSongs()).thenReturn(List.of(TestDataFactory.TEST_SONG_1_DTO, TestDataFactory.TEST_SONG_2_DTO));
 
         // Act
-        ResponseEntity<List<SongDTO>> response = songController.getAllSongs();
+        ResponseEntity<List<SongDto>> response = songController.getAllSongs();
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -65,7 +66,7 @@ public class SongControllerTest {
         Mockito.when(songFacade.getSongById(TestDataFactory.TEST_SONG_1.getId())).thenReturn(TestDataFactory.TEST_SONG_1_DTO);
 
         // Act
-        ResponseEntity<SongDTO> response = songController.getSongById(TestDataFactory.TEST_SONG_1.getId());
+        ResponseEntity<SongDto> response = songController.getSongById(TestDataFactory.TEST_SONG_1.getId());
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -74,7 +75,7 @@ public class SongControllerTest {
     }
 
     @Test
-    void deleteSong_validId_returnsEmptyEntityWithOkStatus() {
+    void deleteSong_validId_returnsEmptyEntityWithNoContentStatus() {
         // Act
         ResponseEntity<Void> response = songController.deleteSong(TestDataFactory.TEST_SONG_1.getId());
 
@@ -85,13 +86,13 @@ public class SongControllerTest {
     }
 
     @Test
-    void getSongsByBandIds_twoSongsMatch_returnsListWithOkStatus() {
+    void getSongsByBand_twoSongsMatch_returnsListWithOkStatus() {
         // Arrange
         Long bandId = 2L;
         Mockito.when(songFacade.getSongsByBand(bandId)).thenReturn(List.of(TestDataFactory.TEST_SONG_1_DTO, TestDataFactory.TEST_SONG_2_DTO));
 
         // Act
-        ResponseEntity<List<SongDTO>> response = songController.getSongsByBand(bandId);
+        ResponseEntity<List<SongDto>> response = songController.getSongsByBand(bandId);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);

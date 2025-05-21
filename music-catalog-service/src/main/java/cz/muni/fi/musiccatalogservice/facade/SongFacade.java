@@ -1,18 +1,18 @@
 package cz.muni.fi.musiccatalogservice.facade;
 
-import cz.muni.fi.musiccatalogservice.dto.SongDTO;
+import cz.muni.fi.musiccatalogservice.dto.SongDto;
 import cz.muni.fi.musiccatalogservice.mapper.SongMapper;
 import cz.muni.fi.musiccatalogservice.model.Album;
 import cz.muni.fi.musiccatalogservice.model.Song;
 import cz.muni.fi.musiccatalogservice.service.AlbumService;
 import cz.muni.fi.musiccatalogservice.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 public class SongFacade {
 
     private final SongService songService;
@@ -27,79 +27,79 @@ public class SongFacade {
         this.songMapper = songMapper;
     }
 
-    public List<SongDTO> getAllSongs() {
+    public List<SongDto> getAllSongs() {
         return songService.getAllSongs().stream()
-                .map(songMapper::toDTO)
+                .map(songMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public List<SongDTO> getSongsByAlbum(Long albumId) {
+    public List<SongDto> getSongsByAlbum(Long albumId) {
         if (albumId == null) {
             throw new IllegalArgumentException("Album ID cannot be null");
         }
 
         return songService.getSongsByAlbum(albumId).stream()
-                .map(songMapper::toDTO)
+                .map(songMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public List<SongDTO> getSongsByBand(Long bandId) {
+    public List<SongDto> getSongsByBand(Long bandId) {
         if (bandId == null) {
             throw new IllegalArgumentException("Band ID cannot be null");
         }
 
         List<Song> songs = songService.getSongsByBand(bandId);
         return songs.stream()
-                .map(songMapper::toDTO)
+                .map(songMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public SongDTO getSongById(Long id) {
+    public SongDto getSongById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Song ID cannot be null");
         }
 
         Song song = songService.getSongById(id);
-        return songMapper.toDTO(song);
+        return songMapper.toDto(song);
     }
 
-    public SongDTO createSong(SongDTO songDTO) {
-        if (songDTO == null) {
+    public SongDto createSong(SongDto songDto) {
+        if (songDto == null) {
             throw new IllegalArgumentException("Song data cannot be null");
         }
 
-        Song song = songMapper.toEntity(songDTO);
+        Song song = songMapper.toEntity(songDto);
 
-        if (songDTO.getAlbumId() != null) {
-            Album album = albumService.getAlbumById(songDTO.getAlbumId());
+        if (songDto.getAlbumId() != null) {
+            Album album = albumService.getAlbumById(songDto.getAlbumId());
             song.setAlbum(album);
         }
 
         Song savedSong = songService.createSong(song);
-        return songMapper.toDTO(savedSong);
+        return songMapper.toDto(savedSong);
     }
 
-    public SongDTO updateSong(Long id, SongDTO songDTO) {
+    public SongDto updateSong(Long id, SongDto songDto) {
         if (id == null) {
             throw new IllegalArgumentException("Song ID cannot be null");
         }
 
-        if (songDTO == null) {
+        if (songDto == null) {
             throw new IllegalArgumentException("Song data cannot be null");
         }
 
         Song song = songService.getSongById(id);
-        songMapper.updateEntityFromDto(songDTO, song);
+        songMapper.updateEntityFromDto(songDto, song);
 
-        if (songDTO.getAlbumId() != null) {
-            Album album = albumService.getAlbumById(songDTO.getAlbumId());
+        if (songDto.getAlbumId() != null) {
+            Album album = albumService.getAlbumById(songDto.getAlbumId());
             song.setAlbum(album);
         } else {
             song.setAlbum(null);
         }
 
         Song updatedSong = songService.createSong(song);
-        return songMapper.toDTO(updatedSong);
+        return songMapper.toDto(updatedSong);
     }
 
     public void deleteSong(Long id) {

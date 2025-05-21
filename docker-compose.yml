@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: auth-service/Dockerfile
+    depends_on:
+      - artemis
     ports:
       - "8084:8084"
 
@@ -12,44 +14,44 @@ services:
     build:
       context: .
       dockerfile: user-service/Dockerfile
+    depends_on:
+      - artemis
     ports:
       - "8091:8091"
     environment:
       - ARTEMIS_BROKER_URL=tcp://artemis:61616
-    depends_on:
-      - artemis
 
   band-service:
     build:
       context: .
       dockerfile: band-service/Dockerfile
+    depends_on:
+      - artemis
     ports:
       - "8092:8092"
     environment:
       - ARTEMIS_BROKER_URL=tcp://artemis:61616
-    depends_on:
-      - artemis
 
   music-catalog-service:
     build:
       context: .
       dockerfile: music-catalog-service/Dockerfile
-    ports:
-      - "8093:8093"
     depends_on:
       - artemis
+    ports:
+      - "8093:8093"
 
   tour-service:
     build:
       context: .
       dockerfile: tour-service/Dockerfile
-    ports:
-      - "8094:8094"
     depends_on:
       - artemis
+    ports:
+      - "8094:8094"
 
   artemis:
-    image: vromero/activemq-artemis:2.16.0
+    image: apache/activemq-artemis:2.41.0-alpine
     container_name: artemis-broker
     ports:
       - "8161:8161"
@@ -67,14 +69,27 @@ services:
   prometheus:
     image: prom/prometheus
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./infra/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
 
   grafana:
     image: grafana/grafana
+    container_name: grafana
     ports:
       - "3000:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+    #  - GF_AUTH_DISABLE_LOGIN_FORM=true
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/provisioning/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning/datasources:/var/lib/grafana/datasources
+      - grafana-storage:/var/lib/grafana  # keep DB & users persistent
+    restart: unless-stopped
+
 
 volumes:
   artemis-data:
+  grafana-storage:

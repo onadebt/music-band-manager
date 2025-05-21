@@ -1,7 +1,6 @@
 package cz.muni.fi.tourmanagementservice.facade;
 
 import cz.muni.fi.tourmanagementservice.dto.CityVisitDto;
-import cz.muni.fi.tourmanagementservice.facades.CityVisitFacade;
 import cz.muni.fi.tourmanagementservice.mapper.CityVisitMapper;
 import cz.muni.fi.tourmanagementservice.model.CityVisit;
 import cz.muni.fi.tourmanagementservice.service.CityVisitService;
@@ -63,7 +62,7 @@ public class CityVisitFacadeTest {
     }
 
     @Test
-    public void testGetAllCityVisits() {
+    public void getAllCityVisits_twoPresent_returnsListWithTwoVisits() {
         when(cityVisitService.getAllCityVisits()).thenReturn(cityVisitList);
         when(cityVisitMapper.toDTO(any(CityVisit.class))).thenReturn(cityVisitDTO);
 
@@ -75,7 +74,7 @@ public class CityVisitFacadeTest {
     }
 
     @Test
-    public void testGetCityVisitById() {
+    public void tetCityVisitById_visitExists_returnsVisit() {
         when(cityVisitService.getCityVisitById(anyLong())).thenReturn(cityVisit);
         when(cityVisitMapper.toDTO(any(CityVisit.class))).thenReturn(cityVisitDTO);
 
@@ -88,7 +87,7 @@ public class CityVisitFacadeTest {
     }
 
     @Test
-    public void testCreateCityVisit() {
+    public void createCityVisit_validRequest_returnsVisit() {
         when(cityVisitMapper.toEntity(any(CityVisitDto.class))).thenReturn(cityVisit);
         when(cityVisitService.createCityVisit(any(CityVisit.class))).thenReturn(cityVisit);
         when(cityVisitMapper.toDTO(any(CityVisit.class))).thenReturn(cityVisitDTO);
@@ -103,7 +102,7 @@ public class CityVisitFacadeTest {
     }
 
     @Test
-    public void testUpdateCityVisit() {
+    public void updateCityVisit_validRequest_returnsUpdatedVisit() {
         when(cityVisitService.getCityVisitById(anyLong())).thenReturn(cityVisit);
         doNothing().when(cityVisitMapper).updateEntityFromDto(any(CityVisitDto.class), any(CityVisit.class));
         when(cityVisitService.createCityVisit(any(CityVisit.class))).thenReturn(cityVisit);
@@ -120,7 +119,7 @@ public class CityVisitFacadeTest {
     }
 
     @Test
-    public void testDeleteCityVisit() {
+    public void deleteCityVisit_visitExists_callsServiceToDelete() {
         doNothing().when(cityVisitService).deleteCityVisit(anyLong());
 
         cityVisitFacade.deleteCityVisit(1L);

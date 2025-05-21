@@ -1,19 +1,25 @@
 package cz.muni.fi.bandmanagementservice.model;
 
-import cz.muni.fi.bandmanagementservice.exceptions.InvalidOperationException;
-import cz.muni.fi.shared.enm.BandOfferStatus;
+import cz.muni.fi.bandmanagementservice.exception.CannotManipulateOfferException;
+import cz.muni.fi.enums.BandOfferStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author Tomáš MAREK
  */
 @Entity
 @Table(name = "band_offers")
+@NoArgsConstructor
+@Getter
+@Setter
 public class BandOffer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,60 +44,19 @@ public class BandOffer {
         this.offeringManagerId = offeringManagerId;
     }
 
-    public BandOffer() {
-    }
 
     public void acceptOffer(){
         if (status != BandOfferStatus.PENDING){
-            throw new InvalidOperationException("The offer has already been accepted or rejected");
+            throw new CannotManipulateOfferException(status);
         }
         status = BandOfferStatus.ACCEPTED;
     }
 
     public void rejectOffer(){
         if (status != BandOfferStatus.PENDING){
-            throw new InvalidOperationException("The offer has already been accepted or rejected");
+            throw new CannotManipulateOfferException(status);
         }
         status = BandOfferStatus.REJECTED;
     }
 
-    public Long getOfferingManagerId() {
-        return offeringManagerId;
-    }
-
-    public void setOfferingManagerId(Long offeringManagerId) {
-        this.offeringManagerId = offeringManagerId;
-    }
-
-    public Long getInvitedMusicianId() {
-        return invitedMusicianId;
-    }
-
-    public void setInvitedMusicianId(Long invitedMusicianId) {
-        this.invitedMusicianId = invitedMusicianId;
-    }
-
-    public Long getBandId() {
-        return bandId;
-    }
-
-    public void setBandId(Long bandId) {
-        this.bandId = bandId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public BandOfferStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(BandOfferStatus status) {
-        this.status = status;
-    }
 }

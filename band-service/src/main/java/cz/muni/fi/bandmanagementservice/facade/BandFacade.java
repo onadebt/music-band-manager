@@ -1,12 +1,13 @@
 package cz.muni.fi.bandmanagementservice.facade;
 
-import cz.muni.fi.bandmanagementservice.model.BandInfoUpdate;
-import cz.muni.fi.bandmanagementservice.mappers.BandMapper;
+import cz.muni.fi.bandmanagementservice.model.Band;
+import cz.muni.fi.bandmanagementservice.mapper.BandMapper;
 import cz.muni.fi.bandmanagementservice.service.BandService;
 import cz.muni.fi.bandmanagementservice.dto.BandDto;
-import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateRequest;
+import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,37 +15,44 @@ import java.util.stream.Collectors;
 /**
  * @author Tomáš MAREK
  */
-@Component
+@Service
+@Transactional
 public class BandFacade {
     private final BandService bandService;
+    private final BandMapper bandMapper;
+
 
     @Autowired
-    public BandFacade(BandService bandService) {
+    public BandFacade(BandService bandService, BandMapper bandMapper) {
         this.bandService = bandService;
+        this.bandMapper = bandMapper;
     }
 
     public BandDto createBand(String name, String musicalStyle, Long managerId) {
-        return BandMapper.mapToDto(bandService.createBand(name, musicalStyle, managerId));
+        Band band = bandService.createBand(name, musicalStyle, managerId);
+        return bandMapper.toDto(band);
     }
 
+    @Transactional(readOnly = true)
     public BandDto getBand(Long id) {
-        return BandMapper.mapToDto(bandService.getBand(id));
+        return bandMapper.toDto(bandService.getBand(id));
     }
 
-    public BandDto updateBand(BandInfoUpdateRequest request){
-        BandInfoUpdate bandInfoUpdate = BandMapper.mapFromInfoUpdateRequest(request);
-        return BandMapper.mapToDto(bandService.updateBand(bandInfoUpdate));
+    public BandDto updateBand(Long id, BandInfoUpdateDto request){
+        Band band = bandMapper.toEntity(request);
+        return bandMapper.toDto(bandService.updateBand(id, band));
     }
 
+    @Transactional(readOnly = true)
     public List<BandDto> getAllBands(){
-        return bandService.getAllBands().stream().map(BandMapper::mapToDto).collect(Collectors.toList());
+        return bandService.getAllBands().stream().map(bandMapper::toDto).collect(Collectors.toList());
     }
 
     public BandDto removeMember(Long bandId, Long memberId) {
-        return BandMapper.mapToDto(bandService.removeMember(bandId, memberId));
+        return bandMapper.toDto(bandService.removeMember(bandId, memberId));
     }
 
     public BandDto addMember(Long bandId, Long memberId) {
-        return BandMapper.mapToDto(bandService.addMember(bandId, memberId));
+        return bandMapper.toDto(bandService.addMember(bandId, memberId));
     }
 }

@@ -1,13 +1,17 @@
 package cz.muni.fi.tourmanagementservice.dto;
 
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class TourDto {
     private Long id;
 
@@ -17,5 +21,6 @@ public class TourDto {
     @NotBlank(message = "Tour name cannot be blank")
     private String tourName;
 
+    @Valid
     private List<CityVisitDto> cityVisits;
 }
