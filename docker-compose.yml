@@ -1,20 +1,12 @@
 version: '3.8'
 
 services:
-  builder:
-    image: maven:3.9.6-eclipse-temurin-21-alpine
-    volumes:
-      - .:/app
-      - maven-repo:/root/.m2
-    working_dir: /app
-    command: mvn clean package -DskipTests
-
   auth-service:
     build:
       context: .
       dockerfile: auth-service/Dockerfile
     depends_on:
-      - builder
+      - artemis
     ports:
       - "8084:8084"
 
@@ -23,7 +15,6 @@ services:
       context: .
       dockerfile: user-service/Dockerfile
     depends_on:
-      - builder
       - artemis
     ports:
       - "8091:8091"
@@ -35,7 +26,6 @@ services:
       context: .
       dockerfile: band-service/Dockerfile
     depends_on:
-      - builder
       - artemis
     ports:
       - "8092:8092"
@@ -47,7 +37,6 @@ services:
       context: .
       dockerfile: music-catalog-service/Dockerfile
     depends_on:
-      - builder
       - artemis
     ports:
       - "8093:8093"
@@ -57,7 +46,6 @@ services:
       context: .
       dockerfile: tour-service/Dockerfile
     depends_on:
-      - builder
       - artemis
     ports:
       - "8094:8094"
@@ -92,4 +80,3 @@ services:
 
 volumes:
   artemis-data:
-  maven-repo:
