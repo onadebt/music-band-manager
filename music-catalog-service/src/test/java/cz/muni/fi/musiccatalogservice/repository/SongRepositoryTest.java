@@ -29,6 +29,11 @@ class SongRepositoryTest {
         song1.setId(null);
         song2.setId(null);
 
+        song1.setBandId(1L);
+        song2.setBandId(1L);
+
+        album.setBandId(1L);
+
         album.addSong(song1);
         album.addSong(song2);
 
@@ -60,6 +65,8 @@ class SongRepositoryTest {
         Song song = TestDataFactory.setUpTestSong1();
         song.setId(null);
 
+        song.setBandId(1L);
+
         songRepository.save(song);
 
         // Act
@@ -82,4 +89,3 @@ class SongRepositoryTest {
         assertTrue(songsByBand.isEmpty());
     }
 }
-

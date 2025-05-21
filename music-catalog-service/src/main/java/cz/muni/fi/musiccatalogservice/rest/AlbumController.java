@@ -1,9 +1,8 @@
 package cz.muni.fi.musiccatalogservice.rest;
 
-import cz.muni.fi.musiccatalogservice.MusicCatalogServiceApplication;
 import cz.muni.fi.musiccatalogservice.config.OpenApiConfig;
-import cz.muni.fi.musiccatalogservice.config.SecurityConfig;
 import cz.muni.fi.musiccatalogservice.dto.AlbumDto;
+import cz.muni.fi.musiccatalogservice.dto.SongDto;
 import cz.muni.fi.musiccatalogservice.facade.AlbumFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -130,6 +129,43 @@ public class AlbumController {
     public ResponseEntity<Void> deleteAlbum(
             @Parameter(description = "Album ID", required = true) @PathVariable Long id) {
         albumFacade.deleteAlbum(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Add song to album", description = "Adds a song to an album")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Song added successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SongDto.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "404", description = "Album not found")
+    })
+    @SecurityRequirement(
+            name = OpenApiConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE}
+    )
+    @PostMapping("/{albumId}/songs")
+    public ResponseEntity<SongDto> addSongToAlbum(
+            @Parameter(description = "Album ID", required = true) @PathVariable Long albumId,
+            @Parameter(description = "Song to add", required = true) @Valid @RequestBody SongDto songDto) {
+        SongDto addedSong = albumFacade.addSongToAlbum(albumId, songDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedSong);
+    }
+
+    @Operation(summary = "Remove song from album", description = "Removes a song from an album")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Song removed successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "404", description = "Album or song not found")
+    })
+    @SecurityRequirement(
+            name = OpenApiConfig.SECURITY_SCHEME_NAME,
+            scopes = {MANAGER_SCOPE}
+    )
+    @DeleteMapping("/{albumId}/songs/{songId}")
+    public ResponseEntity<Void> removeSongFromAlbum(
+            @Parameter(description = "Album ID", required = true) @PathVariable Long albumId,
+            @Parameter(description = "Song ID", required = true) @PathVariable Long songId) {
+        albumFacade.removeSongFromAlbum(albumId, songId);
         return ResponseEntity.noContent().build();
     }
 }

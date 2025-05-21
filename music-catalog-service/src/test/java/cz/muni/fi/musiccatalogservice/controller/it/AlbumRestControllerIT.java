@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import cz.muni.fi.musiccatalogservice.controller.it.config.DisableSecurityTestConfig;
 import cz.muni.fi.musiccatalogservice.dto.AlbumDto;
+import cz.muni.fi.musiccatalogservice.dto.SongDto;
 import cz.muni.fi.musiccatalogservice.model.Album;
 import cz.muni.fi.musiccatalogservice.model.Song;
 import cz.muni.fi.musiccatalogservice.repository.AlbumRepository;
@@ -68,20 +69,21 @@ class AlbumRestControllerIT {
         testAlbum = new Album();
         testAlbum.setTitle("Test Album");
         testAlbum.setBandId(1L);
-        testAlbum.setReleaseDate(LocalDateTime.now().plusDays(30));
+        // Use minusDays instead of plusDays to make the date in the past
+        testAlbum.setReleaseDate(LocalDateTime.now().minusDays(30));
         testAlbum = albumRepository.save(testAlbum);
 
-        // Create test song associated with the album
         testSong = new Song();
         testSong.setName("Test Song");
         testSong.setBandId(1L);
+        testSong.setDuration(180);
         testSong.setAlbum(testAlbum);
         testSong = songRepository.save(testSong);
     }
 
 
     @Test
-    void testGetAllAlbums() throws Exception {
+    void getAllAlbums_albumsExist_returnsCorrectList() throws Exception {
         mockMvc.perform(get("/api/albums"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -91,7 +93,7 @@ class AlbumRestControllerIT {
     }
 
     @Test
-    void testGetAlbumById() throws Exception {
+    void getAlbumById_validId_returnsCorrectAlbum() throws Exception {
         mockMvc.perform(get("/api/albums/{id}", testAlbum.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -101,14 +103,14 @@ class AlbumRestControllerIT {
     }
 
     @Test
-    void testGetAlbumByInvalidId() throws Exception {
+    void getAlbumById_invalidId_returnsNotFound() throws Exception {
         mockMvc.perform(get("/api/albums/{id}", 999L))
                 .andExpect(status().isNotFound());
     }
 
 
     @Test
-    void testCreateAlbum() throws Exception {
+    void createAlbum_validAlbumDto_returnsSavedAlbum() throws Exception {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setTitle("New Album");
         albumDto.setReleaseDate(LocalDateTime.now().minusDays(60));
@@ -125,7 +127,7 @@ class AlbumRestControllerIT {
 
 
     @Test
-    void testCreateInvalidAlbum() throws Exception {
+    void createAlbum_invalidData_returnsBadRequest() throws Exception {
         AlbumDto albumDto = new AlbumDto();
         // Empty title and null releaseDate
 
@@ -138,7 +140,7 @@ class AlbumRestControllerIT {
 
 
     @Test
-    void testUpdateAlbum() throws Exception {
+    void updateAlbum_validAlbumDto_returnsUpdatedAlbum() throws Exception {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setTitle("Updated Album");
         albumDto.setReleaseDate(LocalDateTime.now().minusDays(60));
@@ -152,7 +154,7 @@ class AlbumRestControllerIT {
     }
 
     @Test
-    void testUpdateInvalidAlbum() throws Exception {
+    void updateAlbum_nonExistentId_returnsBadRequest() throws Exception {
         AlbumDto albumDto = new AlbumDto();
         albumDto.setTitle("Updated Album");
         albumDto.setReleaseDate(LocalDateTime.now().plusDays(90));
@@ -165,7 +167,7 @@ class AlbumRestControllerIT {
 
 
     @Test
-    void testDeleteAlbum() throws Exception {
+    void deleteAlbum_existingAlbum_removesFromDatabase() throws Exception {
         mockMvc.perform(delete("/api/albums/{id}", testAlbum.getId()))
                 .andExpect(status().isNoContent());
 
@@ -175,14 +177,14 @@ class AlbumRestControllerIT {
     }
 
     @Test
-    void testDeleteInvalidAlbum() throws Exception {
+    void deleteAlbum_nonExistentId_returnsNotFound() throws Exception {
         mockMvc.perform(delete("/api/albums/{id}", 999L))
                 .andExpect(status().isNotFound());
     }
 
 
     @Test
-    void testGetAlbumByBand() throws Exception {
+    void getAlbumsByBand_validBandId_returnsCorrectAlbums() throws Exception {
         mockMvc.perform(get("/api/albums/band/{bandId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -191,10 +193,75 @@ class AlbumRestControllerIT {
     }
 
     @Test
-    void testGetEmptyListForInvalidBand() throws Exception {
+    void getAlbumsByBand_nonExistentBandId_returnsEmptyList() throws Exception {
         mockMvc.perform(get("/api/albums/band/{bandId}", 999L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }
-}
 
+    @Test
+    void addSongToAlbum_validSongDto_returnsSavedSong() throws Exception {
+        SongDto songDto = new SongDto();
+        songDto.setName("New Album Song");
+        songDto.setBandId(1L);
+        songDto.setDuration(240);
+
+        mockMvc.perform(post("/api/albums/{albumId}/songs", testAlbum.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(songDto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name", is("New Album Song")))
+                .andExpect(jsonPath("$.duration", is(240)))
+                .andExpect(jsonPath("$.albumId", is(testAlbum.getId().intValue())));
+
+        mockMvc.perform(get("/api/albums/{id}", testAlbum.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.songs", hasSize(2))) // Original song + newly added one
+                .andExpect(jsonPath("$.songs[?(@.name == 'New Album Song')]").exists());
+    }
+
+    @Test
+    void removeSongFromAlbum_existingSong_removesFromAlbum() throws Exception {
+        mockMvc.perform(get("/api/albums/{id}", testAlbum.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.songs", hasSize(1)))
+                .andExpect(jsonPath("$.songs[0].id", is(testSong.getId().intValue())));
+
+        mockMvc.perform(delete("/api/albums/{albumId}/songs/{songId}", testAlbum.getId(), testSong.getId()))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/api/albums/{id}", testAlbum.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.songs", hasSize(0)));
+
+        mockMvc.perform(get("/api/songs/{id}", testSong.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(testSong.getId().intValue())))
+                .andExpect(jsonPath("$.albumId").isEmpty());
+    }
+
+    @Test
+    void addSongToAlbum_nonExistentAlbumId_returnsNotFound() throws Exception {
+        SongDto songDto = new SongDto();
+        songDto.setName("Test Song");
+        songDto.setBandId(1L);
+        songDto.setDuration(180);
+
+        mockMvc.perform(post("/api/albums/{albumId}/songs", 999L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(songDto)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void removeSongFromAlbum_songNotInAlbum_returnsBadRequest() throws Exception {
+        Song standaloneSong = new Song();
+        standaloneSong.setName("Standalone Song");
+        standaloneSong.setBandId(1L);
+        standaloneSong.setDuration(180);
+        standaloneSong = songRepository.save(standaloneSong);
+
+        mockMvc.perform(delete("/api/albums/{albumId}/songs/{songId}", testAlbum.getId(), standaloneSong.getId()))
+                .andExpect(status().isBadRequest());
+    }
+}
