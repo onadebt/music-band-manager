@@ -103,6 +103,14 @@ app:
   ```
 ---
 
+## 🎥 Monitor
+The Grafana interface is available at [http://localhost:3000](http://localhost:3000). Its dashboard `Stats` shows health of each microservice. For experimenting with other dashboards, log in using (user/pass: `admin`/`admin`). 
+
+The app loads custom dashboards from `./grafana/provisioning/dashboards` and custom datasources from `./grafana/provisioning/datasources`.
+The Prometheus interface is available at [http://localhost:9090](http://localhost:9090).
+
+
+
 ## 💡 Tips
 - **Database persistence** — when using Docker Compose, H2 volumes are persisted under `./data/` so you won’t lose data between restarts.
 ---
