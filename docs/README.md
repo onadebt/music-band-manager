@@ -4,7 +4,7 @@ A microservices‑based web application that helps a music band manage everythin
 ---
 
 ## 📖 Overview
-This project is composed of four core Spring Boot microservices that communicate over **Apache ActiveMQ Artemis**:
+This project is composed of four core Spring Boot microservices that communicate over **Apache ActiveMQ Artemis**:
 
 | Service                     | Purpose                                                             |
 |-----------------------------|---------------------------------------------------------------------|
@@ -42,7 +42,7 @@ If you prefer to debug the Spring Boot services directly from your IDE, keep Art
 
 ```bash
 docker run -d --name artemis \
-  -e ARTEMIS_USER=admin \
+  -e ARTEMIS_USERNAME=admin \
   -e ARTEMIS_PASSWORD=admin \
   -p 61616:61616 \  # JMS
   -p 8161:8161   \  # Web console
@@ -104,9 +104,7 @@ app:
 ---
 
 ## 💡 Tips
-- **Hot reload** — with Spring DevTools on the classpath, code changes are live‑reloaded when running via Maven.
 - **Database persistence** — when using Docker Compose, H2 volumes are persisted under `./data/` so you won’t lose data between restarts.
-- **Scaling services** — tweak replica counts in `docker-compose.yml` if you want to test load balancing scenarios.
 ---
 
 ## 📌 Use Case Diagram
