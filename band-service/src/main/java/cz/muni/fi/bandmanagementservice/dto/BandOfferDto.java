@@ -1,6 +1,6 @@
 package cz.muni.fi.bandmanagementservice.dto;
 
-import cz.muni.fi.shared.enm.BandOfferStatus;
+import cz.muni.fi.enums.BandOfferStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -7,7 +7,7 @@ import cz.muni.fi.bandmanagementservice.repository.BandOfferRepository;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import cz.muni.fi.bandmanagementservice.rest.it.config.DisableSecurityTestConfig;
 import cz.muni.fi.bandmanagementservice.saga.BandOfferSaga;
-import cz.muni.fi.shared.enm.BandOfferStatus;
+import cz.muni.fi.enums.BandOfferStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

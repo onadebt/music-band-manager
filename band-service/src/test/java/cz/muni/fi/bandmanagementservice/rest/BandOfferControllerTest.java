@@ -2,10 +2,10 @@ package cz.muni.fi.bandmanagementservice.rest;
 
 import cz.muni.fi.bandmanagementservice.TestDataFactory;
 import cz.muni.fi.bandmanagementservice.dto.BandOfferDto;
-import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.CannotManipulateOfferException;
+import cz.muni.fi.bandmanagementservice.exception.BandOfferNotFoundException;
+import cz.muni.fi.bandmanagementservice.exception.CannotManipulateOfferException;
 import cz.muni.fi.bandmanagementservice.facade.BandOfferFacade;
-import cz.muni.fi.shared.enm.BandOfferStatus;
+import cz.muni.fi.enums.BandOfferStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

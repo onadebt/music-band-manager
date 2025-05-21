@@ -1,4 +1,4 @@
-package cz.muni.fi.userservice.mappers;
+package cz.muni.fi.userservice.mapper;
 
 import cz.muni.fi.userservice.dto.UserDto;
 import cz.muni.fi.userservice.dto.UserUpdateDto;

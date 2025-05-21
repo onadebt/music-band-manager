@@ -1,9 +1,8 @@
 package cz.muni.fi.tourmanagementservice.rest;
 
-import cz.muni.fi.tourmanagementservice.controller.TourController;
 import cz.muni.fi.tourmanagementservice.dto.CityVisitDto;
 import cz.muni.fi.tourmanagementservice.dto.TourDto;
-import cz.muni.fi.tourmanagementservice.facades.TourFacade;
+import cz.muni.fi.tourmanagementservice.facade.TourFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

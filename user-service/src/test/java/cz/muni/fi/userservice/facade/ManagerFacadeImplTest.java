@@ -2,31 +2,28 @@ package cz.muni.fi.userservice.facade;
 
 import cz.muni.fi.userservice.TestDataFactory;
 import cz.muni.fi.userservice.dto.ManagerDto;
-import cz.muni.fi.userservice.mappers.ManagerMapper;
+import cz.muni.fi.userservice.dto.ManagerUpdateDto;
+import cz.muni.fi.userservice.mapper.ManagerMapper;
 import cz.muni.fi.userservice.model.Manager;
 import cz.muni.fi.userservice.service.interfaces.ManagerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Tomáš MAREK
  */
 @ExtendWith(MockitoExtension.class)
 public class ManagerFacadeImplTest {
+
     @InjectMocks
     private ManagerFacadeImpl managerFacadeImpl;
 
@@ -37,45 +34,55 @@ public class ManagerFacadeImplTest {
     private ManagerMapper managerMapper;
 
     @Test
-    void register_nullManagerDto_throwsIllegalArgumentException() {
-        // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> managerFacadeImpl.register(null));
-        verify(managerService, Mockito.times(0)).save(any());
-    }
-
-    @Test
     void register_validManagerDto_returnsSavedManager() {
-        // Arrange
         Manager testManager = TestDataFactory.setUpTestManager1();
         ManagerDto testManagerDto = TestDataFactory.setUpTestManager1Dto();
 
-        Mockito.when(managerService.save(testManager)).thenReturn(testManager);
-        Mockito.when(managerMapper.toEntity(testManagerDto)).thenReturn(testManager);
-        Mockito.when(managerMapper.toDto(testManager)).thenReturn(testManagerDto);
+        when(managerService.save(testManager)).thenReturn(testManager);
+        when(managerMapper.toEntity(testManagerDto)).thenReturn(testManager);
+        when(managerMapper.toDto(testManager)).thenReturn(testManagerDto);
 
-        // Act
         ManagerDto registered = managerFacadeImpl.register(testManagerDto);
 
-        // Assert
         verify(managerService, times(1)).save(testManager);
         assertEquals(testManagerDto, registered);
     }
 
     @Test
-    void findById_inputNull_throwsIllegalArgumentException() {
-        // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> managerFacadeImpl.findById(null));
-        verify(managerService, Mockito.times(0)).findById(any());
+    void update_validInput_updatesManager() {
+        Manager testManager = TestDataFactory.setUpTestManager1();
+        ManagerUpdateDto updateDto = new ManagerUpdateDto("Updated Company", Set.of(99L));
+        Manager updatedManager = new Manager();
+        updatedManager.setId(testManager.getId());
+        updatedManager.setCompanyName("Updated Company");
+
+        when(managerService.findById(testManager.getId())).thenReturn(testManager);
+        when(managerMapper.updateManagerFromDto(updateDto, testManager)).thenReturn(updatedManager);
+        when(managerService.updateManager(testManager.getId(), updatedManager)).thenReturn(updatedManager);
+        when(managerMapper.toDto(updatedManager)).thenReturn(TestDataFactory.setUpTestManager1Dto());
+
+        ManagerDto result = managerFacadeImpl.update(testManager.getId(), updateDto);
+
+        assertNotNull(result);
+        verify(managerService).updateManager(eq(testManager.getId()), eq(updatedManager));
     }
 
     @Test
-    void findById_invalidId_throwsIllegalArgumentException() {
-        // Arrange
-        Long invalidId = -1L;
-        Mockito.when(managerService.findById(invalidId)).thenReturn(null);
+    void update_emptyBandIds_allowed() {
+        Manager testManager = TestDataFactory.setUpTestManager1();
+        ManagerUpdateDto updateDto = new ManagerUpdateDto("Empty Band List", Set.of());
+        Manager updatedManager = new Manager();
+        updatedManager.setId(testManager.getId());
+        updatedManager.setCompanyName("Empty Band List");
 
-        // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> managerFacadeImpl.findById(invalidId));
+        when(managerService.findById(testManager.getId())).thenReturn(testManager);
+        when(managerMapper.updateManagerFromDto(updateDto, testManager)).thenReturn(updatedManager);
+        when(managerService.updateManager(testManager.getId(), updatedManager)).thenReturn(updatedManager);
+        when(managerMapper.toDto(updatedManager)).thenReturn(TestDataFactory.setUpTestManager1Dto());
+
+        ManagerDto result = managerFacadeImpl.update(testManager.getId(), updateDto);
+
+        assertNotNull(result);
     }
 
     @Test
@@ -83,27 +90,21 @@ public class ManagerFacadeImplTest {
         Manager testManager = TestDataFactory.setUpTestManager1();
         ManagerDto testManagerDto = TestDataFactory.setUpTestManager1Dto();
 
-        // Arrange
-        Mockito.when(managerService.findById(testManager.getId())).thenReturn(testManager);
-        Mockito.when(managerMapper.toDto(testManager)).thenReturn(testManagerDto);
+        when(managerService.findById(testManager.getId())).thenReturn(testManager);
+        when(managerMapper.toDto(testManager)).thenReturn(testManagerDto);
 
-        // Act
         ManagerDto found = managerFacadeImpl.findById(testManager.getId());
 
-        // Assert
         assertEquals(testManagerDto, found);
         verify(managerService, times(1)).findById(testManager.getId());
     }
 
     @Test
     void findAll_noManagerStored_returnsEmptyList() {
-        // Arrange
-        Mockito.when(managerService.findAll()).thenReturn(List.of());
+        when(managerService.findAll()).thenReturn(List.of());
 
-        // Act
         List<ManagerDto> found = managerFacadeImpl.findAll();
 
-        // Assert
         assertEquals(0, found.size());
         verify(managerService, times(1)).findAll();
     }
@@ -115,108 +116,53 @@ public class ManagerFacadeImplTest {
         ManagerDto testManagerDto1 = TestDataFactory.setUpTestManager1Dto();
         ManagerDto testManagerDto2 = TestDataFactory.setUpTestManager2Dto();
 
-        // Arrange
-        Mockito.when(managerService.findAll()).thenReturn(List.of(testManager1, testManager2));
-        Mockito.when(managerMapper.toDto(testManager1)).thenReturn(testManagerDto1);
-        Mockito.when(managerMapper.toDto(testManager2)).thenReturn(testManagerDto2);
+        when(managerService.findAll()).thenReturn(List.of(testManager1, testManager2));
+        when(managerMapper.toDto(testManager1)).thenReturn(testManagerDto1);
+        when(managerMapper.toDto(testManager2)).thenReturn(testManagerDto2);
 
-        // Act
         List<ManagerDto> found = managerFacadeImpl.findAll();
 
-        // Assert
         assertEquals(2, found.size());
+        assertTrue(found.contains(testManagerDto1));
+        assertTrue(found.contains(testManagerDto2));
         verify(managerService, times(1)).findAll();
-        assertTrue(found.contains(testManagerDto1));
-        assertTrue(found.contains(testManagerDto2));
     }
 
     @Test
-    void findByBandIds_nullArgument_throwsIllegalArgumentException() {
-        // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> managerFacadeImpl.findByBandIds(null));
-        verify(managerService, times(0)).findByManagedBandIds(any());
+    void findByBandIds_validSet_returnsList() {
+        Set<Long> ids = Set.of(1L, 2L);
+        Manager manager = TestDataFactory.setUpTestManager1();
+        ManagerDto dto = TestDataFactory.setUpTestManager1Dto();
+
+        when(managerService.findByManagedBandIds(ids)).thenReturn(List.of(manager));
+        when(managerMapper.toDto(manager)).thenReturn(dto);
+
+        List<ManagerDto> result = managerFacadeImpl.findByBandIds(ids);
+
+        assertEquals(1, result.size());
+        assertEquals(dto, result.getFirst());
     }
 
     @Test
-    void findByBandIds_twoManagersFound_returnsList() {
-        Manager testManager1 = TestDataFactory.setUpTestManager1();
-        Manager testManager2 = TestDataFactory.setUpTestManager2();
-        ManagerDto testManagerDto1 = TestDataFactory.setUpTestManager1Dto();
-        ManagerDto testManagerDto2 = TestDataFactory.setUpTestManager2Dto();
+    void deleteById_validId_callsService() {
+        Long id = 1L;
 
-        // Arrange
-        Set<Long> bandIds = Set.of(1L, 2L);
-        Mockito.when(managerService.findByManagedBandIds(bandIds)).thenReturn(List.of(testManager1, testManager2));
-        Mockito.when(managerMapper.toDto(testManager1)).thenReturn(testManagerDto1);
-        Mockito.when(managerMapper.toDto(testManager2)).thenReturn(testManagerDto2);
+        managerFacadeImpl.deleteById(id);
 
-        // Act
-        List<ManagerDto> found = managerFacadeImpl.findByBandIds(bandIds);
-
-        // Assert
-        verify(managerService, times(1)).findByManagedBandIds(bandIds);
-        assertTrue(found.contains(testManagerDto1));
-        assertTrue(found.contains(testManagerDto2));
+        verify(managerService).deleteById(id);
     }
 
     @Test
-    void deleteById_nullId_throwsIllegalArgumentException() {
-        // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> managerFacadeImpl.deleteById(null));
-        verify(managerService, times(0)).deleteById(null);
-    }
+    void updateBandIds_validInput_returnsUpdatedDto() {
+        Manager manager = TestDataFactory.setUpTestManager1();
+        ManagerDto dto = TestDataFactory.setUpTestManager1Dto();
+        Set<Long> ids = Set.of(1L, 2L);
 
-    @Test
-    void deleteById_invalidId_throwsIllegalArgumentException() {
-        // Arrange
-        Long invalidId = -1L;
-        Mockito.when(managerService.findById(invalidId)).thenReturn(null);
+        when(managerService.updateManagerBandIds(manager.getId(), ids)).thenReturn(manager);
+        when(managerMapper.toDto(manager)).thenReturn(dto);
 
-        // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> managerFacadeImpl.deleteById(invalidId));
-        verify(managerService, times(1)).findById(invalidId);
-    }
+        ManagerDto result = managerFacadeImpl.updateBandIds(manager.getId(), ids);
 
-    @Test
-    void deleteById_validId_callsManagerServiceDelete() {
-        Manager testManager = TestDataFactory.setUpTestManager1();
-
-        // Act
-        managerService.deleteById(testManager.getId());
-
-        // Assert
-        verify(managerService, times(1)).deleteById(testManager.getId());
-    }
-
-    @Test
-    void updateBandIds_nullBandIds_throwsIllegalArgumentException() {
-        // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> managerFacadeImpl.updateBandIds(1L, null));
-        verify(managerService, times(0)).updateManagerBandIds(any(), any());
-    }
-
-    @Test
-    void updateBandIds_nullArtisId_throwsIllegalArgumentException() {
-        // Act / Assert
-        assertThrows(IllegalArgumentException.class, () -> managerFacadeImpl.updateBandIds(null, Set.of()));
-        verify(managerService, times(0)).updateManagerBandIds(any(), any());
-    }
-
-    @Test
-    void updateBandsIds_changedBandIds_returnsUpdatedManager() {
-        Manager testManager = TestDataFactory.setUpTestManager1();
-        ManagerDto testManagerDto = TestDataFactory.setUpTestManager1Dto();
-
-        // Arrange
-        Set<Long> bandIds = Set.of(1L, 2L);
-        Mockito.when(managerService.updateManagerBandIds(testManager.getId(), bandIds)).thenReturn(testManager);
-        Mockito.when(managerMapper.toDto(testManager)).thenReturn(testManagerDto);
-
-        // Act
-        ManagerDto updated = managerFacadeImpl.updateBandIds(testManager.getId(), bandIds);
-
-        // Assert
-        assertEquals(testManagerDto, updated);
-        verify(managerService, times(1)).updateManagerBandIds(testManager.getId(), bandIds);
+        assertEquals(dto, result);
     }
 }

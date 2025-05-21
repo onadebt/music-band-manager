@@ -1,9 +1,9 @@
 package cz.muni.fi.bandmanagementservice.service;
 
-import cz.muni.fi.bandmanagementservice.exceptions.BandAlreadyExistsException;
-import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.MusicianAlreadyInBandException;
-import cz.muni.fi.bandmanagementservice.exceptions.MusicianNotInBandException;
+import cz.muni.fi.bandmanagementservice.exception.BandAlreadyExistsException;
+import cz.muni.fi.bandmanagementservice.exception.BandNotFoundException;
+import cz.muni.fi.bandmanagementservice.exception.MusicianAlreadyInBandException;
+import cz.muni.fi.bandmanagementservice.exception.MusicianNotInBandException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import org.springframework.beans.factory.annotation.Autowired;

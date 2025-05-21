@@ -1,6 +1,6 @@
-package cz.muni.fi.bandmanagementservice.exceptions;
+package cz.muni.fi.bandmanagementservice.exception;
 
-import cz.muni.fi.shared.enm.BandOfferStatus;
+import cz.muni.fi.enums.BandOfferStatus;
 
 /**
  * @author Tomáš MAREK

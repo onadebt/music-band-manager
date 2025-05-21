@@ -1,6 +1,6 @@
 package cz.muni.fi.bandmanagementservice.saga;
 
-import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
+import cz.muni.fi.bandmanagementservice.exception.BandNotFoundException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.repository.BandRepository;
 import cz.muni.fi.bandmanagementservice.service.BandService;
