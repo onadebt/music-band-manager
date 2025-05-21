@@ -51,7 +51,7 @@ public class CityVisitControllerTest {
     }
 
     @Test
-    public void testGetAllCityVisits() {
+    public void getAllCityVisits_containsTwoVisits_returnsListWithTwoVisits() {
         when(cityVisitFacade.getAllCityVisits()).thenReturn(cityVisitDtoList);
 
         ResponseEntity<List<CityVisitDto>> response = cityVisitController.getAllCityVisits();
@@ -62,7 +62,7 @@ public class CityVisitControllerTest {
     }
 
     @Test
-    public void testGetCityVisitById() {
+    public void getCityVisitById_validId_returnsVisit() {
         when(cityVisitFacade.getCityVisitById(anyLong())).thenReturn(cityVisitDTO);
 
         ResponseEntity<CityVisitDto> response = cityVisitController.getCityVisitById(1L);
@@ -73,7 +73,7 @@ public class CityVisitControllerTest {
     }
 
     @Test
-    public void testCreateCityVisit() {
+    public void createCityVisit_validData_returnsCreatedVisit() {
         when(cityVisitFacade.createCityVisit(any(CityVisitDto.class))).thenReturn(cityVisitDTO);
 
         ResponseEntity<CityVisitDto> response = cityVisitController.createCityVisit(cityVisitDTO);
@@ -84,7 +84,7 @@ public class CityVisitControllerTest {
     }
 
     @Test
-    public void testUpdateCityVisit() {
+    public void updateCityVisit_validData_returnsUpdatedVisit() {
         when(cityVisitFacade.updateCityVisit(anyLong(), any(CityVisitDto.class))).thenReturn(cityVisitDTO);
 
         ResponseEntity<CityVisitDto> response = cityVisitController.updateCityVisit(1L, cityVisitDTO);
@@ -95,7 +95,7 @@ public class CityVisitControllerTest {
     }
 
     @Test
-    public void testDeleteCityVisit() {
+    public void deleteCityVisit_validId_verifyDeleteOnFacadeCalled() {
         doNothing().when(cityVisitFacade).deleteCityVisit(anyLong());
 
         ResponseEntity<Void> response = cityVisitController.deleteCityVisit(1L);
