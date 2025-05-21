@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -248,7 +248,7 @@
           "useBackend": false
         }
       ],
-      "title": "Requests per second",
+      "title": "Request total",
       "type": "stat"
     },
     {
@@ -334,5 +334,5 @@
   "timezone": "browser",
   "title": "Stats",
   "uid": "bd055eee-cc2f-4632-86c9-6000bbf1e69c",
-  "version": 1
+  "version": 2
 }
