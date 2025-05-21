@@ -93,10 +93,11 @@ services:
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    #  - GF_AUTH_DISABLE_LOGIN_FORM=true
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ./grafana/provisioning/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning/datasources:/var/lib/grafana/datasources
       - grafana-storage:/var/lib/grafana  # keep DB & users persistent
     restart: unless-stopped
 
