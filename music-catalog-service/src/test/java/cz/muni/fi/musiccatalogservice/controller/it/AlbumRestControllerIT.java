@@ -4,7 +4,7 @@ package cz.muni.fi.musiccatalogservice.controller.it;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import cz.muni.fi.musiccatalogservice.controller.it.config.DisableSecurityTestConfig;
-import cz.muni.fi.musiccatalogservice.dto.AlbumDTO;
+import cz.muni.fi.musiccatalogservice.dto.AlbumDto;
 import cz.muni.fi.musiccatalogservice.model.Album;
 import cz.muni.fi.musiccatalogservice.model.Song;
 import cz.muni.fi.musiccatalogservice.repository.AlbumRepository;
@@ -109,14 +109,14 @@ class AlbumRestControllerIT {
 
     @Test
     void testCreateAlbum() throws Exception {
-        AlbumDTO albumDTO = new AlbumDTO();
-        albumDTO.setTitle("New Album");
-        albumDTO.setReleaseDate(LocalDateTime.now().minusDays(60));
-        albumDTO.setBandId(1L);
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setTitle("New Album");
+        albumDto.setReleaseDate(LocalDateTime.now().minusDays(60));
+        albumDto.setBandId(1L);
 
         mockMvc.perform(post("/api/albums")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(albumDTO)))
+                        .content(objectMapper.writeValueAsString(albumDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title", is("New Album")))
                 .andExpect(jsonPath("$.releaseDate").exists());
@@ -126,12 +126,12 @@ class AlbumRestControllerIT {
 
     @Test
     void testCreateInvalidAlbum() throws Exception {
-        AlbumDTO albumDTO = new AlbumDTO();
+        AlbumDto albumDto = new AlbumDto();
         // Empty title and null releaseDate
 
         mockMvc.perform(post("/api/albums")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(albumDTO)))
+                        .content(objectMapper.writeValueAsString(albumDto)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -139,27 +139,27 @@ class AlbumRestControllerIT {
 
     @Test
     void testUpdateAlbum() throws Exception {
-        AlbumDTO albumDTO = new AlbumDTO();
-        albumDTO.setTitle("Updated Album");
-        albumDTO.setReleaseDate(LocalDateTime.now().minusDays(60));
-        albumDTO.setBandId(1L);
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setTitle("Updated Album");
+        albumDto.setReleaseDate(LocalDateTime.now().minusDays(60));
+        albumDto.setBandId(1L);
 
         mockMvc.perform(put("/api/albums/{id}", testAlbum.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(albumDTO)))
+                        .content(objectMapper.writeValueAsString(albumDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", is("Updated Album")));
     }
 
     @Test
     void testUpdateInvalidAlbum() throws Exception {
-        AlbumDTO albumDTO = new AlbumDTO();
-        albumDTO.setTitle("Updated Album");
-        albumDTO.setReleaseDate(LocalDateTime.now().plusDays(90));
+        AlbumDto albumDto = new AlbumDto();
+        albumDto.setTitle("Updated Album");
+        albumDto.setReleaseDate(LocalDateTime.now().plusDays(90));
 
         mockMvc.perform(put("/api/albums/{id}", 999L)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(albumDTO)))
+                        .content(objectMapper.writeValueAsString(albumDto)))
                 .andExpect(status().isBadRequest());
     }
 

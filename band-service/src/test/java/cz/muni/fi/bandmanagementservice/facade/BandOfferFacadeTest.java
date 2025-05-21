@@ -1,153 +1,151 @@
 package cz.muni.fi.bandmanagementservice.facade;
 
+import cz.muni.fi.bandmanagementservice.TestDataFactory;
 import cz.muni.fi.bandmanagementservice.dto.BandOfferDto;
-import cz.muni.fi.bandmanagementservice.model.BandOffer;
+import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
+import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
 import cz.muni.fi.bandmanagementservice.mappers.BandOfferMapper;
+import cz.muni.fi.bandmanagementservice.model.BandOffer;
+import cz.muni.fi.bandmanagementservice.saga.BandOfferSaga;
 import cz.muni.fi.bandmanagementservice.service.BandOfferService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class BandOfferFacadeTest {
+@ExtendWith(MockitoExtension.class)
+public class BandOfferFacadeTest {
 
+    @Mock
     private BandOfferService bandOfferService;
+
+    @Mock
+    private BandOfferSaga bandOfferSaga;
+
+    @Mock
+    private BandOfferMapper bandOfferMapper;
+
+    @InjectMocks
     private BandOfferFacade bandOfferFacade;
 
-    private BandOffer bandOffer;
-    private BandOfferDto bandOfferDto;
+    @Test
+    void getBandOffer_existingId_returnsBandOfferDto() {
+        BandOffer offer = TestDataFactory.setUpBandOffer1();
+        BandOfferDto dto = TestDataFactory.setUpBandOfferDto1();
 
-    @BeforeEach
-    void setUp() {
-        bandOfferService = mock(BandOfferService.class);
-        bandOfferFacade = new BandOfferFacade(bandOfferService);
+        when(bandOfferService.getBandOffer(1L)).thenReturn(offer);
+        when(bandOfferMapper.toDto(offer)).thenReturn(dto);
 
-        bandOffer = new BandOffer();
-        bandOfferDto = new BandOfferDto();
+        BandOfferDto result = bandOfferFacade.getBandOffer(1L);
+
+        assertEquals(dto, result);
     }
 
     @Test
-    void getBandOffer_shouldReturnMappedDto() {
-        Long offerId = 1L;
+    void getBandOffer_notFound_throwsException() {
+        when(bandOfferService.getBandOffer(99L)).thenThrow(new BandOfferNotFoundException(99L));
 
-        when(bandOfferService.getBandOffer(offerId)).thenReturn(bandOffer);
-
-        try (MockedStatic<BandOfferMapper> mocked = mockStatic(BandOfferMapper.class)) {
-            mocked.when(() -> BandOfferMapper.mapToDto(bandOffer)).thenReturn(bandOfferDto);
-
-            BandOfferDto result = bandOfferFacade.getBandOffer(offerId);
-
-            assertEquals(bandOfferDto, result);
-            verify(bandOfferService).getBandOffer(offerId);
-        }
+        assertThrows(BandOfferNotFoundException.class, () -> bandOfferFacade.getBandOffer(99L));
     }
 
     @Test
-    void postBandOffer_shouldReturnCreatedOfferDto() {
-        Long bandId = 1L, musicianId = 2L, managerId = 3L;
+    void postBandOffer_validInput_returnsDto() {
+        BandOffer offer = TestDataFactory.setUpBandOffer1();
+        BandOfferDto dto = TestDataFactory.setUpBandOfferDto1();
 
-        when(bandOfferService.createBandOffer(bandId, musicianId, managerId)).thenReturn(bandOffer);
+        when(bandOfferService.createBandOffer(1L, 2L, 3L)).thenReturn(offer);
+        when(bandOfferMapper.toDto(offer)).thenReturn(dto);
 
-        try (MockedStatic<BandOfferMapper> mocked = mockStatic(BandOfferMapper.class)) {
-            mocked.when(() -> BandOfferMapper.mapToDto(bandOffer)).thenReturn(bandOfferDto);
+        BandOfferDto result = bandOfferFacade.postBandOffer(1L, 2L, 3L);
 
-            BandOfferDto result = bandOfferFacade.postBandOffer(bandId, musicianId, managerId);
-
-            assertEquals(bandOfferDto, result);
-            verify(bandOfferService).createBandOffer(bandId, musicianId, managerId);
-        }
+        assertEquals(dto, result);
     }
 
     @Test
-    void acceptBandOffer_shouldReturnAcceptedOfferDto() {
-        Long offerId = 1L;
+    void postBandOffer_bandNotFound_throwsException() {
+        when(bandOfferService.createBandOffer(1L, 2L, 3L)).thenThrow(new BandNotFoundException(1L));
 
-        when(bandOfferService.acceptOffer(offerId)).thenReturn(bandOffer);
-
-        try (MockedStatic<BandOfferMapper> mocked = mockStatic(BandOfferMapper.class)) {
-            mocked.when(() -> BandOfferMapper.mapToDto(bandOffer)).thenReturn(bandOfferDto);
-
-            BandOfferDto result = bandOfferFacade.acceptBandOffer(offerId);
-
-            assertEquals(bandOfferDto, result);
-            verify(bandOfferService).acceptOffer(offerId);
-        }
+        assertThrows(BandNotFoundException.class, () -> bandOfferFacade.postBandOffer(1L, 2L, 3L));
     }
 
     @Test
-    void rejectBandOffer_shouldReturnRejectedOfferDto() {
-        Long offerId = 1L;
+    void acceptBandOffer_validOffer_returnsUpdatedDto() {
+        BandOffer offer = TestDataFactory.setUpBandOffer1();
+        BandOfferDto dto = TestDataFactory.setUpBandOfferDto1();
 
-        when(bandOfferService.rejectOffer(offerId)).thenReturn(bandOffer);
+        when(bandOfferSaga.startAcceptBandOffer(1L)).thenReturn(offer);
+        when(bandOfferMapper.toDto(offer)).thenReturn(dto);
 
-        try (MockedStatic<BandOfferMapper> mocked = mockStatic(BandOfferMapper.class)) {
-            mocked.when(() -> BandOfferMapper.mapToDto(bandOffer)).thenReturn(bandOfferDto);
+        BandOfferDto result = bandOfferFacade.acceptBandOffer(1L);
 
-            BandOfferDto result = bandOfferFacade.rejectBandOffer(offerId);
-
-            assertEquals(bandOfferDto, result);
-            verify(bandOfferService).rejectOffer(offerId);
-        }
+        assertEquals(dto, result);
     }
 
     @Test
-    void revokeOffer_shouldCallService() {
-        Long offerId = 1L;
+    void acceptBandOffer_invalidId_throwsException() {
+        when(bandOfferSaga.startAcceptBandOffer(99L)).thenThrow(new BandOfferNotFoundException(99L));
 
-        bandOfferFacade.revokeOffer(offerId);
-
-        verify(bandOfferService).revokeOffer(offerId);
+        assertThrows(BandOfferNotFoundException.class, () -> bandOfferFacade.acceptBandOffer(99L));
     }
 
     @Test
-    void getAllBandOffers_shouldReturnMappedList() {
-        List<BandOffer> offers = Arrays.asList(bandOffer, bandOffer);
-        List<BandOfferDto> dtos = Arrays.asList(bandOfferDto, bandOfferDto);
+    void rejectBandOffer_validOffer_rejectsSuccessfully() {
+        BandOffer offer = TestDataFactory.setUpBandOffer1();
+        BandOfferDto dto = TestDataFactory.setUpBandOfferDto1();
+
+        when(bandOfferService.rejectOffer(1L)).thenReturn(offer);
+        when(bandOfferMapper.toDto(offer)).thenReturn(dto);
+
+        BandOfferDto result = bandOfferFacade.rejectBandOffer(1L);
+
+        assertEquals(dto, result);
+    }
+
+    @Test
+    void revokeOffer_validOffer_executesSuccessfully() {
+        doNothing().when(bandOfferService).revokeOffer(1L);
+
+        assertDoesNotThrow(() -> bandOfferFacade.revokeOffer(1L));
+        verify(bandOfferService).revokeOffer(1L);
+    }
+
+    @Test
+    void getAllBandOffers_returnsList() {
+        List<BandOffer> offers = List.of(TestDataFactory.setUpBandOffer1(), TestDataFactory.setUpBandOffer2());
+        List<BandOfferDto> dtos = List.of(TestDataFactory.setUpBandOfferDto1(), TestDataFactory.setUpBandOfferDto2());
 
         when(bandOfferService.getAllBandOffers()).thenReturn(offers);
+        when(bandOfferMapper.toDto(any())).thenReturn(dtos.get(0), dtos.get(1));
 
-        try (MockedStatic<BandOfferMapper> mocked = mockStatic(BandOfferMapper.class)) {
-            mocked.when(() -> BandOfferMapper.mapToDto(any(BandOffer.class))).thenReturn(bandOfferDto);
+        List<BandOfferDto> result = bandOfferFacade.getAllBandOffers();
 
-            List<BandOfferDto> result = bandOfferFacade.getAllBandOffers();
-
-            assertEquals(dtos.size(), result.size());
-            verify(bandOfferService).getAllBandOffers();
-        }
+        assertEquals(2, result.size());
+        verify(bandOfferMapper, times(2)).toDto(any());
     }
 
     @Test
-    void getBandOffersByBandId_shouldReturnMappedList() {
-        Long bandId = 5L;
-        when(bandOfferService.getBandOffersByBandId(bandId)).thenReturn(List.of(bandOffer));
+    void getBandOffersByBandId_validId_returnsFilteredOffers() {
+        when(bandOfferService.getBandOffersByBandId(1L)).thenReturn(List.of(TestDataFactory.setUpBandOffer1()));
+        when(bandOfferMapper.toDto(any())).thenReturn(TestDataFactory.setUpBandOfferDto1());
 
-        try (MockedStatic<BandOfferMapper> mocked = mockStatic(BandOfferMapper.class)) {
-            mocked.when(() -> BandOfferMapper.mapToDto(bandOffer)).thenReturn(bandOfferDto);
+        List<BandOfferDto> result = bandOfferFacade.getBandOffersByBandId(1L);
 
-            List<BandOfferDto> result = bandOfferFacade.getBandOffersByBandId(bandId);
-
-            assertEquals(1, result.size());
-            verify(bandOfferService).getBandOffersByBandId(bandId);
-        }
+        assertEquals(1, result.size());
     }
 
     @Test
-    void getBandOffersByInvitedMusicianId_shouldReturnMappedList() {
-        Long musicianId = 2L;
-        when(bandOfferService.getBandOfferByInvitedMusicianId(musicianId)).thenReturn(List.of(bandOffer));
+    void getBandOffersByInvitedMusicianId_validId_returnsFilteredOffers() {
+        when(bandOfferService.getBandOfferByInvitedMusicianId(1L)).thenReturn(List.of(TestDataFactory.setUpBandOffer1()));
+        when(bandOfferMapper.toDto(any())).thenReturn(TestDataFactory.setUpBandOfferDto1());
 
-        try (MockedStatic<BandOfferMapper> mocked = mockStatic(BandOfferMapper.class)) {
-            mocked.when(() -> BandOfferMapper.mapToDto(bandOffer)).thenReturn(bandOfferDto);
+        List<BandOfferDto> result = bandOfferFacade.getBandOffersByInvitedMusicianId(1L);
 
-            List<BandOfferDto> result = bandOfferFacade.getBandOffersByInvitedMusicianId(musicianId);
-
-            assertEquals(1, result.size());
-            verify(bandOfferService).getBandOfferByInvitedMusicianId(musicianId);
-        }
+        assertEquals(1, result.size());
     }
 }

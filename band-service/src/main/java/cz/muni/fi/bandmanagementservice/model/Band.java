@@ -9,6 +9,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -20,6 +24,10 @@ import java.util.Set;
  */
 @Entity
 @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode
 @Table(name = "bands")
 public class Band {
     @Id
@@ -55,7 +63,12 @@ public class Band {
         this.logoUrl = logoUrl;
     }
 
-    public Band() {
+    public void addMember(Long memberId) {
+        this.members.add(memberId);
+    }
+
+    public void removeMember(Long memberId) {
+        this.members.remove(memberId);
     }
 
     public Set<Long> getMembers() {
@@ -65,65 +78,5 @@ public class Band {
     public void setMembers(Set<Long> members) {
         this.members.clear();
         this.members.addAll(members);
-    }
-
-    public void addMember(Long memberId) {
-        this.members.add(memberId);
-    }
-
-    public void removeMember(Long memberId) {
-        this.members.remove(memberId);
-    }
-
-    public Long getManagerId() {
-        return managerId;
-    }
-
-    public void setManagerId(Long managerId) {
-        this.managerId = managerId;
-    }
-
-    public String getLogoUrl() {
-        return logoUrl;
-    }
-
-    public void setLogoUrl(String logoUrl) {
-        this.logoUrl = logoUrl;
-    }
-
-    public String getMusicalStyle() {
-        return musicalStyle;
-    }
-
-    public void setMusicalStyle(String musicalStyle) {
-        this.musicalStyle = musicalStyle;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (object == null || getClass() != object.getClass()) return false;
-        Band band = (Band) object;
-        return Objects.equals(managerId, band.managerId) && Objects.equals(name, band.name) && Objects.equals(musicalStyle, band.musicalStyle) && Objects.equals(logoUrl, band.logoUrl) && Objects.equals(members, band.members);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, musicalStyle, logoUrl, managerId, members);
     }
 }

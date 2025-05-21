@@ -1,12 +1,13 @@
 package cz.muni.fi.musiccatalogservice.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -76,10 +76,10 @@ mvn spring-boot:run
 | Service                | URL                                                                            |
 |------------------------|--------------------------------------------------------------------------------|
 | Authentication Service | [http://localhost:8084/token](http://localhost:8084/token)                     |
-| User Service           | [http://localhost:8091/swagger-ui.html](http://localhost:8081/swagger-ui.html) |
-| Band Service           | [http://localhost:8092/swagger-ui.html](http://localhost:8082/swagger-ui.html) |
-| Music Catalog Service  | [http://localhost:8093/swagger-ui.html](http://localhost:8083/swagger-ui.html) |
-| Tour Service           | [http://localhost:8094/swagger-ui.html](http://localhost:8084/swagger-ui.html) |
+| User Service           | [http://localhost:8091/swagger-ui.html](http://localhost:8091/swagger-ui.html) |
+| Band Service           | [http://localhost:8092/swagger-ui.html](http://localhost:8092/swagger-ui.html) |
+| Music Catalog Service  | [http://localhost:8093/swagger-ui.html](http://localhost:8093/swagger-ui.html) |
+| Tour Service           | [http://localhost:8094/swagger-ui.html](http://localhost:8094/swagger-ui.html) |
 
 ---
 ## 🔒 Authentication and Authorization
