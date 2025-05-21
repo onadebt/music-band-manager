@@ -41,7 +41,7 @@ public class CityVisitServiceTest {
     }
 
     @Test
-    void getAllCityVisits_ShouldReturnAllCityVisits() {
+    void getAllCityVisits_containsOneVisit_returnsListWithOneCityVisit() {
         List<CityVisit> cityVisits = Arrays.asList(cityVisit);
         when(cityVisitRepository.findAll()).thenReturn(cityVisits);
 
@@ -53,7 +53,7 @@ public class CityVisitServiceTest {
     }
 
     @Test
-    void getCityVisitById_ShouldReturnCityVisit_WhenExists() {
+    void getCityVisitById_validId_returnsWantedVisit() {
         when(cityVisitRepository.findById(1L)).thenReturn(Optional.of(cityVisit));
 
         CityVisit result = cityVisitService.getCityVisitById(1L);
@@ -65,7 +65,7 @@ public class CityVisitServiceTest {
     }
 
     @Test
-    void getCityVisitById_ShouldThrowException_WhenCityVisitDoesNotExist() {
+    void getCityVisitById_invalidId_throwsResourceNotFoundException() {
         when(cityVisitRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> cityVisitService.getCityVisitById(99L));
@@ -73,7 +73,7 @@ public class CityVisitServiceTest {
     }
 
     @Test
-    void createCityVisit_ShouldReturnSavedCityVisit() {
+    void createCityVisit_validInput_returnsCreatedCityVisit() {
         when(cityVisitRepository.save(any(CityVisit.class))).thenReturn(cityVisit);
         CityVisit result = cityVisitService.createCityVisit(cityVisit);
 
@@ -83,7 +83,7 @@ public class CityVisitServiceTest {
     }
 
     @Test
-    void updateCityVisit_ShouldUpdateCityVisitFields() {
+    void updateCityVisit_validInput_returnsUpdatedCityVisit() {
         CityVisit updatedCityVisit = new CityVisit();
         updatedCityVisit.setCityName("Berlin");
         updatedCityVisit.setDateFrom(LocalDate.of(2025, 6, 10));
@@ -103,7 +103,7 @@ public class CityVisitServiceTest {
     }
 
     @Test
-    void deleteCityVisit_ShouldDeleteCityVisit() {
+    void deleteCityVisit_validId_verifiesDeleteOnRepositoryCalled() {
         when(cityVisitRepository.findById(1L)).thenReturn(Optional.of(cityVisit));
         doNothing().when(cityVisitRepository).deleteById(1L);
 
@@ -114,7 +114,7 @@ public class CityVisitServiceTest {
     }
 
     @Test
-    void deleteCityVisit_ShouldThrowException_WhenCityVisitDoesNotExist() {
+    void deleteCityVisit_invalidId_throwsResourceNotFoundException() {
         when(cityVisitRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> cityVisitService.deleteCityVisit(99L));

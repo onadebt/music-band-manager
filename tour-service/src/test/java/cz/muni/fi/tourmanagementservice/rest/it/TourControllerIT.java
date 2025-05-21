@@ -73,7 +73,7 @@ public class TourControllerIT {
     }
 
     @Test
-    public void testGetAllTours() throws Exception {
+    public void getAllTours_oneTourPresent_returnsOkAndListWithOneTour() throws Exception {
         mockMvc.perform(get("/api/tours"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -82,7 +82,7 @@ public class TourControllerIT {
     }
 
     @Test
-    public void testGetTourById() throws Exception {
+    public void getTourById_tourExists_returnOkAndWantedTour() throws Exception {
         mockMvc.perform(get("/api/tours/{id}", testTour.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -94,7 +94,7 @@ public class TourControllerIT {
     }
 
     @Test
-    public void testGetToursByBand() throws Exception {
+    public void getToursByBand_oneTourMatched_returnsOkAndListWithOneTour() throws Exception {
         mockMvc.perform(get("/api/tours/band/{bandId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -103,7 +103,7 @@ public class TourControllerIT {
     }
 
     @Test
-    public void testCreateTour() throws Exception {
+    public void createTour_validData_returnsOkAndCreatedTour() throws Exception {
         TourDto tourDTO = new TourDto();
         tourDTO.setTourName("North America Tour 2025");
         tourDTO.setBandId(2L);
@@ -119,7 +119,7 @@ public class TourControllerIT {
     }
 
     @Test
-    public void testUpdateTour() throws Exception {
+    public void updateTour_validData_returnsOkAndUpdatedTour() throws Exception {
         TourDto tourDTO = new TourDto();
         tourDTO.setTourName("Updated Tour Name");
         tourDTO.setBandId(testTour.getBandId());
@@ -134,7 +134,7 @@ public class TourControllerIT {
     }
 
     @Test
-    public void testDeleteTour() throws Exception {
+    public void deleteTour_tourExists_returnsNoContent() throws Exception {
         mockMvc.perform(delete("/api/tours/{id}", testTour.getId()))
                 .andExpect(status().isNoContent());
 
@@ -143,7 +143,7 @@ public class TourControllerIT {
     }
 
     @Test
-    public void testAddCityVisitToTour() throws Exception {
+    public void addCityVisitToTour_validData_returnsOk() throws Exception {
         CityVisitDto cityVisitDTO = new CityVisitDto();
         cityVisitDTO.setCityName("Berlin");
 
@@ -167,7 +167,7 @@ public class TourControllerIT {
     }
 
     @Test
-    public void testRemoveCityVisitFromTour() throws Exception {
+    public void removeCityVisitFromTour_tourAndVisitExist_returnsNoContent() throws Exception {
         mockMvc.perform(delete("/api/tours/{tourId}/city-visit/{cityVisitId}",
                         testTour.getId(), testCityVisit.getId()))
                 .andExpect(status().isNoContent());
@@ -178,7 +178,7 @@ public class TourControllerIT {
     }
 
     @Test
-    public void testCreateTourWithInvalidData() throws Exception {
+    public void createTour_invalidData_returnsBadRequest() throws Exception {
         TourDto tourDTO = new TourDto();
         tourDTO.setTourName("a");
         tourDTO.setBandId(null);
@@ -192,7 +192,7 @@ public class TourControllerIT {
     }
 
     @Test
-    public void testGetNonExistingTour() throws Exception {
+    public void getTour_invalidId_returnsNotFound() throws Exception {
         mockMvc.perform(get("/api/tours/{id}", 999L))
                 .andExpect(status().isNotFound());
     }

@@ -57,7 +57,7 @@ public class CityVisitControllerIT {
     }
 
     @Test
-    public void testGetAllCityVisits() throws Exception {
+    public void getAllCityVisits_containOneVisit_returnsOkAndListWithOneVisit() throws Exception {
         mockMvc.perform(get("/api/cityVisits"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -66,7 +66,7 @@ public class CityVisitControllerIT {
     }
 
     @Test
-    public void testGetCityVisitById() throws Exception {
+    public void getCityVisitById_visitExists_returnOkAndVisit() throws Exception {
         mockMvc.perform(get("/api/cityVisits/{id}", testCityVisit.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -75,7 +75,7 @@ public class CityVisitControllerIT {
     }
 
     @Test
-    public void testCreateCityVisit() throws Exception {
+    public void createCityVisit_validData_returnsOkAndCreatedVisit() throws Exception {
         CityVisitDto cityVisitDTO = new CityVisitDto();
         cityVisitDTO.setCityName("Paris");
 
@@ -95,7 +95,7 @@ public class CityVisitControllerIT {
     }
 
     @Test
-    public void testUpdateCityVisit() throws Exception {
+    public void updateCityVisit_validDataAndVisitExists_returnOkAndUpdatedVisit() throws Exception {
         CityVisitDto cityVisitDTO = new CityVisitDto();
         cityVisitDTO.setCityName("Updated City Name");
 
@@ -115,7 +115,7 @@ public class CityVisitControllerIT {
     }
 
     @Test
-    public void testDeleteCityVisit() throws Exception {
+    public void deleteCityVisit_visitDoesNotExist_returnsNotFound() throws Exception {
         mockMvc.perform(delete("/api/cityVisits/{id}", testCityVisit.getId()))
                 .andExpect(status().isNotFound());
 
@@ -124,7 +124,7 @@ public class CityVisitControllerIT {
     }
 
     @Test
-    public void testCreateCityVisitWithInvalidData() throws Exception {
+    public void createCityVisit_invalidData_returnsBadRequest() throws Exception {
         CityVisitDto cityVisitDTO = new CityVisitDto();
         cityVisitDTO.setCityName("");
 
@@ -142,7 +142,7 @@ public class CityVisitControllerIT {
     }
 
     @Test
-    public void testCreateCityVisitWithInvalidDates() throws Exception {
+    public void createCityVisit_invalidDates_returnsBadRequest() throws Exception {
         CityVisitDto cityVisitDTO = new CityVisitDto();
         cityVisitDTO.setCityName("London");
 
@@ -161,7 +161,7 @@ public class CityVisitControllerIT {
     }
 
     @Test
-    public void testGetNonExistingCityVisit() throws Exception {
+    public void getCityVisit_invalidId_returnsNotFound() throws Exception {
         mockMvc.perform(get("/api/cityVisits/{id}", 999L))
                 .andExpect(status().isNotFound());
     }

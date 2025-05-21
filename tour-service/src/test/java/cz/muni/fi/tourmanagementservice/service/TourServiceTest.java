@@ -56,7 +56,7 @@ public class TourServiceTest {
     }
 
     @Test
-    void getAllTours_ShouldReturnAllTours() {
+    void getAllTours_containsOneTour_returnsListWithOneTour() {
         List<Tour> tours = Arrays.asList(tour);
         when(tourRepository.findAll()).thenReturn(tours);
 
@@ -68,7 +68,7 @@ public class TourServiceTest {
     }
 
     @Test
-    void getTourById_ShouldReturnTour_WhenExists() {
+    void getTourById_validId_returnsWantedTour() {
         when(tourRepository.findById(1L)).thenReturn(Optional.of(tour));
 
         Tour result = tourService.getTourById(1L);
@@ -80,7 +80,7 @@ public class TourServiceTest {
     }
 
     @Test
-    void getTourById_ShouldThrowException_WhenTourDoesNotExist() {
+    void getTourById_invalidId_throwsResourceNotFoundException() {
         when(tourRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> tourService.getTourById(99L));
@@ -88,7 +88,7 @@ public class TourServiceTest {
     }
 
     @Test
-    void getToursByBand_ShouldReturnTours() {
+    void getToursByBand_oneTourMatches_returnsListWithOneTour(){
         List<Tour> tours = Arrays.asList(tour);
         when(tourRepository.findAllByBandId(2L)).thenReturn(tours);
 
@@ -100,7 +100,7 @@ public class TourServiceTest {
     }
 
     @Test
-    void createTour_ShouldReturnSavedTour() {
+    void createTour_validData_returnsCreatedTour() {
         when(tourRepository.save(any(Tour.class))).thenReturn(tour);
 
         Tour result = tourService.createTour(tour);
@@ -111,7 +111,7 @@ public class TourServiceTest {
     }
 
     @Test
-    void updateTour_ShouldUpdateTourFields() {
+    void updateTour_validData_returnsUpdatedTour() {
         Tour updatedTour = new Tour();
         updatedTour.setTourName("Updated Tour Name");
         updatedTour.setBandId(3L);
@@ -137,7 +137,7 @@ public class TourServiceTest {
     }
 
     @Test
-    void deleteTour_ShouldDeleteTour() {
+    void deleteTour_validId_verifiesDeleteOnRepositoryCalled() {
         when(tourRepository.findById(1L)).thenReturn(Optional.of(tour));
         doNothing().when(tourRepository).deleteById(1L);
 
@@ -148,7 +148,7 @@ public class TourServiceTest {
     }
 
     @Test
-    void deleteTour_ShouldThrowException_WhenTourDoesNotExist() {
+    void deleteTour_invalidId_throwsResourceNotFoundException() {
         when(tourRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> tourService.deleteTour(99L));
@@ -157,7 +157,7 @@ public class TourServiceTest {
     }
 
     @Test
-    void addCityVisitToTour_ShouldAddCityVisit() {
+    void addCityVisitToTour_validInputTourExists_verifiesVisitAddedToTour() {
         CityVisit newCityVisit = new CityVisit();
         newCityVisit.setCityName("Vienna");
 
@@ -175,7 +175,7 @@ public class TourServiceTest {
     }
 
     @Test
-    void removeCityVisitFromTour_ShouldRemoveCityVisit() {
+    void removeCityVisitFromTour_visitAndTourExists_verifiesVisitRemovedFromTour() {
         when(tourRepository.findById(1L)).thenReturn(Optional.of(tour));
         when(cityVisitRepository.findById(1L)).thenReturn(Optional.of(cityVisit));
 
@@ -189,7 +189,7 @@ public class TourServiceTest {
     }
 
     @Test
-    void removeCityVisitFromTour_ShouldThrowException_WhenTourDoesNotExist() {
+    void removeCityVisitFromTour_invalidTour_throwsResourceNotFoundException() {
         when(tourRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> tourService.removeCityVisitFromTour(99L, 1L));
@@ -198,7 +198,7 @@ public class TourServiceTest {
     }
 
     @Test
-    void removeCityVisitFromTour_ShouldThrowException_WhenCityVisitDoesNotExist() {
+    void removeCityVisitFromTour_invalidCityVisit_throwsResourceNotFoundException() {
         when(tourRepository.findById(1L)).thenReturn(Optional.of(tour));
         when(cityVisitRepository.findById(99L)).thenReturn(Optional.empty());
 

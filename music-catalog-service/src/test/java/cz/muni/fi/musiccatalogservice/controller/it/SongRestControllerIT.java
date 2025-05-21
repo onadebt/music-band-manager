@@ -66,45 +66,48 @@ public class SongRestControllerIT {
         // Create test album
         testAlbum = new Album();
         testAlbum.setTitle("Test Album");
-        testAlbum.setReleaseDate(LocalDateTime.now().plusDays(30));
+        testAlbum.setBandId(1L);
+        // Use minusDays instead of plusDays to make the date in the past
+        testAlbum.setReleaseDate(LocalDateTime.now().minusDays(30));
         testAlbum = albumRepository.save(testAlbum);
 
         // Create test song
         testSong = new Song();
         testSong.setName("Test Song");
         testSong.setBandId(1L);
+        testSong.setDuration(180);
         testSong.setAlbum(testAlbum);
         testSong = songRepository.save(testSong);
     }
 
 
     @Test
-    void testGetAllSongs() throws Exception {
+    void getAllSongs_songsExist_returnsCorrectList() throws Exception {
         mockMvc.perform(get("/api/songs"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("Test Song")))
                 .andExpect(jsonPath("$[0].bandId", is(1)));
-                //.andExpect(jsonPath("$[0].album.title", is("Test Album")));
+        //.andExpect(jsonPath("$[0].album.title", is("Test Album")));
     }
 
 
     @Test
-    public void testGetSongById() throws Exception {
+    public void getSongById_validId_returnsCorrectSong() throws Exception {
         mockMvc.perform(get("/api/songs/{id}", testSong.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(testSong.getId().intValue())))
                 .andExpect(jsonPath("$.name", is("Test Song")))
                 .andExpect(jsonPath("$.bandId", is(1)));
-                //.andExpect(jsonPath("$.album.title", is("Test Album")));
+        //.andExpect(jsonPath("$.album.title", is("Test Album")));
 
     }
 
 
     @Test
-    public void testGetSongsByBand() throws Exception {
+    public void getSongsByBand_validBandId_returnsCorrectSongs() throws Exception {
         mockMvc.perform(get("/api/songs/band/{bandId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -115,7 +118,7 @@ public class SongRestControllerIT {
 
 
     @Test
-    public void testCreateSong() throws Exception {
+    public void createSong_validSongDto_returnsSavedSong() throws Exception {
         SongDto songDto = new SongDto();
         songDto.setName("New Song");
         songDto.setBandId(2L);
@@ -132,7 +135,7 @@ public class SongRestControllerIT {
 
 
     @Test
-    void testCreateInvalidSong() throws Exception {
+    void createSong_invalidData_returnsBadRequest() throws Exception {
         SongDto songDto = new SongDto();
         // Empty name and null bandId
 
@@ -143,7 +146,7 @@ public class SongRestControllerIT {
     }
 
     @Test
-    public void testUpdateSong() throws Exception {
+    public void updateSong_validSongDto_returnsUpdatedSong() throws Exception {
         SongDto songDto = new SongDto();
         songDto.setName("Updated Song Name");
         songDto.setBandId(testSong.getBandId());
@@ -160,7 +163,7 @@ public class SongRestControllerIT {
 
 
     @Test
-    public void testDeleteSong() throws Exception {
+    public void deleteSong_existingSong_removesFromDatabase() throws Exception {
         mockMvc.perform(delete("/api/songs/{id}", testSong.getId()))
                 .andExpect(status().isNoContent());
 
@@ -172,7 +175,7 @@ public class SongRestControllerIT {
 
 
     @Test
-    public void testCreateSongWithInvalidData() throws Exception {
+    public void createSong_emptyNameAndNullBandId_returnsBadRequest() throws Exception {
         SongDto songDto = new SongDto();
         songDto.setName("");
         songDto.setBandId(null);
@@ -186,9 +189,8 @@ public class SongRestControllerIT {
     }
 
     @Test
-    public void testGetNonExistingSong() throws Exception {
+    public void getSongById_nonExistentId_returnsNotFound() throws Exception {
         mockMvc.perform(get("/api/songs/{id}", 999L))
                 .andExpect(status().isNotFound());
     }
 }
-

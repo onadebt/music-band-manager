@@ -26,7 +26,7 @@ public class SongServiceTest {
     SongService songService;
 
     @Test
-    void findAll_noSongsStored_returnsEmptyList() {
+    void getAllSongs_noSongsStored_returnsEmptyList() {
         // Arrange
         Mockito.when(songRepository.findAll()).thenReturn(List.of());
 
@@ -38,7 +38,7 @@ public class SongServiceTest {
     }
 
     @Test
-    void findAll_twoSongsStored_returnsList() {
+    void getAllSongs_twoSongsStored_returnsList() {
         // Arrange
         Mockito.when(songRepository.findAll()).thenReturn(List.of(TestDataFactory.TEST_SONG_1, TestDataFactory.TEST_SONG_2));
 
@@ -52,7 +52,7 @@ public class SongServiceTest {
     }
 
     @Test
-    void deleteById_songPresent_noException() {
+    void deleteSong_songPresent_noException() {
         // Arrange
         Mockito.when(songRepository.findById(TestDataFactory.TEST_SONG_1.getId()))
                 .thenReturn(Optional.of(TestDataFactory.TEST_SONG_1));
@@ -66,7 +66,7 @@ public class SongServiceTest {
     }
 
     @Test
-    void findByAlbumIds_noSongInAlbums_returnsEmptyList() {
+    void getSongsByAlbum_noSongInAlbums_returnsEmptyList() {
         // Arrange
         Long emptySongId = 5L;
         Mockito.when(songRepository.findByAlbumId(emptySongId)).thenReturn(List.of());
@@ -80,7 +80,7 @@ public class SongServiceTest {
 
 
     @Test
-    void findByAlbumIds_songsInAlbums_returnsList() {
+    void getSongsByAlbum_songsInAlbums_returnsList() {
         // Arrange
         Long albumId = 2L;
         Mockito.when(songRepository.findByAlbumId(albumId)).thenReturn(List.of(TestDataFactory.TEST_SONG_1, TestDataFactory.TEST_SONG_2));
