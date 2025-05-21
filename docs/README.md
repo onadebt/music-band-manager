@@ -34,7 +34,7 @@ All APIs are self‑documenting thanks to **Springdoc OpenAPI** (Swagger UI).
 docker compose up --build
 ```
 
-This spins up **all** microservices, their H2 databases, Prometheus, Grafana and an **Artemis broker** in one shot. The very first cold build may take **≈ 50s** on a typical laptop.
+This spins up **all** microservices, their H2 databases, Prometheus, Grafana and an **Artemis broker** in one shot. The very first cold build may take **≈ 150s** on a typical laptop.
 
 ### Option 2 — **Run Artemis externally, services locally**
 
@@ -42,7 +42,7 @@ If you prefer to debug the Spring Boot services directly from your IDE, keep Art
 
 ```bash
 docker run -d --name artemis \
-  -e ARTEMIS_USERNAME=admin \
+  -e ARTEMIS_USER=admin \
   -e ARTEMIS_PASSWORD=admin \
   -p 61616:61616 \  # JMS
   -p 8161:8161   \  # Web console
