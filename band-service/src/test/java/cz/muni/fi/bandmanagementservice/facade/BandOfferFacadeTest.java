@@ -2,9 +2,9 @@ package cz.muni.fi.bandmanagementservice.facade;
 
 import cz.muni.fi.bandmanagementservice.TestDataFactory;
 import cz.muni.fi.bandmanagementservice.dto.BandOfferDto;
-import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
-import cz.muni.fi.bandmanagementservice.mappers.BandOfferMapper;
+import cz.muni.fi.bandmanagementservice.exception.BandNotFoundException;
+import cz.muni.fi.bandmanagementservice.exception.BandOfferNotFoundException;
+import cz.muni.fi.bandmanagementservice.mapper.BandOfferMapper;
 import cz.muni.fi.bandmanagementservice.model.BandOffer;
 import cz.muni.fi.bandmanagementservice.saga.BandOfferSaga;
 import cz.muni.fi.bandmanagementservice.service.BandOfferService;

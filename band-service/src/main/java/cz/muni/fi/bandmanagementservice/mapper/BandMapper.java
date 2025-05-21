@@ -1,7 +1,6 @@
-package cz.muni.fi.bandmanagementservice.mappers;
+package cz.muni.fi.bandmanagementservice.mapper;
 
 import cz.muni.fi.bandmanagementservice.dto.BandInfoUpdateDto;
-import cz.muni.fi.bandmanagementservice.exceptions.BandNotFoundException;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.dto.BandDto;
 import org.mapstruct.Mapper;

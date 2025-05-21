@@ -1,9 +1,8 @@
-package cz.muni.fi.userservice.mappers;
+package cz.muni.fi.userservice.mapper;
 
 import cz.muni.fi.userservice.dto.ArtistDto;
 import cz.muni.fi.userservice.dto.ArtistUpdateDto;
 import cz.muni.fi.userservice.model.Artist;
-import cz.muni.fi.userservice.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 

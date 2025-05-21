@@ -1,7 +1,7 @@
 package cz.muni.fi.bandmanagementservice.service;
 
 import cz.muni.fi.bandmanagementservice.TestDataFactory;
-import cz.muni.fi.bandmanagementservice.exceptions.*;
+import cz.muni.fi.bandmanagementservice.exception.*;
 import cz.muni.fi.bandmanagementservice.model.Band;
 import cz.muni.fi.bandmanagementservice.model.BandOffer;
 import cz.muni.fi.bandmanagementservice.repository.BandOfferRepository;

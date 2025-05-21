@@ -1,4 +1,4 @@
-package cz.muni.fi.bandmanagementservice.exceptions;
+package cz.muni.fi.bandmanagementservice.exception;
 
 /**
  * @author Tomáš MAREK

@@ -1,7 +1,6 @@
 package cz.muni.fi.tourmanagementservice.facade;
 
 import cz.muni.fi.tourmanagementservice.dto.CityVisitDto;
-import cz.muni.fi.tourmanagementservice.facades.CityVisitFacade;
 import cz.muni.fi.tourmanagementservice.mapper.CityVisitMapper;
 import cz.muni.fi.tourmanagementservice.model.CityVisit;
 import cz.muni.fi.tourmanagementservice.service.CityVisitService;

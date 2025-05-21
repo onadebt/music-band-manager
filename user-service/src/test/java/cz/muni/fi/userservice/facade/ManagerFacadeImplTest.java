@@ -2,7 +2,7 @@ package cz.muni.fi.userservice.facade;
 
 import cz.muni.fi.userservice.TestDataFactory;
 import cz.muni.fi.userservice.dto.ManagerDto;
-import cz.muni.fi.userservice.mappers.ManagerMapper;
+import cz.muni.fi.userservice.mapper.ManagerMapper;
 import cz.muni.fi.userservice.model.Manager;
 import cz.muni.fi.userservice.service.interfaces.ManagerService;
 import org.junit.jupiter.api.Test;

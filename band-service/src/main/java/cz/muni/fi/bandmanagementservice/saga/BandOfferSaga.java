@@ -1,14 +1,14 @@
 package cz.muni.fi.bandmanagementservice.saga;
 
-import cz.muni.fi.bandmanagementservice.exceptions.BandOfferNotFoundException;
-import cz.muni.fi.bandmanagementservice.exceptions.CannotManipulateOfferException;
+import cz.muni.fi.bandmanagementservice.exception.BandOfferNotFoundException;
+import cz.muni.fi.bandmanagementservice.exception.CannotManipulateOfferException;
 import cz.muni.fi.bandmanagementservice.model.BandOffer;
 import cz.muni.fi.bandmanagementservice.repository.BandOfferRepository;
 import cz.muni.fi.bandmanagementservice.service.BandOfferService;
 import cz.muni.fi.events.bandoffer.BandOfferAcceptCommand;
 import cz.muni.fi.events.bandoffer.BandOfferAcceptFailedEvent;
 import cz.muni.fi.events.bandoffer.BandOfferAcceptOkEvent;
-import cz.muni.fi.shared.enums.BandOfferStatus;
+import cz.muni.fi.enums.BandOfferStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

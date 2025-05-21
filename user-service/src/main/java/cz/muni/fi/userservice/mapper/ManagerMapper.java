@@ -1,11 +1,10 @@
-package cz.muni.fi.userservice.mappers;
+package cz.muni.fi.userservice.mapper;
 
 import cz.muni.fi.userservice.dto.ManagerDto;
 import cz.muni.fi.userservice.dto.ManagerUpdateDto;
 import cz.muni.fi.userservice.model.Manager;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface ManagerMapper {

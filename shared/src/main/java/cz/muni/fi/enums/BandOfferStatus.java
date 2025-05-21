@@ -1,4 +1,4 @@
-package cz.muni.fi.shared.enums;
+package cz.muni.fi.enums;
 
 /**
  * @author Tomáš MAREK

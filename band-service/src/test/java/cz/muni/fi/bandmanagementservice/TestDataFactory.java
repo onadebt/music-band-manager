@@ -8,7 +8,7 @@ import cz.muni.fi.bandmanagementservice.model.BandOffer;
 
 import java.util.Set;
 
-import static cz.muni.fi.shared.enums.BandOfferStatus.PENDING;
+import static cz.muni.fi.enums.BandOfferStatus.PENDING;
 
 public class TestDataFactory {
 

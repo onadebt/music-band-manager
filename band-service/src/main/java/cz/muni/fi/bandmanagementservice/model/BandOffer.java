@@ -1,7 +1,7 @@
 package cz.muni.fi.bandmanagementservice.model;
 
-import cz.muni.fi.bandmanagementservice.exceptions.CannotManipulateOfferException;
-import cz.muni.fi.shared.enums.BandOfferStatus;
+import cz.muni.fi.bandmanagementservice.exception.CannotManipulateOfferException;
+import cz.muni.fi.enums.BandOfferStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

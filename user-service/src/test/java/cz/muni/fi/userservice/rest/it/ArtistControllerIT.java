@@ -2,10 +2,8 @@ package cz.muni.fi.userservice.rest.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.muni.fi.userservice.TestDataFactory;
-import cz.muni.fi.userservice.artemis.BandOfferEventListener;
 import cz.muni.fi.userservice.dto.ArtistDto;
 import cz.muni.fi.userservice.dto.ArtistUpdateDto;
-import cz.muni.fi.userservice.mappers.ArtistMapper;
 import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.repository.ArtistRepository;
 import cz.muni.fi.userservice.rest.it.config.DisableSecurityTestConfig;
@@ -17,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 

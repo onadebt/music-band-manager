@@ -4,7 +4,7 @@ import cz.muni.fi.userservice.dto.ArtistDto;
 import cz.muni.fi.userservice.dto.ManagerDto;
 import cz.muni.fi.userservice.model.Artist;
 import cz.muni.fi.userservice.model.Manager;
-import cz.muni.fi.shared.enums.Role;
+import cz.muni.fi.enums.Role;
 
 import java.util.Set;
 
