@@ -7,7 +7,7 @@ import subprocess
 import argparse
 import json
 from datetime import datetime
-from config import AUTH_TOKEN, DEFAULT_TIMEOUT
+from infra.config import AUTH_TOKEN, DEFAULT_TIMEOUT
 
 def setup_args():
     parser = argparse.ArgumentParser(description='Run Band Manager showcase scenario')
