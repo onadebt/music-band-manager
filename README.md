@@ -88,7 +88,7 @@ mvn spring-boot:run
 ---
 
 ## 🎬 Showcase
-- Read detailed instructions on how to run the showcase test in the [showcase](readme_showcase.md) section.
+- Read detailed instructions on how to run the showcase test in the [showcase](docs/readme_showcase.md) section.
 ---
 
 ## 🌱 Seed/Clear Data
@@ -116,7 +116,7 @@ The Prometheus interface is available at [http://localhost:9090](http://localhos
 ---
 
 ## 📌 Use Case Diagram
-![Use case diagram](assets/UsecaseDiagram.png)
+![Use case diagram](docs/assets/UsecaseDiagram.png)
 
 ### Diagram Overview
 This diagram shows the interactions between two primary actors:
@@ -135,7 +135,7 @@ Both actors share a common **Login** system, while other use cases are specific 
 
 ## 🧬 Class Diagram
 This diagram illustrates the core data structures and relationships between key entities in the system. The classes map to the microservices described and support functionalities like band management, music cataloging, user roles, and tour scheduling.
-![Class diagram](assets/ClassDiagram.png)
+![Class diagram](docs/assets/ClassDiagram.png)
 ---
 
 ## 📝 AI Disclosure
